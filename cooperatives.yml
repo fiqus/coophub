@@ -1,0 +1,17 @@
+fiqus:
+  name: Cooperativa de Trabajo Fiqus Ltda.
+  url: https://www.fiqus.coop
+  description: ""
+  location: CABA/Villa La Angostura
+
+gcoop-libre:
+  name: Cooperativa de Trabajo gcoop Ltda.
+  url: https://www.gcoop.coop
+  description: ""
+  location: CABA
+
+cambalab:
+  name: Cooperativa de Trabajo Cambá Ltda.
+  url: https://www.camba.coop
+  description: ""
+  location: CABA
