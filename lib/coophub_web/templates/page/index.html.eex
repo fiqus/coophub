@@ -1,14 +1,1 @@
-<section class="row">
-  <article class="column">
-    <%= for {org, info} <- @repos do %>
-    <h2><%= org %></h2>
-    <ul>
-      <%= for repo <- info["repos"] do %>
-      <li>
-        <a href="<%= repo["html_url"] %>"><%= repo["name"] %></a>
-      </li>
-      <% end %>
-    </ul>
-    <% end %>
-  </article>
-</section>
+<div id="react-app"></div>

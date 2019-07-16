@@ -2,16 +2,17 @@ defmodule CoophubWeb.PageController do
   use CoophubWeb, :controller
 
   def index(conn, _params) do
-    path = Path.join(File.cwd!(), "cooperatives.yml")
-    {:ok, coops} = YamlElixir.read_from_file(path)
-
-    repos =
-      coops
-      |> Enum.map(fn {org, info} ->
-        {org, Map.put(info, "repos", get_repos(org))}
-      end)
-
-    render(conn, "index.html", repos: repos)
+#    path = Path.join(File.cwd!(), "cooperatives.yml")
+#    {:ok, coops} = YamlElixir.read_from_file(path)
+#
+#    repos =
+#      coops
+#      |> Enum.map(fn {org, info} ->
+#        {org, Map.put(info, "repos", get_repos(org))}
+#      end)
+#
+#    render(conn, "index.html", repos: repos)
+    render(conn, "index.html")
   end
 
   defp get_repos(org) do
