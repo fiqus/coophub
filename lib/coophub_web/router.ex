@@ -16,11 +16,12 @@ defmodule CoophubWeb.Router do
   scope "/", CoophubWeb do
     pipe_through :browser
 
-    get "/*path", PageController, :index
+    get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", CoophubWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", CoophubWeb do
+    pipe_through :api
+
+    get "/orgs/:name", OrgController, :show
+  end
 end

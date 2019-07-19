@@ -40,7 +40,8 @@ defmodule Coophub.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:httpoison, "~> 1.4"},
-      {:yaml_elixir, "~> 2.4"}
+      {:yaml_elixir, "~> 2.4"},
+      {:cachex, "~> 3.1"}
     ]
   end
 end

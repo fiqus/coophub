@@ -5,13 +5,29 @@ defmodule Coophub.Application do
 
   use Application
 
+  import Cachex.Spec
+
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
-      CoophubWeb.Endpoint
+      CoophubWeb.Endpoint,
       # Starts a worker by calling: Coophub.Worker.start_link(arg)
       # {Coophub.Worker, arg},
+      %{
+        id: CachexRepos,
+        start:
+          {Cachex, :start_link,
+           [
+             :repos_cache,
+             [
+               warmers: [
+                 warmer(module: Coophub.ReposWarmer)
+               ],
+               expiration: expiration(default: :timer.minutes(60))
+             ]
+           ]}
+      }
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

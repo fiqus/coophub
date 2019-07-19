@@ -36,6 +36,5 @@ node_modules/
 /config/*.secret.exs
 .elixir_ls
 .vscode
-.tool-versions
 /.idea/
 /coophub.iml
