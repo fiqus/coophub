@@ -5,6 +5,12 @@ defmodule CoophubWeb.RepoController do
 
   action_fallback(CoophubWeb.FallbackController)
 
+  @forks_factor 1.7
+  @stargazers_factor 1.5
+  @open_issues_factor 1.3
+  @fork_coeficient 0.5
+  @gravity 1.8
+
   def index(conn, _) do
     {:ok, keys} = Cachex.keys(:repos_cache)
 
@@ -107,8 +113,20 @@ defmodule CoophubWeb.RepoController do
     DateTime.compare(datetime1, datetime2) === :gt
   end
 
+  # based on http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html
+  # and https://gist.github.com/soulim/d69e5dabc511c325f089
   defp repo_popularity(repo) do
-    repo["watchers_count"] + repo["stargazers_count"] * 2 + repo["forks_count"] * 3
+    rating = repo["stargazers_count"] * @stargazers_factor + repo["forks_count"] * @forks_factor + repo["open_issues_count"] * @open_issues_factor
+    if repo["fork"] do
+      rating = rating * @fork_coeficient
+    end
+
+    {:ok, pushed_at_datetime, _} = DateTime.from_iso8601(repo["pushed_at"])
+    divisor =
+      ((DateTime.utc_now() |> DateTime.to_unix()) - (pushed_at_datetime |> DateTime.to_unix())) / 3600
+      |> :math.pow(@gravity)
+
+    rating / divisor
   end
 
   defp get_all_repos() do
