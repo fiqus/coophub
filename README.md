@@ -15,7 +15,7 @@ Endpoints:
 - [x] GET api/orgs
 - [x] GET api/orgs/:name
 - [x] GET api/orgs/:name/latest
-- [ ] GET api/orgs/:name/popular
+- [x] GET api/orgs/:name/popular
 
 - [x] Dump cachex for dev env
 

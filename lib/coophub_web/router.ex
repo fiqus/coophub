@@ -25,5 +25,6 @@ defmodule CoophubWeb.Router do
     get "/orgs", OrgController, :index
     get "/orgs/:name", OrgController, :show
     get "/orgs/:name/latest", OrgController, :show_latest
+    get "/orgs/:name/popular", OrgController, :show_popular
   end
 end
