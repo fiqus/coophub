@@ -8,7 +8,16 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## 
+Endpoints:
+- [ ] GET api/repos/latest
+- [ ] GET api/repos/popular
+- [x] GET api/orgs
+- [x] GET api/orgs/:name
+- [x] GET api/orgs/:name/latest
+- [ ] GET api/orgs/:name/popular
+
+- [x] Dump cachex for dev env
 
 ## Learn more
 
