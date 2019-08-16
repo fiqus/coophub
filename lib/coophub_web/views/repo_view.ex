@@ -1,4 +1,4 @@
-defmodule CoophubWeb.OrgView do
+defmodule CoophubWeb.RepoView do
   use CoophubWeb, :view
 
   def render("index.json", %{orgs_repos: orgs_repos}) do

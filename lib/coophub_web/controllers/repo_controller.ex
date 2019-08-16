@@ -1,4 +1,4 @@
-defmodule CoophubWeb.OrgController do
+defmodule CoophubWeb.RepoController do
   use CoophubWeb, :controller
 
   require Logger
@@ -23,7 +23,7 @@ defmodule CoophubWeb.OrgController do
     render(conn, "index.json", orgs_repos: orgs_repos)
   end
 
-  def show(conn, %{"name" => name}) do
+  def orgs_repos(conn, %{"name" => name}) do
     case Cachex.get(:repos_cache, name) do
       {:ok, nil} ->
         conn
@@ -41,7 +41,7 @@ defmodule CoophubWeb.OrgController do
     end
   end
 
-  def show_latest(conn, %{"name" => name}) do
+  def org_repos_latest(conn, %{"name" => name}) do
     case Cachex.get(:repos_cache, name) do
       {:ok, nil} ->
         conn
@@ -63,7 +63,7 @@ defmodule CoophubWeb.OrgController do
     end
   end
 
-  def show_popular(conn, %{"name" => name}) do
+  def org_repos_popular(conn, %{"name" => name}) do
     case Cachex.get(:repos_cache, name) do
       {:ok, nil} ->
         conn
@@ -85,6 +85,22 @@ defmodule CoophubWeb.OrgController do
     end
   end
 
+  def repos_latest(conn, _params) do
+    repos =
+      get_all_repos()
+      |> Enum.sort(&dates_comparer/2)
+      |> Enum.take(3)
+    render(conn, "show.json", repos: repos)
+  end
+
+  def repos_popular(conn, _params) do
+    repos =
+      get_all_repos()
+      |> Enum.sort(& repo_popularity(&1) >= repo_popularity(&2))
+      |> Enum.take(3)
+    render(conn, "show.json", repos: repos)
+  end
+
   defp dates_comparer(repo1, repo2) do
     {:ok, datetime1, _} = DateTime.from_iso8601(repo1["pushed_at"])
     {:ok, datetime2, _} = DateTime.from_iso8601(repo2["pushed_at"])
@@ -93,5 +109,17 @@ defmodule CoophubWeb.OrgController do
 
   defp repo_popularity(repo) do
     repo["watchers_count"] + repo["stargazers_count"] * 2 + repo["forks_count"] * 3
+  end
+
+  defp get_all_repos() do
+    {:ok, keys} = Cachex.keys(:repos_cache)
+    Enum.map(keys, fn key ->
+      case Cachex.get(:repos_cache, key) do
+        {:ok, nil} -> []
+        {:ok, org} -> org["repos"]
+        _ -> []
+      end
+    end)
+    |> List.flatten()
   end
 end

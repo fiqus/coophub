@@ -22,9 +22,11 @@ defmodule CoophubWeb.Router do
   scope "/api", CoophubWeb do
     pipe_through :api
 
-    get "/orgs", OrgController, :index
-    get "/orgs/:name", OrgController, :show
-    get "/orgs/:name/latest", OrgController, :show_latest
-    get "/orgs/:name/popular", OrgController, :show_popular
+    get "/orgs", RepoController, :index
+    get "/orgs/:name", RepoController, :orgs_repos
+    get "/orgs/:name/latest", RepoController, :org_repos_latest
+    get "/orgs/:name/popular", RepoController, :org_repos_popular
+    get "/repos/latest", RepoController, :repos_latest
+    get "/repos/popular", RepoController, :repos_popular
   end
 end
