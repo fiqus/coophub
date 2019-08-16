@@ -38,3 +38,4 @@ node_modules/
 .vscode
 /.idea/
 /coophub.iml
+/repos-cache.dump
