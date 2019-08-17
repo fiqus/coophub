@@ -25,7 +25,8 @@ defmodule Coophub.ReposWarmer do
         {:ok, size} -> size
         _ -> 0
       end
-
+IO.inspect size, label: "size"
+IO.inspect (read_yml() |> Map.keys() |> length()), label: "file size"
     if size < read_yml() |> Map.keys() |> length() do
       load_cache()
     else

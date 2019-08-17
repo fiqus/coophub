@@ -113,8 +113,7 @@ defmodule CoophubWeb.RepoController do
     DateTime.compare(datetime1, datetime2) === :gt
   end
 
-  # based on http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html
-  # and https://gist.github.com/soulim/d69e5dabc511c325f089
+  # based on https://gist.github.com/soulim/d69e5dabc511c325f089
   defp repo_popularity(repo) do
     rating = repo["stargazers_count"] * @stargazers_factor + repo["forks_count"] * @forks_factor + repo["open_issues_count"] * @open_issues_factor
     if repo["fork"] do

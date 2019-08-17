@@ -13,12 +13,6 @@ defmodule CoophubWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", CoophubWeb do
-    pipe_through :browser
-
-    get "/", PageController, :index
-  end
-
   scope "/api", CoophubWeb do
     pipe_through :api
 
@@ -29,4 +23,11 @@ defmodule CoophubWeb.Router do
     get "/repos/latest", RepoController, :repos_latest
     get "/repos/popular", RepoController, :repos_popular
   end
+  
+  scope "/", CoophubWeb do
+    pipe_through :browser
+
+    get "/*path", PageController, :index
+  end
+
 end
