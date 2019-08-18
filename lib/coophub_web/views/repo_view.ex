@@ -1,11 +1,15 @@
 defmodule CoophubWeb.RepoView do
   use CoophubWeb, :view
 
-  def render("index.json", %{orgs_repos: orgs_repos}) do
-    %{orgs_repos: orgs_repos}
+  def render("index.json", %{orgs: orgs}) do
+    %{data: orgs}
   end
 
-  def render("show.json", %{repos: repos}) do
-    %{repos: repos}
+  def render("org.json", %{org: org}) do
+    %{data: org}
+  end
+
+  def render("repos.json", %{repos: repos}) do
+    %{data: repos}
   end
 end

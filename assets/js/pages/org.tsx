@@ -45,7 +45,7 @@ export default class OrgPage extends React.Component<
     fetch(`/api/orgs/${this.orgName}`)
       .then(response => response.json() as Promise<ApiResponse>)
       .then(response => {
-        this.setState({ Org: response.repos, loading: false });
+        this.setState({ Org: response.data, loading: false });
       })
       .catch(err => {
         return (<Redirect to = "/" />);
