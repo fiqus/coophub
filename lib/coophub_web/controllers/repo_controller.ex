@@ -116,9 +116,9 @@ defmodule CoophubWeb.RepoController do
   # based on https://gist.github.com/soulim/d69e5dabc511c325f089
   defp repo_popularity(repo) do
     rating = repo["stargazers_count"] * @stargazers_factor + repo["forks_count"] * @forks_factor + repo["open_issues_count"] * @open_issues_factor
-    if repo["fork"] do
-      rating = rating * @fork_coeficient
-    end
+    rating = if repo["fork"],
+      do: rating * @fork_coeficient,
+      else: rating
 
     {:ok, pushed_at_datetime, _} = DateTime.from_iso8601(repo["pushed_at"])
     divisor =
