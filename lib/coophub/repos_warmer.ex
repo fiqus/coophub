@@ -3,6 +3,8 @@ defmodule Coophub.ReposWarmer do
 
   require Logger
 
+  @dump_file Application.get_env(:coophub, :cachex_dump)
+
   @doc """
   Returns the interval for this warmer.
   """
@@ -15,20 +17,18 @@ defmodule Coophub.ReposWarmer do
   def execute(_state), do: maybe_warm(Mix.env())
 
   defp maybe_warm(:dev) do
-    Logger.info("Warming repos into repos cache from dump..", ansi_color: :yellow)
+    Logger.info("Warming repos into cache from dump..", ansi_color: :yellow)
     Process.sleep(2000)
-    dump_file = Application.get_env(:coophub, :cachex_dump)
-    Cachex.load(:repos_cache, dump_file)
+    Cachex.load(:repos_cache, @dump_file)
 
     size =
       case Cachex.size(:repos_cache) do
         {:ok, size} -> size
         _ -> 0
       end
-IO.inspect size, label: "size"
-IO.inspect (read_yml() |> Map.keys() |> length()), label: "file size"
+
     if size < read_yml() |> Map.keys() |> length() do
-      load_cache()
+      load_cache() |> save_cache()
     else
       :ignore
     end
@@ -37,7 +37,7 @@ IO.inspect (read_yml() |> Map.keys() |> length()), label: "file size"
   defp maybe_warm(_), do: load_cache()
 
   defp load_cache() do
-    Logger.info("Warming repos into repos cache from github..", ansi_color: :yellow)
+    Logger.info("Warming repos into cache from github..", ansi_color: :yellow)
 
     repos =
       read_yml()
@@ -46,6 +46,17 @@ IO.inspect (read_yml() |> Map.keys() |> length()), label: "file size"
       end)
 
     {:ok, repos}
+  end
+
+  defp save_cache(result) do
+    spawn(&save_cache/0)
+    result
+  end
+
+  defp save_cache() do
+    Process.sleep(2000)
+    Logger.info("Dumping repos cache to local file '#{@dump_file}'..", ansi_color: :yellow)
+    Cachex.dump(:repos_cache, @dump_file)
   end
 
   defp get_repos(org, info) do

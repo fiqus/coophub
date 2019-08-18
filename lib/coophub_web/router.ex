@@ -23,11 +23,10 @@ defmodule CoophubWeb.Router do
     get "/repos/latest", RepoController, :repos_latest
     get "/repos/popular", RepoController, :repos_popular
   end
-  
+
   scope "/", CoophubWeb do
     pipe_through :browser
 
     get "/*path", PageController, :index
   end
-
 end

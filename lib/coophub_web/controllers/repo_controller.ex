@@ -21,11 +21,6 @@ defmodule CoophubWeb.RepoController do
         acc |> Map.put_new(key, repos)
       end)
 
-    if Mix.env() == :dev do
-      dump_file = Application.get_env(:coophub, :cachex_dump)
-      Cachex.dump(:repos_cache, dump_file)
-    end
-
     render(conn, "index.json", orgs_repos: orgs_repos)
   end
 
@@ -41,6 +36,7 @@ defmodule CoophubWeb.RepoController do
 
       {:error, err} ->
         Logger.error("Could not get repos for org '#{name}': #{inspect(err)}")
+
         conn
         |> put_status(:unprocessable_entity)
         |> render(CoophubWeb.ErrorView, :"500")
@@ -59,10 +55,12 @@ defmodule CoophubWeb.RepoController do
           org["repos"]
           |> Enum.sort(&dates_comparer/2)
           |> Enum.take(3)
+
         render(conn, "show.json", repos: repos)
 
       {:error, err} ->
         Logger.error("Could not get repos for org '#{name}': #{inspect(err)}")
+
         conn
         |> put_status(:unprocessable_entity)
         |> render(CoophubWeb.ErrorView, :"500")
@@ -79,12 +77,14 @@ defmodule CoophubWeb.RepoController do
       {:ok, org} ->
         repos =
           org["repos"]
-          |> Enum.sort(& repo_popularity(&1) >= repo_popularity(&2))
+          |> Enum.sort(&(repo_popularity(&1) >= repo_popularity(&2)))
           |> Enum.take(3)
+
         render(conn, "show.json", repos: repos)
 
       {:error, err} ->
         Logger.error("Could not get repos for org '#{name}': #{inspect(err)}")
+
         conn
         |> put_status(:unprocessable_entity)
         |> render(CoophubWeb.ErrorView, :"500")
@@ -96,14 +96,16 @@ defmodule CoophubWeb.RepoController do
       get_all_repos()
       |> Enum.sort(&dates_comparer/2)
       |> Enum.take(3)
+
     render(conn, "show.json", repos: repos)
   end
 
   def repos_popular(conn, _params) do
     repos =
       get_all_repos()
-      |> Enum.sort(& repo_popularity(&1) >= repo_popularity(&2))
+      |> Enum.sort(&(repo_popularity(&1) >= repo_popularity(&2)))
       |> Enum.take(3)
+
     render(conn, "show.json", repos: repos)
   end
 
@@ -115,14 +117,20 @@ defmodule CoophubWeb.RepoController do
 
   # based on https://gist.github.com/soulim/d69e5dabc511c325f089
   defp repo_popularity(repo) do
-    rating = repo["stargazers_count"] * @stargazers_factor + repo["forks_count"] * @forks_factor + repo["open_issues_count"] * @open_issues_factor
-    rating = if repo["fork"],
-      do: rating * @fork_coeficient,
-      else: rating
+    rating =
+      repo["stargazers_count"] * @stargazers_factor + repo["forks_count"] * @forks_factor +
+        repo["open_issues_count"] * @open_issues_factor
+
+    rating =
+      if repo["fork"],
+        do: rating * @fork_coeficient,
+        else: rating
 
     {:ok, pushed_at_datetime, _} = DateTime.from_iso8601(repo["pushed_at"])
+
     divisor =
-      ((DateTime.utc_now() |> DateTime.to_unix()) - (pushed_at_datetime |> DateTime.to_unix())) / 3600
+      (((DateTime.utc_now() |> DateTime.to_unix()) - (pushed_at_datetime |> DateTime.to_unix())) /
+         3600)
       |> :math.pow(@gravity)
 
     rating / divisor
@@ -130,6 +138,7 @@ defmodule CoophubWeb.RepoController do
 
   defp get_all_repos() do
     {:ok, keys} = Cachex.keys(:repos_cache)
+
     Enum.map(keys, fn key ->
       case Cachex.get(:repos_cache, key) do
         {:ok, nil} -> []
