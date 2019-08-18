@@ -12,101 +12,84 @@ defmodule CoophubWeb.RepoController do
   @gravity 1.8
 
   def index(conn, _) do
-    {:ok, keys} = Cachex.keys(:repos_cache)
-
-    orgs_repos =
-      keys
-      |> Enum.reduce(%{}, fn key, acc ->
-        {:ok, repos} = Cachex.get(:repos_cache, key)
-        acc |> Map.put_new(key, repos)
-      end)
-
-    render(conn, "index.json", orgs_repos: orgs_repos)
+    case Repos.get_all_orgs() do
+      :error -> render_status(conn, 500)
+      orgs_repos -> render(conn, "index.json", orgs_repos: orgs_repos)
+    end
   end
 
-  def orgs_repos(conn, %{"name" => name}) do
-    case Cachex.get(:repos_cache, name) do
-      {:ok, nil} ->
-        conn
-        |> put_status(:not_found)
-        |> render(CoophubWeb.ErrorView, :"404")
-
-      {:ok, repos} ->
-        render(conn, "show.json", repos: repos)
-
-      {:error, err} ->
-        Logger.error("Could not get repos for org '#{name}': #{inspect(err)}")
-
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(CoophubWeb.ErrorView, :"500")
+  def org_repos(conn, %{"name" => name}) do
+    case Repos.get_org(name) do
+      :error -> render_status(conn, 500)
+      nil -> render_status(conn, 404)
+      org -> render(conn, "show.json", repos: org)
     end
   end
 
   def org_repos_latest(conn, %{"name" => name}) do
-    case Cachex.get(:repos_cache, name) do
-      {:ok, nil} ->
-        conn
-        |> put_status(:not_found)
-        |> render(CoophubWeb.ErrorView, :"404")
+    case Repos.get_org_repos(name) do
+      :error ->
+        render_status(conn, 500)
 
-      {:ok, org} ->
+      nil ->
+        render_status(conn, 404)
+
+      repos ->
         repos =
-          org["repos"]
+          repos
           |> Enum.sort(&dates_comparer/2)
           |> Enum.take(3)
 
         render(conn, "show.json", repos: repos)
-
-      {:error, err} ->
-        Logger.error("Could not get repos for org '#{name}': #{inspect(err)}")
-
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(CoophubWeb.ErrorView, :"500")
     end
   end
 
   def org_repos_popular(conn, %{"name" => name}) do
-    case Cachex.get(:repos_cache, name) do
-      {:ok, nil} ->
-        conn
-        |> put_status(:not_found)
-        |> render(CoophubWeb.ErrorView, :"404")
+    case Repos.get_org_repos(name) do
+      :error ->
+        render_status(conn, 500)
 
-      {:ok, org} ->
+      nil ->
+        render_status(conn, 404)
+
+      repos ->
         repos =
-          org["repos"]
+          repos
           |> Enum.sort(&(repo_popularity(&1) >= repo_popularity(&2)))
           |> Enum.take(3)
 
         render(conn, "show.json", repos: repos)
-
-      {:error, err} ->
-        Logger.error("Could not get repos for org '#{name}': #{inspect(err)}")
-
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(CoophubWeb.ErrorView, :"500")
     end
   end
 
   def repos_latest(conn, _params) do
-    repos =
-      get_all_repos()
-      |> Enum.sort(&dates_comparer/2)
-      |> Enum.take(3)
+    case Repos.get_all_repos() do
+      :error ->
+        render_status(conn, 500)
 
-    render(conn, "show.json", repos: repos)
+      repos ->
+        repos =
+          repos
+          |> Enum.sort(&dates_comparer/2)
+          |> Enum.take(3)
+
+        render(conn, "show.json", repos: repos)
+    end
   end
 
   def repos_popular(conn, _params) do
-    repos =
-      get_all_repos()
-      |> Enum.sort(&(repo_popularity(&1) >= repo_popularity(&2)))
-      |> Enum.take(3)
+    case Repos.get_all_repos() do
+      :error ->
+        render_status(conn, 500)
 
-    render(conn, "show.json", repos: repos)
+      repos ->
+        repos =
+          repos
+          |> Enum.sort(&(repo_popularity(&1) >= repo_popularity(&2)))
+          |> Enum.take(3)
+
+        render(conn, "show.json", repos: repos)
+    end
   end
 
   defp dates_comparer(repo1, repo2) do
@@ -134,18 +117,5 @@ defmodule CoophubWeb.RepoController do
       |> :math.pow(@gravity)
 
     rating / divisor
-  end
-
-  defp get_all_repos() do
-    {:ok, keys} = Cachex.keys(:repos_cache)
-
-    Enum.map(keys, fn key ->
-      case Cachex.get(:repos_cache, key) do
-        {:ok, nil} -> []
-        {:ok, org} -> org["repos"]
-        _ -> []
-      end
-    end)
-    |> List.flatten()
   end
 end

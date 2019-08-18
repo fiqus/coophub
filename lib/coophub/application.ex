@@ -22,7 +22,7 @@ defmodule Coophub.Application do
              :repos_cache,
              [
                warmers: [
-                 warmer(module: Coophub.ReposWarmer)
+                 warmer(module: Coophub.Repos.Warmer)
                ],
                expiration: expiration(default: :timer.minutes(60))
              ]

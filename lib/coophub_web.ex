@@ -23,7 +23,15 @@ defmodule CoophubWeb do
 
       import Plug.Conn
       import CoophubWeb.Gettext
+      alias Coophub.Repos
       alias CoophubWeb.Router.Helpers, as: Routes
+
+      defp render_status(conn, code),
+        do:
+          conn
+          |> put_status(code)
+          |> put_view(CoophubWeb.ErrorView)
+          |> render("#{code}.html")
     end
   end
 

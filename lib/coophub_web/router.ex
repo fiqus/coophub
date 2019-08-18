@@ -17,7 +17,7 @@ defmodule CoophubWeb.Router do
     pipe_through :api
 
     get "/orgs", RepoController, :index
-    get "/orgs/:name", RepoController, :orgs_repos
+    get "/orgs/:name", RepoController, :org_repos
     get "/orgs/:name/latest", RepoController, :org_repos_latest
     get "/orgs/:name/popular", RepoController, :org_repos_popular
     get "/repos/latest", RepoController, :repos_latest
