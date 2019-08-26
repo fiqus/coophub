@@ -1,9 +1,10 @@
 import * as React from 'react';
+import {Container} from "reactstrap";
 
 const Main: React.FC = ({ children }) => (
-    <main role="main" className="container">
+    <Container>
         {children}
-    </main>
+    </Container>
 );
 
 export default Main

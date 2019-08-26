@@ -1,100 +1,119 @@
 // pages/org.tsx
 
 import * as React from 'react';
-import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
-
+import {Redirect, RouteComponentProps} from 'react-router';
 import Main from '../components/Main';
 import GitHubButton from 'react-github-btn';
+import {
+    Card,
+    CardBody, CardColumns, CardLink,
+    CardText,
+    CardTitle,
+    Col, Container, Jumbotron, NavLink,
+    Row,
+    Spinner
+} from "reactstrap";
+import {GoRepoForked, GoStar} from 'react-icons/go';
 
 // The interface for our API response
 interface ApiResponse {
-  data: Org;
+    data: Org;
 }
 
 // The interface for our Org model.
 interface Org {
-  location: string;
-  name: string;
-  description: string;
-  repos: Repo[];
+    location: string;
+    name: string;
+    description: string;
+    repos: Repo[];
 }
 
 interface Repo {
-  name: string;
-  stargazers_count: number;
-  forks_count: number;
-  html_url: string;
+    description: string;
+    name: string;
+    stargazers_count: number;
+    forks_count: number;
+    html_url: string;
 }
 
 interface OrgExampleState {
-  Org: Org;
-  loading: boolean;
+    Org: Org;
+    loading: boolean;
 }
 
-export default class OrgPage extends React.Component<
-  {},
-  OrgExampleState
-> {
-  constructor(props: {}) {
-    super(props);
-    this.state = { Org: {name: "", location: "", description: "", repos: []}, loading: true };
-    this.orgName = props.match.params.name;
+interface MatchParams {
+    name: string
+}
 
-    // Get the data from our API.
-    fetch(`/api/orgs/${this.orgName}`)
-      .then(response => response.json() as Promise<ApiResponse>)
-      .then(response => {
-        this.setState({ Org: response.data, loading: false });
-      })
-      .catch(err => {
-        return (<Redirect to = "/" />);
-      });
-  }
+export default class OrgPage extends React.Component<{}, OrgExampleState> {
+    readonly orgName: string;
 
-  private static renderReposGrid(repos: Repo[]) {
-    return (
-      <div>
-      {repos.map(repo => (
-        <div key={repo.name}>
-          <div>
-            <a href={repo.html_url}>{repo.name}</a>
-            <span>
-            <GitHubButton href={repo.html_url} data-icon="octicon-star" aria-label="Star fiqus/repo on GitHub">{repo.stargazers_count}</GitHubButton>
-            </span>
-            <span>
-            <GitHubButton href={repo.html_url + "/fork"} data-icon="octicon-repo-forked" aria-label="Fork fiqus/repo on GitHub">{repo.forks_count}</GitHubButton>
-            </span>
-          </div>
-          <div>{repo.description}</div>
-        </div>
-      ))}
-      </div>
-    );
-  }
+    constructor(props: RouteComponentProps<MatchParams>) {
+        super(props);
+        this.state = {Org: {name: "", location: "", description: "", repos: []}, loading: true};
+        this.orgName = props.match.params.name;
 
-  public render(): JSX.Element {
-    const content = this.state.loading ? (
-      <p>
-        <em>Loading...</em>
-      </p>
-    ) : (
-      OrgPage.renderReposGrid(this.state.Org.repos)
-    );
-    
-    return (
-      <Main>
-        <h1>{this.state.Org.name} <GitHubButton href={"https://github.com/" + this.orgName} data-size="large" data-show-count="true" aria-label={"Follow @" + this.orgName + " on GitHub"}>Follow @{this.orgName}</GitHubButton></h1>
-        <p>
-        {this.state.Org.description}
-        </p>
-        {content}
-        <br />
-        <br />
-        <p>
-          <Link to="/">Back to home</Link>
-        </p>
-      </Main>
-    );
-  }
+        // Get the data from our API.
+        fetch(`/api/orgs/${this.orgName}`)
+            .then(response => response.json() as Promise<ApiResponse>)
+            .then(response => {
+                this.setState({Org: response.data, loading: false});
+            })
+            .catch(() => {
+                return (<Redirect to="/"/>);
+            });
+    }
+
+    private static renderReposGrid(repos: Repo[]) {
+        return (
+            <CardColumns>
+                {repos.map(repo => (
+                    <Card>
+                        {/*<CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="Card image cap" />*/}
+                        <CardBody>
+                            <CardTitle>{repo.name}</CardTitle>
+                            <CardText>{repo.description}</CardText>
+                            <CardLink href={`${repo.html_url}/fork`}><GoRepoForked/> {repo.forks_count}</CardLink>
+                            <CardLink href={repo.html_url}><GoStar/>{repo.stargazers_count}</CardLink>
+                        </CardBody>
+                    </Card>
+                ))}
+            </CardColumns>
+        );
+    }
+
+    public render(): JSX.Element {
+        const content = this.state.loading ? (
+            <Spinner style={{width: '3rem', height: '3rem'}}/>
+        ) : (
+            OrgPage.renderReposGrid(this.state.Org.repos)
+        );
+
+        return (
+            <>
+                <Jumbotron fluid>
+                    <Container fluid>
+                        <h1 className="display-3">{this.state.Org.name}</h1>
+                        <p className="lead">{this.state.Org.description}</p>
+                        <p className="lead">
+                            <GitHubButton href={"https://github.com/" + this.orgName} data-size="large"
+                                          data-show-count
+                                          aria-label={"Follow @ " + this.orgName + " on GitHub"}>
+                                Follow @{this.orgName}
+                            </GitHubButton>
+                        </p>
+                    </Container>
+                </Jumbotron>
+                <Container>
+                    {content}
+                    <br/>
+                    <br/>
+                    <p>
+                        <NavLink to="/">Back to home</NavLink>
+                    </p>
+                </Container>
+
+            </>
+        )
+    }
 }
