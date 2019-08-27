@@ -5,8 +5,7 @@ import {CardDeck, Container, Jumbotron} from "reactstrap";
 import useFetch from 'fetch-suspense';
 
 import 'bootstrap/dist/css/bootstrap.css';
-import {Repo} from "../types";
-import {ApiResponse} from "../api";
+import {ApiResponse, Repo} from "../types";
 import RepoCard from "../components/RepoCard";
 import FullWidthSpinner from "../components/FullWidthSpinner";
 

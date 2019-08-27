@@ -4,6 +4,8 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './pages';
 import OrgPage from './pages/org';
+import {Suspense} from "react";
+import FullWidthSpinner from "./components/FullWidthSpinner";
 
 export default class Root extends React.Component {
     public render(): JSX.Element {
@@ -11,10 +13,12 @@ export default class Root extends React.Component {
             <>
                 <BrowserRouter>
                     <Header/>
-                    <Switch>
-                        <Route exact path="/" component={HomePage}/>
-                        <Route path="/orgs/:name" component={OrgPage} />
-                    </Switch>
+                    <Suspense fallback={<FullWidthSpinner/>}>
+                        <Switch>
+                            <Route exact path="/" component={HomePage}/>
+                            <Route path="/orgs/:name" component={OrgPage} />
+                        </Switch>
+                    </Suspense>
                 </BrowserRouter>
             </>
         )
