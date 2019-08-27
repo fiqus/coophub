@@ -12,7 +12,7 @@ const Header: React.FC = () => {
 
 
     return <Navbar color="faded" light>
-        <NavbarBrand href="/" className="mr-auto">coophub</NavbarBrand>
+        <NavbarBrand href="/" className="mr-auto">CoopHub</NavbarBrand>
         <NavbarToggler onClick={toggleNavBar} className="mr-2" />
         <Collapse isOpen={!collapsed} navbar>
             <Nav navbar>

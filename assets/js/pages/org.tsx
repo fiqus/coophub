@@ -1,10 +1,11 @@
 import * as React from 'react';
 import {RouteComponentProps} from 'react-router';
 import GitHubButton from 'react-github-btn';
-import {CardColumns, Container, Jumbotron, NavLink, Spinner} from "reactstrap";
+import {CardColumns, Container, Jumbotron, NavLink} from "reactstrap";
 import RepoCard from "../components/RepoCard";
 import {fetchOrg} from "../api";
 import {Org} from "../types";
+import FullWidthSpinner from "../components/FullWidthSpinner";
 
 type State = {
     org: Org;
@@ -48,7 +49,7 @@ export default class OrgPage extends React.Component<{}, State> {
                 </Jumbotron>
                 <Container>
                     {this.state.loading ?
-                        <Spinner style={{width: '3rem', height: '3rem'}}/> :
+                        <FullWidthSpinner/> :
                         <CardColumns>
                             {this.state.org.repos.map((repo, i) => (
                                 <RepoCard key={i} repo={repo}/>
