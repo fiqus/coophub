@@ -3,8 +3,6 @@ defmodule CoophubWeb.RepoController do
 
   require Logger
 
-  @default_repos_limit 3
-
   action_fallback(CoophubWeb.FallbackController)
 
   def index(conn, _) do
@@ -14,28 +12,30 @@ defmodule CoophubWeb.RepoController do
     end
   end
 
-  def org_repos(conn, %{"name" => name}) do
-    case Repos.get_org(name) do
+  def org(conn, %{"name" => name}) do
+    case Repos.get_org_info(name) do
       :error -> render_status(conn, 500)
       nil -> render_status(conn, 404)
       org -> render(conn, "org.json", org: org)
     end
   end
 
-  def org_repos_latest(conn, %{"name" => name} = params) do
+  def org_repos(conn, %{"name" => name} = params) do
     limit = get_limit(params)
-    case Repos.get_org_repos_latest(name, limit) do
+    sort = Map.get(params, "sort", "latest")
+    case Repos.get_org_repos(name, sort, limit) do
       :error -> render_status(conn, 500)
       nil -> render_status(conn, 404)
-      repos -> render(conn, "repos.json", repos: repos)
+      org -> render(conn, "org.json", org: org)
     end
   end
 
-  def org_repos_popular(conn, %{"name" => name} = params) do
+  def repos(conn, params) do
     limit = get_limit(params)
-    case Repos.get_org_repos_popular(name, limit) do
+    sort = Map.get(params, "sort", "latest")
+
+    case Repos.get_repos(sort, limit) do
       :error -> render_status(conn, 500)
-      nil -> render_status(conn, 404)
       repos -> render(conn, "repos.json", repos: repos)
     end
   end
@@ -44,29 +44,9 @@ defmodule CoophubWeb.RepoController do
     try do
       String.to_integer(limit)
     rescue
-      _ -> @default_repos_limit
+      _ -> nil
     end
   end
 
-  defp get_limit(_), do: @default_repos_limit
-
-  def repos_latest(conn, params) do
-    params
-    |> get_limit()
-    |> Repos.get_repos_latest()
-    |> case do
-      :error -> render_status(conn, 500)
-      repos -> render(conn, "repos.json", repos: repos)
-    end
-  end
-
-  def repos_popular(conn, params) do
-    params
-    |> get_limit()
-    |> Repos.get_repos_popular()
-    |> case do
-      :error -> render_status(conn, 500)
-      repos -> render(conn, "repos.json", repos: repos)
-    end
-  end
+  defp get_limit(_), do: nil
 end

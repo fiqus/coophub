@@ -3,7 +3,7 @@ import {RouteComponentProps} from 'react-router';
 import GitHubButton from 'react-github-btn';
 import {CardColumns, Container, Jumbotron, NavLink} from "reactstrap";
 import RepoCard from "../components/RepoCard";
-import {ApiResponse, Org} from "../types";
+import {ApiResponse, Org, Repo} from "../types";
 import useFetch from 'fetch-suspense';
 
 
@@ -11,11 +11,13 @@ type MatchParams = {
     name: string
 }
 type OrgResponse = ApiResponse<Org>
+type OrgReposResponse = ApiResponse<Repo>
 
 
 const OrgPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
     const orgName = match.params.name;
     const response = useFetch(`/api/orgs/${orgName}`) as OrgResponse;
+    const repos = useFetch(`/api/orgs/${orgName}/repos`) as OrgReposResponse;
     const org = response.data;
 
     return <>
@@ -35,7 +37,7 @@ const OrgPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
         </Jumbotron>
         <Container>
             <CardColumns>
-                {org.repos.map((repo, i) => (
+                {repos.data.map((repo, i) => (
                     <RepoCard key={i} repo={repo}/>
                 ))}
             </CardColumns>

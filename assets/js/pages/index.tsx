@@ -30,12 +30,12 @@ const HomePage: React.FC<RouteComponentProps> = () => {
         <Container>
             <h2>Popular Repos</h2>
             <Suspense fallback={<FullWidthSpinner/>}>
-                <RepoList url={"/api/repos/popular"}/>
+                <RepoList url={"/api/repos?limit=3&sort=popular"}/>
             </Suspense>
 
             <h2>Latest Repos</h2>
             <Suspense fallback={<FullWidthSpinner/>}>
-                <RepoList url={"/api/repos/latest"}/>
+                <RepoList url={"/api/repos?limit=3&sort=latest"}/>
             </Suspense>
         </Container>
     </>;

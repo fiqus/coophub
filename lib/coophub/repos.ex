@@ -55,51 +55,53 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_org_repos(String.t()) :: [map] | nil | :error
-  def get_org_repos(org_name) do
+  @spec get_org_info(String.t()) :: map | nil | :error
+  def get_org_info(org_name) do
     case get_org(org_name) do
-      %{"repos" => repos} -> repos
-      err -> err
+      nil -> nil
+      :error -> :error
+      org -> org |> Map.delete("repos")
     end
   end
 
-  @spec get_org_repos_latest(String.t(), integer) :: [map] | nil | :error
-  def get_org_repos_latest(org_name, qty) do
-    case get_org_repos(org_name) do
-      repos when is_list(repos) -> sort_and_take_repos(repos, &repo_pushed_at/1, qty)
-      err -> err
+  @spec get_org_repos(String.t(), String.t(), integer | nil) :: [map] | nil | :error
+  def get_org_repos(org_name, sort, limit \\ nil) do
+    case get_org(org_name) do
+      %{"repos" => repos} ->
+        if sort == "popular" do
+          sort_and_take_repos(repos, &repo_popularity/1, limit)
+        else
+          sort_and_take_repos(repos, &repo_pushed_at/1, limit)
+        end
+      other -> other
     end
   end
 
-  @spec get_org_repos_popular(String.t(), integer) :: [map] | nil | :error
-  def get_org_repos_popular(org_name, qty) do
-    case get_org_repos(org_name) do
-      repos when is_list(repos) -> sort_and_take_repos(repos, &repo_popularity/1, qty)
-      err -> err
-    end
-  end
-
-  @spec get_repos_latest(integer) :: [map] | nil | :error
-  def get_repos_latest(qty) do
+  @spec get_repos(String.t(), integer | nil) :: [map] | nil | :error
+  def get_repos(sort, limit \\ nil) do
     case get_all_repos() do
-      repos when is_list(repos) -> sort_and_take_repos(repos, &repo_pushed_at/1, qty)
+      repos when is_list(repos) ->
+        if sort == "popular" do
+          sort_and_take_repos(repos, &repo_popularity/1, limit)
+        else
+          sort_and_take_repos(repos, &repo_pushed_at/1, limit)
+        end
       err -> err
     end
   end
 
-  @spec get_repos_popular(integer) :: [map] | nil | :error
-  def get_repos_popular(qty) do
-    case get_all_repos() do
-      repos when is_list(repos) -> sort_and_take_repos(repos, &repo_popularity/1, qty)
-      err -> err
-    end
-  end
-
-  defp sort_and_take_repos(repos, func, qty) do
+  defp sort_and_take_repos(repos, sort_fn, nil) do
     repos
-    |> Enum.sort(&(func.(&1) >= func.(&2)))
-    |> Enum.take(qty)
+    |> sort(sort_fn)
   end
+
+  defp sort_and_take_repos(repos, sort_fn, limit) do
+    repos
+    |> sort(sort_fn)
+    |> Enum.take(limit)
+  end
+
+  defp sort(repos, sort_fn), do: Enum.sort(repos, &(sort_fn.(&1) >= sort_fn.(&2)))
 
   defp repo_pushed_at(repo) do
     {:ok, datetime, _} = DateTime.from_iso8601(repo["pushed_at"])
