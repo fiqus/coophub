@@ -73,7 +73,9 @@ defmodule Coophub.Repos do
         else
           sort_and_take_repos(repos, &repo_pushed_at/1, limit)
         end
-      other -> other
+
+      other ->
+        other
     end
   end
 
@@ -86,7 +88,9 @@ defmodule Coophub.Repos do
         else
           sort_and_take_repos(repos, &repo_pushed_at/1, limit)
         end
-      err -> err
+
+      err ->
+        err
     end
   end
 

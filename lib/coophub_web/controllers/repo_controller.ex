@@ -23,6 +23,7 @@ defmodule CoophubWeb.RepoController do
   def org_repos(conn, %{"name" => name} = params) do
     limit = get_limit(params)
     sort = Map.get(params, "sort", "latest")
+
     case Repos.get_org_repos(name, sort, limit) do
       :error -> render_status(conn, 500)
       nil -> render_status(conn, 404)
