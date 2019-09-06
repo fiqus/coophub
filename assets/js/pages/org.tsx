@@ -23,6 +23,7 @@ const OrgPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
             <Container fluid>
                 <h1 className="display-3">{org.name}</h1>
                 <p className="lead">{org.description}</p>
+                <img src={org.avatar_url} alt=""/>
                 <p className="lead">
                     <GitHubButton href={"https://github.com/" + orgName} data-size="large"
                                   data-show-count

@@ -42,8 +42,9 @@ defmodule Coophub.Repos.Warmer do
 
     repos =
       read_yml()
-      |> Enum.reduce([], fn {org, info}, acc ->
-        [get_repos(org, info) | acc]
+      |> Enum.reduce([], fn {name, _}, acc ->
+        org_data = get_org(name)
+        [get_repos(name, org_data) | acc]
       end)
 
     {:ok, repos}
@@ -73,6 +74,22 @@ defmodule Coophub.Repos.Warmer do
       {:error, %HTTPoison.Error{reason: reason}} ->
         Logger.error("error getting the repos from github with reason: #{inspect(reason)}")
         {org, info}
+    end
+  end
+
+  defp get_org(name) do
+    case HTTPoison.get("https://api.github.com/orgs/#{name}") do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        org = Jason.decode!(body)
+        Logger.info("Saving organization: #{name}", ansi_color: :yellow)
+        org
+
+      {:ok, %HTTPoison.Response{status_code: 404}} ->
+        name
+
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        Logger.error("error getting organization: #{inspect(reason)}")
+        name
     end
   end
 

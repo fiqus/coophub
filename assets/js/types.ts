@@ -14,5 +14,6 @@ export type Org = {
     location: string;
     name: string;
     description: string;
+    avatar_url: string;
     repos: Repo[];
 }
