@@ -26,10 +26,11 @@ Then, to run this app you will need:
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 ### API Endpoints
-- GET api/repos/latest
-- GET api/repos/popular
-- GET api/orgs
-- GET api/orgs/:name
-- GET api/orgs/:name/latest
-- GET api/orgs/:name/popular
+- GET api/orgs (all the coops)
+- GET api/orgs/:name (detail of a coop)
+- GET api/orgs/:name/repos (repos of a coop)
+- GET api/repos (all coops repos)
 
+## Allowed query params
+- `limit` - Number
+- `sort` - `popular` or `latest` (default)
