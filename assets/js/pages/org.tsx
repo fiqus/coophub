@@ -3,7 +3,7 @@ import {RouteComponentProps} from 'react-router';
 import GitHubButton from 'react-github-btn';
 import {CardColumns, Container, Jumbotron, NavLink} from "reactstrap";
 import RepoCard from "../components/RepoCard";
-import {ApiResponse, Org, Repo} from "../types";
+import {ApiResponse, Org, Repos} from "../types";
 import useFetch from 'fetch-suspense';
 
 
@@ -11,7 +11,7 @@ type MatchParams = {
     name: string
 }
 type OrgResponse = ApiResponse<Org>
-type OrgReposResponse = ApiResponse<Repo>
+type OrgReposResponse = ApiResponse<Repos>
 
 
 const OrgPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
@@ -25,7 +25,6 @@ const OrgPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
             <Container fluid>
                 <h1 className="display-3">{org.name}</h1>
                 <p className="lead">{org.description}</p>
-                <img src={org.avatar_url} alt=""/>
                 <p className="lead">
                     <GitHubButton href={"https://github.com/" + orgName} data-size="large"
                                   data-show-count

@@ -10,10 +10,11 @@ export type Repo  = {
     html_url: string;
 }
 
+export type Repos = Array<Repo>
+
 export type Org = {
     location: string;
     name: string;
     description: string;
     avatar_url: string;
-    repos: Repo[];
 }
