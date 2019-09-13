@@ -6,7 +6,7 @@ import useFetch from 'fetch-suspense';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import {ApiResponse, Repo} from "../types";
-import RepoCard from "../components/RepoCard";
+import RepoCardIndex from "../components/RepoCardIndex";
 import FullWidthSpinner from "../components/FullWidthSpinner";
 
 type ReposResponse = ApiResponse<[Repo]>
@@ -15,7 +15,7 @@ type RepoListProps = {url:string}
 const RepoList: React.FC<RepoListProps> = ({url}) => {
     const response = useFetch(url) as ReposResponse;
     return <CardDeck>
-        {response.data.map((repo, i)=><RepoCard repo={repo} key={i}/>)}
+        {response.data.map((repo, i)=><RepoCardIndex repo={repo} key={i}/>)}
     </CardDeck>;
 };
 
