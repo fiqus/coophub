@@ -86,7 +86,7 @@ defmodule Coophub.Repos do
     end
   end
 
-  defp sort_by(sort, repos, limit) when sort == "popular" do
+  defp sort_by("popular", repos, limit) do
     sort_and_take_repos(repos, &repo_popularity/1, limit)
   end
 
