@@ -68,11 +68,7 @@ defmodule Coophub.Repos do
   def get_org_repos(org_name, sort, limit \\ nil) do
     case get_org(org_name) do
       %{"repos" => repos} ->
-        if sort == "popular" do
-          sort_and_take_repos(repos, &repo_popularity/1, limit)
-        else
-          sort_and_take_repos(repos, &repo_pushed_at/1, limit)
-        end
+        sort_by(sort, repos, limit)
 
       other ->
         other
@@ -83,15 +79,19 @@ defmodule Coophub.Repos do
   def get_repos(sort, limit \\ nil) do
     case get_all_repos() do
       repos when is_list(repos) ->
-        if sort == "popular" do
-          sort_and_take_repos(repos, &repo_popularity/1, limit)
-        else
-          sort_and_take_repos(repos, &repo_pushed_at/1, limit)
-        end
+        sort_by(sort, repos, limit)
 
       err ->
         err
     end
+  end
+
+  defp sort_by(sort, repos, limit) when sort == "popular" do
+    sort_and_take_repos(repos, &repo_popularity/1, limit)
+  end
+
+  defp sort_by(_, repos, limit) do
+    sort_and_take_repos(repos, &repo_pushed_at/1, limit)
   end
 
   defp sort_and_take_repos(repos, sort_fn, nil) do
