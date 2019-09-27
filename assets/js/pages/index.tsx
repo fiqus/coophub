@@ -32,7 +32,7 @@ const HomePage: React.FC<RouteComponentProps> = () => {
             <Suspense fallback={<FullWidthSpinner/>}>
                 <RepoList url={"/api/repos?limit=3&sort=popular"}/>
             </Suspense>
-
+            <br />
             <h2>Latest Repos</h2>
             <Suspense fallback={<FullWidthSpinner/>}>
                 <RepoList url={"/api/repos?limit=3&sort=latest"}/>

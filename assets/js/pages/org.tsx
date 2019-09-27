@@ -17,7 +17,7 @@ type OrgReposResponse = ApiResponse<Repos>
 const OrgPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
     const orgName = match.params.name;
     const response = useFetch(`/api/orgs/${orgName}`) as OrgResponse;
-    const repos = useFetch(`/api/orgs/${orgName}/repos`) as OrgReposResponse;
+    const repos = useFetch(`/api/orgs/${orgName}/repos?sort=popular`) as OrgReposResponse;
     const org = response.data;
 
     return <>

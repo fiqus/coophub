@@ -62,9 +62,13 @@ defmodule Coophub.Repos.Warmer do
   end
 
   defp get_repos(org, info) do
-    case HTTPoison.get("https://api.github.com/orgs/#{org}/repos") do
+    case HTTPoison.get("https://api.github.com/orgs/#{org}/repos", headers()) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        repos = Jason.decode!(body)
+        repos =
+          body
+          |> Jason.decode!()
+          |> put_languages(org)
+          
         Logger.info("Saving #{length(repos)} repos for #{org}", ansi_color: :yellow)
         {org, Map.put(info, "repos", repos)}
 
@@ -78,7 +82,7 @@ defmodule Coophub.Repos.Warmer do
   end
 
   defp get_org(name) do
-    case HTTPoison.get("https://api.github.com/orgs/#{name}") do
+    case HTTPoison.get("https://api.github.com/orgs/#{name}", headers()) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         org = Jason.decode!(body)
         Logger.info("Saving organization: #{name}", ansi_color: :yellow)
@@ -93,9 +97,37 @@ defmodule Coophub.Repos.Warmer do
     end
   end
 
+  defp put_languages(repos, org) do
+    repos
+    |> Enum.map(fn repo ->
+      repo_name = repo["name"]
+      case HTTPoison.get("https://api.github.com/repos/#{org}/#{repo_name}/languages", headers()) do
+        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+          languages = Jason.decode!(body)
+          Map.put(repo, "languages", languages)
+
+        {:ok, %HTTPoison.Response{status_code: 404}} ->
+          repo
+
+        {:error, %HTTPoison.Error{reason: reason}} ->
+          Logger.error("error getting languages: #{inspect(reason)}")
+          repo
+      end
+    end)
+  end
+
   defp read_yml() do
     path = Path.join(File.cwd!(), "cooperatives.yml")
     {:ok, coops} = YamlElixir.read_from_file(path)
     coops
+  end
+
+  defp headers() do
+    token = System.get_env("GITHUB_OAUTH_TOKEN")
+    if is_binary(token) do
+      [{"Authorization", "token #{token}"}]
+    else
+      []
+    end
   end
 end
