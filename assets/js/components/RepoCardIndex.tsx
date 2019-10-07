@@ -7,7 +7,7 @@ import Helpers from "../helpers";
 const RepoCardIndex:React.FC<{repo: Repo}> = ({repo}) => {
     return (
         <Card>
-            <CardHeader style={{color: "grey"}}>{repo.owner.login}</CardHeader>
+            <CardHeader style={{color: "grey"}}><a href={`orgs/${repo.owner.login}`}>{repo.owner.login}</a></CardHeader>
             <CardBody>
                 <CardTitle><h3><a href={repo.html_url}>{repo.name}</a></h3></CardTitle>
                 <CardText>{repo.description}</CardText>
