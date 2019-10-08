@@ -70,10 +70,12 @@ defmodule Coophub.Repos.Warmer do
           |> put_languages(org)
 
         Logger.info("Saving #{length(repos)} repos for #{org}", ansi_color: :yellow)
+
         org_info =
           org_info
           |> Map.put("repos", repos)
           |> put_org_languages_stats()
+
         {org, org_info}
 
       {:ok, %HTTPoison.Response{status_code: 404}} ->
@@ -105,9 +107,11 @@ defmodule Coophub.Repos.Warmer do
     repos
     |> Enum.map(fn repo ->
       repo_name = repo["name"]
+
       case HTTPoison.get("https://api.github.com/repos/#{org}/#{repo_name}/languages", headers()) do
         {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
           languages = Jason.decode!(body)
+
           Map.put(repo, "languages", languages)
           |> put_repo_languages_stats()
 
@@ -129,7 +133,7 @@ defmodule Coophub.Repos.Warmer do
     lang_stats =
       repo["languages"]
       |> Enum.reduce(%{}, fn {lang, bytes}, acc ->
-        percentage = ((bytes / total) * 100) |> Float.round(2)
+        percentage = (bytes / total * 100) |> Float.round(2)
         Map.put(acc, percentage, lang)
       end)
 
@@ -151,9 +155,10 @@ defmodule Coophub.Repos.Warmer do
     lang_stats =
       lang_totals
       |> Enum.reduce(%{}, fn {lang, bytes}, acc ->
-        percentage = ((bytes / total) * 100) |> Float.round(2)
+        percentage = (bytes / total * 100) |> Float.round(2)
         Map.put(acc, percentage, lang)
       end)
+
     Map.put(org, "lang_stats", lang_stats)
   end
 
@@ -165,6 +170,7 @@ defmodule Coophub.Repos.Warmer do
 
   defp headers() do
     token = System.get_env("GITHUB_OAUTH_TOKEN")
+
     if is_binary(token) do
       [{"Authorization", "token #{token}"}]
     else

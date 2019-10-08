@@ -9,7 +9,11 @@ defmodule Coophub.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases(),
+      preferred_cli_env: [
+        coverage: :test
+      ]
     ]
   end
 
@@ -42,6 +46,15 @@ defmodule Coophub.MixProject do
       {:httpoison, "~> 1.4"},
       {:yaml_elixir, "~> 2.4"},
       {:cachex, "~> 3.1"}
+    ]
+  end
+
+  # Aliases are shortcuts or tasks specific to the current project.
+  #
+  # See the documentation for `Mix` for more info on aliases.
+  defp aliases do
+    [
+      coverage: ["test --cover"]
     ]
   end
 end

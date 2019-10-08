@@ -16,17 +16,7 @@ defmodule Coophub.Application do
       # {Coophub.Worker, arg},
       %{
         id: CachexRepos,
-        start:
-          {Cachex, :start_link,
-           [
-             :repos_cache,
-             [
-               warmers: [
-                 warmer(module: Coophub.Repos.Warmer)
-               ],
-               expiration: expiration(default: :timer.minutes(60))
-             ]
-           ]}
+        start: {Cachex, :start_link, [:repos_cache, cachex_opts(Mix.env())]}
       }
     ]
 
@@ -41,5 +31,16 @@ defmodule Coophub.Application do
   def config_change(changed, _new, removed) do
     CoophubWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp cachex_opts(:test), do: []
+
+  defp cachex_opts(_) do
+    [
+      warmers: [
+        warmer(module: Coophub.Repos.Warmer)
+      ],
+      expiration: expiration(default: :timer.minutes(60))
+    ]
   end
 end
