@@ -6,5 +6,8 @@ config :coophub, CoophubWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+config :coophub,
+  cachex_name: :repos_cache_test
+
 # Print only warnings and errors during test
 config :logger, level: :warn

@@ -15,6 +15,8 @@ config :coophub, CoophubWeb.Endpoint,
   pubsub: [name: Coophub.PubSub, adapter: Phoenix.PubSub.PG2]
 
 config :coophub,
+  cachex_name: :repos_cache,
+  cachex_interval: 60,
   cachex_dump: "repos-cache.dump"
 
 # Configures Elixir's Logger

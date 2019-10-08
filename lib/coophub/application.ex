@@ -7,6 +7,8 @@ defmodule Coophub.Application do
 
   import Cachex.Spec
 
+  @repos_cache_name Application.get_env(:coophub, :cachex_name)
+
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
@@ -16,7 +18,7 @@ defmodule Coophub.Application do
       # {Coophub.Worker, arg},
       %{
         id: CachexRepos,
-        start: {Cachex, :start_link, [:repos_cache, cachex_opts(Mix.env())]}
+        start: {Cachex, :start_link, [@repos_cache_name, cachex_opts(Mix.env())]}
       }
     ]
 

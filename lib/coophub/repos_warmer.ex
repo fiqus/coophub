@@ -3,14 +3,15 @@ defmodule Coophub.Repos.Warmer do
 
   require Logger
 
-  @repos_cache_name :repos_cache
-  @dump_file Application.get_env(:coophub, :cachex_dump)
+  @repos_cache_name Application.get_env(:coophub, :cachex_name)
+  @repos_cache_interval Application.get_env(:coophub, :cachex_interval)
+  @repos_cache_dump Application.get_env(:coophub, :cachex_dump)
 
   @doc """
   Returns the interval for this warmer.
   """
   def interval,
-    do: :timer.minutes(20)
+    do: :timer.minutes(@repos_cache_interval)
 
   @doc """
   Executes this cache warmer.
@@ -20,7 +21,7 @@ defmodule Coophub.Repos.Warmer do
   defp maybe_warm(:dev) do
     Logger.info("Warming repos into cache from dump..", ansi_color: :yellow)
     Process.sleep(2000)
-    Cachex.load(@repos_cache_name, @dump_file)
+    Cachex.load(@repos_cache_name, @repos_cache_dump)
 
     size =
       case Cachex.size(@repos_cache_name) do
@@ -57,8 +58,8 @@ defmodule Coophub.Repos.Warmer do
 
   defp save_cache() do
     Process.sleep(2000)
-    Logger.info("Dumping repos cache to local file '#{@dump_file}'..", ansi_color: :yellow)
-    Cachex.dump(@repos_cache_name, @dump_file)
+    Logger.info("Dumping repos cache to local file '#{@repos_cache_dump}'..", ansi_color: :yellow)
+    Cachex.dump(@repos_cache_name, @repos_cache_dump)
   end
 
   defp get_repos(org, org_info) do
