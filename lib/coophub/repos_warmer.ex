@@ -1,6 +1,8 @@
 defmodule Coophub.Repos.Warmer do
   use Cachex.Warmer
 
+  alias Coophub.Repos
+
   require Logger
 
   @repos_cache_name Application.get_env(:coophub, :cachex_name)
@@ -71,6 +73,7 @@ defmodule Coophub.Repos.Warmer do
         repos =
           body
           |> Jason.decode!()
+          |> put_popularities()
           |> put_languages(org)
 
         Logger.info("Saving #{length(repos)} repos for #{org}", ansi_color: :yellow)
@@ -105,6 +108,13 @@ defmodule Coophub.Repos.Warmer do
         Logger.error("error getting organization: #{inspect(reason)}")
         name
     end
+  end
+
+  defp put_popularities(repos) do
+    Enum.map(repos, fn repo ->
+      popularity = Repos.get_repo_popularity(repo)
+      Map.put(repo, "popularity", popularity)
+    end)
   end
 
   defp put_languages(repos, org) do

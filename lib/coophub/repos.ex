@@ -86,6 +86,28 @@ defmodule Coophub.Repos do
     end
   end
 
+  # based on https://gist.github.com/soulim/d69e5dabc511c325f089
+  @spec get_repo_popularity(map) :: float
+  def get_repo_popularity(repo) do
+    rating =
+      repo["stargazers_count"] * @stargazers_factor + repo["forks_count"] * @forks_factor +
+        repo["open_issues_count"] * @open_issues_factor
+
+    rating =
+      if repo["fork"],
+        do: rating * @fork_coeficient,
+        else: rating
+
+    {:ok, pushed_at_datetime, _} = DateTime.from_iso8601(repo["pushed_at"])
+
+    divisor =
+      (((DateTime.utc_now() |> DateTime.to_unix()) - (pushed_at_datetime |> DateTime.to_unix())) /
+         3600)
+      |> :math.pow(@gravity)
+
+    rating / divisor
+  end
+
   defp sort_by("popular", repos, limit) do
     sort_and_take_repos(repos, &repo_popularity/1, limit)
   end
@@ -108,28 +130,13 @@ defmodule Coophub.Repos do
   defp sort(repos, sort_fn), do: Enum.sort(repos, &(sort_fn.(&1) >= sort_fn.(&2)))
 
   defp repo_pushed_at(repo) do
-    {:ok, datetime, _} = DateTime.from_iso8601(repo["pushed_at"])
-    DateTime.to_unix(datetime)
+    case DateTime.from_iso8601(repo["pushed_at"]) do
+      {:ok, datetime, _} -> DateTime.to_unix(datetime)
+      _ -> 0
+    end
   end
 
-  # based on https://gist.github.com/soulim/d69e5dabc511c325f089
   defp repo_popularity(repo) do
-    rating =
-      repo["stargazers_count"] * @stargazers_factor + repo["forks_count"] * @forks_factor +
-        repo["open_issues_count"] * @open_issues_factor
-
-    rating =
-      if repo["fork"],
-        do: rating * @fork_coeficient,
-        else: rating
-
-    {:ok, pushed_at_datetime, _} = DateTime.from_iso8601(repo["pushed_at"])
-
-    divisor =
-      (((DateTime.utc_now() |> DateTime.to_unix()) - (pushed_at_datetime |> DateTime.to_unix())) /
-         3600)
-      |> :math.pow(@gravity)
-
-    rating / divisor
+    repo["popularity"] || 0
   end
 end

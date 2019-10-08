@@ -74,6 +74,7 @@ defmodule CoophubWeb.Fixtures do
     [
       %{
         "languages" => generate_languages(:surgex),
+        "popularity" => 4,
         "id" => 186_053_039,
         "node_id" => "MDEwOlJlcG9zaXRvcnkxODYwNTMwMzk=",
         "name" => "surgex",
@@ -183,6 +184,7 @@ defmodule CoophubWeb.Fixtures do
       },
       %{
         "languages" => generate_languages(:uktalk),
+        "popularity" => 1,
         "id" => 184_261_975,
         "node_id" => "MDEwOlJlcG9zaXRvcnkxODQyNjE5NzU=",
         "name" => "uk-talk",
@@ -291,6 +293,7 @@ defmodule CoophubWeb.Fixtures do
     [
       %{
         "languages" => generate_languages(:testone),
+        "popularity" => 5,
         "id" => 123_111,
         "node_id" => "123111=",
         "name" => "testone",
@@ -324,6 +327,7 @@ defmodule CoophubWeb.Fixtures do
       },
       %{
         "languages" => generate_languages(:testtwo),
+        "popularity" => 3,
         "id" => 123_222,
         "node_id" => "123222=",
         "name" => "testtwo",
@@ -357,6 +361,7 @@ defmodule CoophubWeb.Fixtures do
       },
       %{
         "languages" => generate_languages(:testthree),
+        "popularity" => 2,
         "id" => 123_333,
         "node_id" => "123333=",
         "name" => "testthree",
