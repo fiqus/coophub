@@ -62,7 +62,10 @@ defmodule Coophub.Repos.Warmer do
   end
 
   defp get_repos(org, org_info) do
-    case HTTPoison.get("https://api.github.com/orgs/#{org}/repos?per_page=100&type=public&sort=pushed&direction=desc", headers()) do
+    case HTTPoison.get(
+           "https://api.github.com/orgs/#{org}/repos?per_page=100&type=public&sort=pushed&direction=desc",
+           headers()
+         ) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         repos =
           body

@@ -43,7 +43,10 @@ defmodule CoophubWeb.RepoController do
 
   defp get_limit(%{"limit" => limit}) do
     try do
-      String.to_integer(limit)
+      case String.to_integer(limit) do
+        num when num > 0 -> num
+        _ -> nil
+      end
     rescue
       _ -> nil
     end
