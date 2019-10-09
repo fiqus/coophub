@@ -108,6 +108,11 @@ defmodule Coophub.Repos do
     rating / divisor
   end
 
+  @spec get_org_popularity(map) :: float
+  def get_org_popularity(%{"repos" => repos}) do
+    Enum.reduce(repos, 0, fn %{"popularity" => pop}, acc -> acc + pop end)
+  end
+
   @spec get_languages_stats(map) :: map
   def get_languages_stats(languages) do
     total = Enum.reduce(languages, 0, fn {_lang, bytes}, acc -> acc + bytes end)

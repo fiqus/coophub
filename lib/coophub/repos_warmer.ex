@@ -111,6 +111,7 @@ defmodule Coophub.Repos.Warmer do
       org_info
       |> Map.put("repos", org_repos)
       |> put_org_languages_stats()
+      |> put_org_popularity()
 
     {org, org_info}
   end
@@ -174,6 +175,11 @@ defmodule Coophub.Repos.Warmer do
   defp put_org_languages_stats(org) do
     stats = Repos.get_org_languages_stats(org)
     Map.put(org, "languages", stats)
+  end
+
+  defp put_org_popularity(org) do
+    popularity = Repos.get_org_popularity(org)
+    Map.put(org, "popularity", popularity)
   end
 
   defp read_yml() do

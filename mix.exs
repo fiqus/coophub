@@ -54,7 +54,14 @@ defmodule Coophub.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      coverage: ["test --cover"]
+      coverage: ["test --cover"],
+      refresh: [&remove_dump_file/1, "phx.server"]
     ]
+  end
+
+  defp remove_dump_file(_) do
+    cache_dump_file = Application.get_env(:coophub, :cachex_dump)
+    Mix.shell().info("Removing dump file '#{cache_dump_file}'..")
+    Mix.shell().cmd("rm #{cache_dump_file}")
   end
 end
