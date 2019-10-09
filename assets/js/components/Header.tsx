@@ -25,7 +25,7 @@ type CoopListProps = {
 const CoopList: React.FC<CoopListProps> = ({navigate}) => {
     const response = useFetch('/api/orgs') as OrgsResponse;
     return <>
-        {Object.entries(response.data).map(([key, org], i) => <DropdownItem key={i} onClick={()=>navigate(`/orgs/${key}`)}>
+        {Object.values(response.data).map((org, i) => <DropdownItem key={i} onClick={()=>navigate(`/orgs/${org.key}`)}>
             {org.name}
         </DropdownItem>)}
     </>
