@@ -11,6 +11,7 @@ export type Language = {
 }
 
 export type Repo  = {
+    key: string;
     description: string;
     name: string;
     stargazers_count: number;
@@ -24,9 +25,10 @@ export type Repo  = {
 export type Repos = Array<Repo>
 
 export type Org = {
-    location: string;
+    key: string;
     name: string;
     description: string;
+    location: string;
     avatar_url: string;
     blog: string;
     email: string;

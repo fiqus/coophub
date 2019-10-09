@@ -1,2 +1,9 @@
 /* This file is for your main application css. */
 
+.container-org-header .org-avatar {
+  width: 200px;
+  border: solid 1px white;
+}
+.container-org-header .org-description {
+  color: #777777;
+}

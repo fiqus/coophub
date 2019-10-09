@@ -51,8 +51,10 @@ defmodule Coophub.Repos.Warmer do
     repos =
       read_yml()
       |> Enum.reduce([], fn {name, _}, acc ->
-        org_data = get_org(name)
-        [get_repos(name, org_data) | acc]
+        case get_org(name) do
+          :error -> acc
+          org_data -> [get_repos(name, org_data) | acc]
+        end
       end)
 
     {:ok, repos}
@@ -81,64 +83,60 @@ defmodule Coophub.Repos.Warmer do
   end
 
   defp get_repos(org, org_info) do
-    Logger.info("Fetching repos for #{org}..", ansi_color: :yellow)
+    org_repos =
+      case HTTPoison.get(
+             "https://api.github.com/orgs/#{org}/repos?per_page=100&type=public&sort=pushed&direction=desc",
+             headers()
+           ) do
+        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+          repos =
+            body
+            |> Jason.decode!()
+            |> put_key(org)
+            |> put_popularities()
+            |> put_languages(org)
 
-    case HTTPoison.get(
-           "https://api.github.com/orgs/#{org}/repos?per_page=100&type=public&sort=pushed&direction=desc",
-           headers()
-         ) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        repos =
-          body
-          |> Jason.decode!()
-          |> put_popularities()
-          |> put_languages(org)
+          Logger.info("Fetched #{length(repos)} repos for #{org}", ansi_color: :yellow)
+          repos
 
-        Logger.info("Fetched #{length(repos)} repos for #{org}", ansi_color: :yellow)
+        {:ok, %HTTPoison.Response{status_code: 404}} ->
+          []
 
-        org_info =
-          org_info
-          |> Map.put("repos", repos)
-          |> put_org_languages_stats()
+        {:error, %HTTPoison.Error{reason: reason}} ->
+          Logger.error("Error getting the repos for '#{org}' from github: #{inspect(reason)}")
+          []
+      end
 
-        {org, org_info}
+    org_info =
+      org_info
+      |> Map.put("repos", org_repos)
+      |> put_org_languages_stats()
 
-      {:ok, %HTTPoison.Response{status_code: 404}} ->
-        {org, org_info}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        Logger.error(
-          "Error getting the repos for '#{org}' from github with reason: #{inspect(reason)}"
-        )
-
-        {org, org_info}
-    end
+    {org, org_info}
   end
 
   defp get_org(name) do
     case HTTPoison.get("https://api.github.com/orgs/#{name}", headers()) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         org = Jason.decode!(body)
-        Logger.info("Fetched organization: #{name}", ansi_color: :yellow)
-        org
+        Logger.info("Fetched organization #{name}! Getting repos..", ansi_color: :yellow)
+        org |> Map.put("key", name)
 
       {:ok, %HTTPoison.Response{status_code: 404}} ->
-        name
+        :error
 
       {:error, %HTTPoison.Error{reason: reason}} ->
-        Logger.error(
-          "Error getting the organization '#{name}' from github with reason: #{inspect(reason)}"
-        )
-
-        name
+        Logger.error("Error getting the organization '#{name}' from github: #{inspect(reason)}")
+        :error
     end
   end
 
+  defp put_key(repos, key) do
+    Enum.map(repos, &Map.put(&1, "key", key))
+  end
+
   defp put_popularities(repos) do
-    Enum.map(repos, fn repo ->
-      popularity = Repos.get_repo_popularity(repo)
-      Map.put(repo, "popularity", popularity)
-    end)
+    Enum.map(repos, &Map.put(&1, "popularity", Repos.get_repo_popularity(&1)))
   end
 
   defp put_languages(repos, org) do
@@ -158,9 +156,7 @@ defmodule Coophub.Repos.Warmer do
 
         {:error, %HTTPoison.Error{reason: reason}} ->
           Logger.error(
-            "Error getting the langages for '#{org}/#{repo_name}' from github with reason: #{
-              inspect(reason)
-            }"
+            "Error getting the langages for '#{org}/#{repo_name}' from github: #{inspect(reason)}"
           )
 
           repo
