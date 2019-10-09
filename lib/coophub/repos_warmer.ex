@@ -112,6 +112,7 @@ defmodule Coophub.Repos.Warmer do
       |> Map.put("repos", org_repos)
       |> put_org_languages_stats()
       |> put_org_popularity()
+      |> put_org_last_activity()
 
     {org, org_info}
   end
@@ -155,7 +156,7 @@ defmodule Coophub.Repos.Warmer do
 
           {:error, %HTTPoison.Error{reason: reason}} ->
             Logger.error(
-              "Error getting the langages for '#{org}/#{repo_name}' from github: #{
+              "Error getting the languages for '#{org}/#{repo_name}' from github: #{
                 inspect(reason)
               }"
             )
@@ -180,6 +181,11 @@ defmodule Coophub.Repos.Warmer do
   defp put_org_popularity(org) do
     popularity = Repos.get_org_popularity(org)
     Map.put(org, "popularity", popularity)
+  end
+
+  defp put_org_last_activity(org) do
+    last_activity = Repos.get_org_last_activity(org)
+    Map.put(org, "last_activity", last_activity)
   end
 
   defp read_yml() do

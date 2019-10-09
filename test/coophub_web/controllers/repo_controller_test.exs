@@ -2,10 +2,24 @@ defmodule CoophubWeb.RepoControllerTest do
   use CoophubWeb.ConnCase
 
   describe "GET /api/orgs" do
-    test "lists all orgs", %{conn: conn} do
+    test "lists all orgs sorted by default: latest", %{conn: conn} do
       data = get_data(conn, :index)
-      assert data["fiqus"]["email"] == "info@fiqus.coop"
-      assert data["test"]["email"] == "info@test.coop"
+      assert length(data) == 2
+      assert Enum.at(data, 0)["email"] == "info@test.coop"
+      assert Enum.at(data, 1)["email"] == "info@fiqus.coop"
+    end
+
+    test "lists all orgs sorted by: popular", %{conn: conn} do
+      data = get_data(conn, :index, %{"sort" => "popular"})
+      assert length(data) == 2
+      assert Enum.at(data, 0)["email"] == "info@fiqus.coop"
+      assert Enum.at(data, 1)["email"] == "info@test.coop"
+    end
+
+    test "lists all orgs according to given limit", %{conn: conn} do
+      data = get_data(conn, :index, %{"sort" => "popular", "limit" => "1"})
+      assert length(data) == 1
+      assert Enum.at(data, 0)["email"] == "info@fiqus.coop"
     end
   end
 

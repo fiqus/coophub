@@ -5,8 +5,11 @@ defmodule CoophubWeb.RepoController do
 
   action_fallback(CoophubWeb.FallbackController)
 
-  def index(conn, _) do
-    case Repos.get_all_orgs() do
+  def index(conn, params) do
+    sort = Map.get(params, "sort", "latest")
+    limit = get_limit(params)
+
+    case Repos.get_orgs(sort, limit) do
       :error -> render_status(conn, 500)
       orgs -> render(conn, "index.json", orgs: orgs)
     end

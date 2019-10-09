@@ -15,6 +15,11 @@ defmodule Coophub.ReposTest do
     end
   end
 
+  describe "get_orgs/2" do
+    test "WIP!" do
+    end
+  end
+
   describe "get_org/1" do
     test "WIP!" do
     end

@@ -43,6 +43,19 @@ defmodule Coophub.Repos do
     end
   end
 
+  @spec get_orgs(String.t(), integer | nil) :: [map] | :error
+  def get_orgs(sort, limit \\ nil) do
+    case get_all_orgs() do
+      orgs when is_map(orgs) ->
+        orgs
+        |> Map.values()
+        |> orgs_sort_by(sort, limit)
+
+      err ->
+        err
+    end
+  end
+
   @spec get_org(String.t()) :: map | nil | :error
   def get_org(org_name) do
     case Cachex.get(@repos_cache_name, org_name) do
@@ -68,10 +81,10 @@ defmodule Coophub.Repos do
   def get_org_repos(org_name, sort, limit \\ nil) do
     case get_org(org_name) do
       %{"repos" => repos} ->
-        sort_by(sort, repos, limit)
+        repos_sort_by(repos, sort, limit)
 
-      other ->
-        other
+      err ->
+        err
     end
   end
 
@@ -79,7 +92,7 @@ defmodule Coophub.Repos do
   def get_repos(sort, limit \\ nil) do
     case get_all_repos() do
       repos when is_list(repos) ->
-        sort_by(sort, repos, limit)
+        repos_sort_by(repos, sort, limit)
 
       err ->
         err
@@ -136,35 +149,61 @@ defmodule Coophub.Repos do
     get_languages_stats(languages)
   end
 
-  defp sort_by("popular", repos, limit) do
-    sort_and_take_repos(repos, &repo_popularity/1, limit)
+  @spec get_org_last_activity(map) :: float
+  def get_org_last_activity(org) do
+    init = org["updated_at"] || org["created_at"]
+
+    Enum.reduce(org["repos"], init, fn repo, org_date ->
+      repo_date = repo["pushed_at"] || repo["updated_at"] || repo["created_at"]
+      if repo_date > org_date, do: repo_date, else: org_date
+    end)
   end
 
-  defp sort_by(_, repos, limit) do
-    sort_and_take_repos(repos, &repo_pushed_at/1, limit)
+  defp orgs_sort_by(orgs, "popular", limit) do
+    sort_and_take(orgs, &sort_field_popularity/1, limit)
   end
 
-  defp sort_and_take_repos(repos, sort_fn, nil) do
-    repos
+  defp orgs_sort_by(orgs, _, limit) do
+    sort_and_take(orgs, &sort_field_last_activity/1, limit)
+  end
+
+  defp repos_sort_by(repos, "popular", limit) do
+    sort_and_take(repos, &sort_field_popularity/1, limit)
+  end
+
+  defp repos_sort_by(repos, _, limit) do
+    sort_and_take(repos, &sort_pushed_at/1, limit)
+  end
+
+  defp sort_and_take(enum, sort_fn, nil) do
+    enum
     |> sort(sort_fn)
   end
 
-  defp sort_and_take_repos(repos, sort_fn, limit) do
-    repos
+  defp sort_and_take(enum, sort_fn, limit) do
+    enum
     |> sort(sort_fn)
     |> Enum.take(limit)
   end
 
-  defp sort(repos, sort_fn), do: Enum.sort(repos, &(sort_fn.(&1) >= sort_fn.(&2)))
+  defp sort(enum, sort_fn), do: Enum.sort(enum, &(sort_fn.(&1) >= sort_fn.(&2)))
 
-  defp repo_pushed_at(repo) do
-    case DateTime.from_iso8601(repo["pushed_at"]) do
+  defp sort_field_last_activity(%{"last_activity" => last_activity}) do
+    sort_field_date(last_activity)
+  end
+
+  defp sort_pushed_at(%{"pushed_at" => pushed_at}) do
+    sort_field_date(pushed_at)
+  end
+
+  defp sort_field_date(date) do
+    case DateTime.from_iso8601(date) do
       {:ok, datetime, _} -> DateTime.to_unix(datetime)
       _ -> 0
     end
   end
 
-  defp repo_popularity(repo) do
-    repo["popularity"] || 0
+  defp sort_field_popularity(data) do
+    data["popularity"] || 0
   end
 end

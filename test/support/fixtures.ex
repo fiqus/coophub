@@ -42,6 +42,7 @@ defmodule CoophubWeb.Fixtures do
          "html_url" => "https://github.com/fiqus",
          "created_at" => "2012-06-25T20:15:48Z",
          "updated_at" => "2019-09-02T01:07:04Z",
+         "last_activity" => "2019-09-03T01:07:04Z",
          "type" => "Organization"
        }},
       {"test",
@@ -65,6 +66,7 @@ defmodule CoophubWeb.Fixtures do
          "html_url" => "https://github.com/test",
          "created_at" => "2011-06-25T20:15:48Z",
          "updated_at" => "2019-06-02T01:07:04Z",
+         "last_activity" => "2019-09-04T01:07:04Z",
          "type" => "Organization"
        }}
     ]
