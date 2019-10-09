@@ -21,6 +21,11 @@ defmodule CoophubWeb.RepoControllerTest do
       assert data["id"] == 123
       assert data["email"] == "info@test.coop"
     end
+
+    test "404 when org is not found", %{conn: conn} do
+      conn = get(conn, Routes.repo_path(conn, :org, "not-found"))
+      assert html_response(conn, 404) =~ "404 - Not Found"
+    end
   end
 
   describe "GET /api/orgs/:name/repos" do
@@ -56,6 +61,11 @@ defmodule CoophubWeb.RepoControllerTest do
       data = get_data(conn, :org_repos, "test", %{"sort" => "popular", "limit" => "1"})
       assert length(data) == 1
       assert Enum.at(data, 0)["name"] == "testone"
+    end
+
+    test "404 when org is not found", %{conn: conn} do
+      conn = get(conn, Routes.repo_path(conn, :org_repos, "not-found"))
+      assert html_response(conn, 404) =~ "404 - Not Found"
     end
   end
 
@@ -110,14 +120,14 @@ defmodule CoophubWeb.RepoControllerTest do
   end
 
   defp get_data(conn, path, params \\ %{}) do
-    call_get(conn, Routes.repo_path(conn, path, params))
+    api_call_get(conn, Routes.repo_path(conn, path, params))
   end
 
   defp get_data(conn, path, params, data) do
-    call_get(conn, Routes.repo_path(conn, path, params, data))
+    api_call_get(conn, Routes.repo_path(conn, path, params, data))
   end
 
-  defp call_get(conn, uri) do
+  defp api_call_get(conn, uri) do
     response = conn |> get(uri) |> json_response(200)
     response["data"]
   end

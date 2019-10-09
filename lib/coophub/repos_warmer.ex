@@ -23,17 +23,22 @@ defmodule Coophub.Repos.Warmer do
   defp maybe_warm(:dev) do
     Logger.info("Warming repos into cache from dump..", ansi_color: :yellow)
     Process.sleep(2000)
-    Cachex.load(@repos_cache_name, @repos_cache_dump)
 
     size =
-      case Cachex.size(@repos_cache_name) do
-        {:ok, size} -> size
-        _ -> 0
+      case Cachex.load(@repos_cache_name, @repos_cache_dump) do
+        {:ok, true} ->
+          Cachex.size(@repos_cache_name) |> elem(1)
+
+        _ ->
+          Logger.info("Dump not found '#{@repos_cache_dump}'", ansi_color: :yellow)
+          0
       end
 
     if size < read_yml() |> Map.keys() |> length() do
+      Logger.info("The dump data needs to be updated!", ansi_color: :yellow)
       load_cache() |> save_cache()
     else
+      Logger.info("The dump was loaded with #{size} orgs!", ansi_color: :yellow)
       :ignore
     end
   end
@@ -53,18 +58,31 @@ defmodule Coophub.Repos.Warmer do
     {:ok, repos}
   end
 
-  defp save_cache(result) do
-    spawn(&save_cache/0)
+  defp save_cache({:ok, repos} = result) do
+    spawn(save_cache(repos))
     result
   end
 
-  defp save_cache() do
-    Process.sleep(2000)
-    Logger.info("Dumping repos cache to local file '#{@repos_cache_dump}'..", ansi_color: :yellow)
-    Cachex.dump(@repos_cache_name, @repos_cache_dump)
+  defp save_cache(repos) do
+    fn ->
+      Process.sleep(2000)
+
+      case Cachex.dump(@repos_cache_name, @repos_cache_dump) do
+        {:ok, true} ->
+          Logger.info(
+            "Saved repos cache dump with #{length(repos)} orgs to local file '#{@repos_cache_dump}'",
+            ansi_color: :green
+          )
+
+        err ->
+          Logger.error("Error saving repos cache dump: #{inspect(err)}")
+      end
+    end
   end
 
   defp get_repos(org, org_info) do
+    Logger.info("Fetching repos for #{org}..", ansi_color: :yellow)
+
     case HTTPoison.get(
            "https://api.github.com/orgs/#{org}/repos?per_page=100&type=public&sort=pushed&direction=desc",
            headers()
@@ -76,7 +94,7 @@ defmodule Coophub.Repos.Warmer do
           |> put_popularities()
           |> put_languages(org)
 
-        Logger.info("Saving #{length(repos)} repos for #{org}", ansi_color: :yellow)
+        Logger.info("Fetched #{length(repos)} repos for #{org}", ansi_color: :yellow)
 
         org_info =
           org_info
@@ -89,7 +107,10 @@ defmodule Coophub.Repos.Warmer do
         {org, org_info}
 
       {:error, %HTTPoison.Error{reason: reason}} ->
-        Logger.error("error getting the repos from github with reason: #{inspect(reason)}")
+        Logger.error(
+          "Error getting the repos for '#{org}' from github with reason: #{inspect(reason)}"
+        )
+
         {org, org_info}
     end
   end
@@ -98,14 +119,17 @@ defmodule Coophub.Repos.Warmer do
     case HTTPoison.get("https://api.github.com/orgs/#{name}", headers()) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         org = Jason.decode!(body)
-        Logger.info("Saving organization: #{name}", ansi_color: :yellow)
+        Logger.info("Fetched organization: #{name}", ansi_color: :yellow)
         org
 
       {:ok, %HTTPoison.Response{status_code: 404}} ->
         name
 
       {:error, %HTTPoison.Error{reason: reason}} ->
-        Logger.error("error getting organization: #{inspect(reason)}")
+        Logger.error(
+          "Error getting the organization '#{name}' from github with reason: #{inspect(reason)}"
+        )
+
         name
     end
   end
@@ -133,7 +157,12 @@ defmodule Coophub.Repos.Warmer do
           repo
 
         {:error, %HTTPoison.Error{reason: reason}} ->
-          Logger.error("error getting languages: #{inspect(reason)}")
+          Logger.error(
+            "Error getting the langages for '#{org}/#{repo_name}' from github with reason: #{
+              inspect(reason)
+            }"
+          )
+
           repo
       end
     end)

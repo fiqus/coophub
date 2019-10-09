@@ -6,10 +6,13 @@ defmodule Coophub.Application do
   use Application
 
   import Cachex.Spec
+  require Logger
 
   @repos_cache_name Application.get_env(:coophub, :cachex_name)
 
   def start(_type, _args) do
+    check_github_token()
+
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
@@ -44,5 +47,18 @@ defmodule Coophub.Application do
       ],
       expiration: expiration(default: :timer.minutes(60))
     ]
+  end
+
+  defp check_github_token() do
+    case System.get_env("GITHUB_OAUTH_TOKEN") do
+      token when is_binary(token) ->
+        Logger.info("Got github token from 'GITHUB_OAUTH_TOKEN' env!", ansi_color: :green)
+
+      _ ->
+        Logger.warn(
+          "No github token given at 'GITHUB_OAUTH_TOKEN' env.. your request rate to github API will be limited!",
+          ansi_color: :red
+        )
+    end
   end
 end

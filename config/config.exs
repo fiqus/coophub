@@ -14,6 +14,7 @@ config :coophub, CoophubWeb.Endpoint,
   render_errors: [view: CoophubWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Coophub.PubSub, adapter: Phoenix.PubSub.PG2]
 
+# Configures Cachex
 config :coophub,
   cachex_name: :repos_cache,
   cachex_interval: 60,
