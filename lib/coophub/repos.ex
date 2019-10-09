@@ -43,7 +43,7 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_orgs(String.t(), integer | nil) :: [map] | :error
+  @spec get_orgs(map, integer | nil) :: [map] | :error
   def get_orgs(sort, limit \\ nil) do
     case get_all_orgs() do
       orgs when is_map(orgs) ->
@@ -77,7 +77,7 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_org_repos(String.t(), String.t(), integer | nil) :: [map] | nil | :error
+  @spec get_org_repos(String.t(), map, integer | nil) :: [map] | nil | :error
   def get_org_repos(org_name, sort, limit \\ nil) do
     case get_org(org_name) do
       %{"repos" => repos} ->
@@ -88,7 +88,7 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_repos(String.t(), integer | nil) :: [map] | nil | :error
+  @spec get_repos(map, integer | nil) :: [map] | nil | :error
   def get_repos(sort, limit \\ nil) do
     case get_all_repos() do
       repos when is_list(repos) ->
@@ -159,34 +159,33 @@ defmodule Coophub.Repos do
     end)
   end
 
-  defp orgs_sort_by(orgs, "popular", limit) do
-    sort_and_take(orgs, &sort_field_popularity/1, limit)
+  defp orgs_sort_by(orgs, %{"field" => "popular", "dir" => dir}, limit) do
+    sort_and_take(orgs, &sort_field_popularity/1, dir, limit)
   end
 
-  defp orgs_sort_by(orgs, _, limit) do
-    sort_and_take(orgs, &sort_field_last_activity/1, limit)
+  defp orgs_sort_by(orgs, %{"dir" => dir}, limit) do
+    sort_and_take(orgs, &sort_field_last_activity/1, dir, limit)
   end
 
-  defp repos_sort_by(repos, "popular", limit) do
-    sort_and_take(repos, &sort_field_popularity/1, limit)
+  defp repos_sort_by(repos, %{"field" => "popular", "dir" => dir}, limit) do
+    sort_and_take(repos, &sort_field_popularity/1, dir, limit)
   end
 
-  defp repos_sort_by(repos, _, limit) do
-    sort_and_take(repos, &sort_pushed_at/1, limit)
+  defp repos_sort_by(repos, %{"dir" => dir}, limit) do
+    sort_and_take(repos, &sort_pushed_at/1, dir, limit)
   end
 
-  defp sort_and_take(enum, sort_fn, nil) do
-    enum
-    |> sort(sort_fn)
+  defp sort_and_take(enum, sort_fn, dir, limit) do
+    sorted = enum |> sort(sort_fn, dir)
+
+    case limit do
+      num when is_integer(num) and num > 0 -> Enum.take(sorted, num)
+      _ -> sorted
+    end
   end
 
-  defp sort_and_take(enum, sort_fn, limit) do
-    enum
-    |> sort(sort_fn)
-    |> Enum.take(limit)
-  end
-
-  defp sort(enum, sort_fn), do: Enum.sort(enum, &(sort_fn.(&1) >= sort_fn.(&2)))
+  defp sort(enum, sort_fn, "asc"), do: Enum.sort(enum, &(sort_fn.(&1) < sort_fn.(&2)))
+  defp sort(enum, sort_fn, _), do: Enum.sort(enum, &(sort_fn.(&1) >= sort_fn.(&2)))
 
   defp sort_field_last_activity(%{"last_activity" => last_activity}) do
     sort_field_date(last_activity)

@@ -6,7 +6,7 @@ defmodule CoophubWeb.RepoController do
   action_fallback(CoophubWeb.FallbackController)
 
   def index(conn, params) do
-    sort = Map.get(params, "sort", "latest")
+    sort = get_sort(params)
     limit = get_limit(params)
 
     case Repos.get_orgs(sort, limit) do
@@ -24,8 +24,8 @@ defmodule CoophubWeb.RepoController do
   end
 
   def org_repos(conn, %{"name" => name} = params) do
+    sort = get_sort(params)
     limit = get_limit(params)
-    sort = Map.get(params, "sort", "latest")
 
     case Repos.get_org_repos(name, sort, limit) do
       :error -> render_status(conn, 500)
@@ -35,8 +35,8 @@ defmodule CoophubWeb.RepoController do
   end
 
   def repos(conn, params) do
+    sort = get_sort(params)
     limit = get_limit(params)
-    sort = Map.get(params, "sort", "latest")
 
     case Repos.get_repos(sort, limit) do
       :error -> render_status(conn, 500)
@@ -44,9 +44,16 @@ defmodule CoophubWeb.RepoController do
     end
   end
 
-  defp get_limit(%{"limit" => limit}) do
+  defp get_sort(params) do
+    %{
+      "field" => Map.get(params, "sort", "latest"),
+      "dir" => Map.get(params, "dir", "desc")
+    }
+  end
+
+  defp get_limit(params) do
     try do
-      case String.to_integer(limit) do
+      case Map.get(params, "limit") |> String.to_integer() do
         num when num > 0 -> num
         _ -> nil
       end
@@ -54,6 +61,4 @@ defmodule CoophubWeb.RepoController do
       _ -> nil
     end
   end
-
-  defp get_limit(_), do: nil
 end
