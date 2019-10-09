@@ -140,65 +140,40 @@ defmodule Coophub.Repos.Warmer do
   end
 
   defp put_languages(repos, org) do
-    repos
-    |> Enum.map(fn repo ->
+    Enum.map(repos, fn repo ->
       repo_name = repo["name"]
+      url = "https://api.github.com/repos/#{org}/#{repo_name}/languages"
 
-      case HTTPoison.get("https://api.github.com/repos/#{org}/#{repo_name}/languages", headers()) do
-        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-          languages = Jason.decode!(body)
+      languages =
+        case HTTPoison.get(url, headers()) do
+          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+            Jason.decode!(body)
 
-          Map.put(repo, "languages", languages)
-          |> put_repo_languages_stats()
+          {:ok, %HTTPoison.Response{status_code: 404}} ->
+            %{}
 
-        {:ok, %HTTPoison.Response{status_code: 404}} ->
-          repo
+          {:error, %HTTPoison.Error{reason: reason}} ->
+            Logger.error(
+              "Error getting the langages for '#{org}/#{repo_name}' from github: #{
+                inspect(reason)
+              }"
+            )
 
-        {:error, %HTTPoison.Error{reason: reason}} ->
-          Logger.error(
-            "Error getting the langages for '#{org}/#{repo_name}' from github: #{inspect(reason)}"
-          )
+            %{}
+        end
 
-          repo
-      end
+      put_repo_languages_stats(repo, languages)
     end)
   end
 
-  defp put_repo_languages_stats(repo) do
-    total =
-      repo["languages"]
-      |> Enum.reduce(0, fn {_lang, bytes}, tot -> tot + bytes end)
-
-    lang_stats =
-      repo["languages"]
-      |> Enum.reduce(%{}, fn {lang, bytes}, acc ->
-        percentage = (bytes / total * 100) |> Float.round(2)
-        Map.put(acc, percentage, lang)
-      end)
-
-    Map.put(repo, "lang_stats", lang_stats)
+  defp put_repo_languages_stats(repo, languages) do
+    stats = Repos.get_languages_stats(languages)
+    Map.put(repo, "languages", stats)
   end
 
   defp put_org_languages_stats(org) do
-    lang_totals =
-      Enum.reduce(org["repos"], %{}, fn repo, acc ->
-        repo["languages"]
-        |> Enum.reduce(acc, fn {lang, bytes}, accum_repo ->
-          prev_cant = Map.get(acc, lang, 0)
-          Map.put(accum_repo, lang, prev_cant + bytes)
-        end)
-      end)
-
-    total = Enum.reduce(lang_totals, 0, fn {_lang, bytes}, tot -> tot + bytes end)
-
-    lang_stats =
-      lang_totals
-      |> Enum.reduce(%{}, fn {lang, bytes}, acc ->
-        percentage = (bytes / total * 100) |> Float.round(2)
-        Map.put(acc, percentage, lang)
-      end)
-
-    Map.put(org, "lang_stats", lang_stats)
+    stats = Repos.get_org_languages_stats(org)
+    Map.put(org, "languages", stats)
   end
 
   defp read_yml() do
