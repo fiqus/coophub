@@ -22,10 +22,15 @@ type CoopListProps = {
     navigate: (url: string) => void;
 }
 
-const CoopList: React.FC<CoopListProps> = ({navigate}) => {
+const fetchAndSortOrgs = () => {
     const response = useFetch('/api/orgs') as OrgsResponse;
+    return Object.values(response.data).sort((a, b) => (a.name.toLowerCase() <= b.name.toLowerCase()) ? 1 : -1);
+};
+
+const CoopList: React.FC<CoopListProps> = ({navigate}) => {
+    const orgs = fetchAndSortOrgs();
     return <>
-        {Object.values(response.data).map((org, i) => <DropdownItem key={i} onClick={()=>navigate(`/orgs/${org.key}`)}>
+        {orgs.map((org, i) => <DropdownItem key={i} onClick={()=>navigate(`/orgs/${org.key}`)}>
             {org.name}
         </DropdownItem>)}
     </>
