@@ -35,5 +35,5 @@ export type Org = {
     blog: string;
     email: string;
     login: string;
-    languages: Language;
+    languages: Array<Language>;
 }

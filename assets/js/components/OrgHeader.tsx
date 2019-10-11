@@ -7,7 +7,7 @@ import {Org} from "../types";
 const OrgHeader:React.FC<{org: Org}> = ({org}) => {
     const marginTop = {marginTop: "1.8%"};
     const marginLeft = {marginLeft: "-1.5%"};
-    const mostImportanLanguages = org["languages"].slice(0, 5);
+    const mostImportanLanguages = org.languages.slice(0, 5);
     return (
         <Jumbotron>
             <Container fluid className="container-org-header">
