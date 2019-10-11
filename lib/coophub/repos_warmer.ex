@@ -111,6 +111,7 @@ defmodule Coophub.Repos.Warmer do
       org_info
       |> Map.put("repos", org_repos)
       |> put_org_languages_stats()
+      |> convert_languages_to_array_and_sort()
       |> put_org_popularity()
       |> put_org_last_activity()
 
@@ -204,6 +205,36 @@ defmodule Coophub.Repos.Warmer do
   defp put_org_last_activity(org) do
     last_activity = Repos.get_org_last_activity(org)
     Map.put(org, "last_activity", last_activity)
+  end
+
+  def convert_languages_to_array_and_sort(org) do
+    languages =
+      Map.get(org, "languages", [])
+      |> Enum.map(fn {lang, stats} -> Map.put(stats, "lang", lang) end)
+      |> languages_sort()
+
+    Map.put(org, "languages", languages)
+    |> convert_repos_languages_to_array()
+  end
+
+  def convert_repos_languages_to_array(org) do
+    repos =
+      Map.get(org, "repos", [])
+      |> Enum.map(fn repo ->
+        languages =
+          Map.get(repo, "languages")
+          |> Enum.map(fn {lang, stats} -> Map.put(stats, "lang", lang) end)
+          |> languages_sort()
+
+        Map.put(repo, "languages", languages)
+      end)
+
+    Map.put(org, "repos", repos)
+  end
+
+  def languages_sort(langs) do
+    langs
+    |> Enum.sort(&(&1["bytes"] > &2["bytes"]))
   end
 
   defp read_yml() do
