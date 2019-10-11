@@ -49,6 +49,7 @@ defmodule Coophub.Repos do
       orgs when is_map(orgs) ->
         orgs
         |> Map.values()
+        |> Enum.map(&(Map.delete(&1, "repos")))
         |> orgs_sort_by(sort, limit)
 
       err ->
