@@ -43,7 +43,10 @@ defmodule CoophubWeb.Fixtures do
          "created_at" => "2012-06-25T20:15:48Z",
          "updated_at" => "2019-09-02T01:07:04Z",
          "last_activity" => "2019-09-03T01:07:04Z",
-         "type" => "Organization"
+         "type" => "Organization",
+         "members" => [
+           %{"id" => 111, "login" => "fiqusmember", "type" => "User"}
+         ]
        }},
       {"test",
        %{
@@ -67,7 +70,10 @@ defmodule CoophubWeb.Fixtures do
          "created_at" => "2011-06-25T20:15:48Z",
          "updated_at" => "2019-06-02T01:07:04Z",
          "last_activity" => "2019-09-04T01:07:04Z",
-         "type" => "Organization"
+         "type" => "Organization",
+         "members" => [
+           %{"id" => 222, "login" => "testmember", "type" => "User"}
+         ]
        }}
     ]
   end

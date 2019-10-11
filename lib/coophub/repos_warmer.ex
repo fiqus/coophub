@@ -117,12 +117,30 @@ defmodule Coophub.Repos.Warmer do
     {org, org_info}
   end
 
+  defp get_members(%{"key" => key} = org) do
+    members =
+      case HTTPoison.get("https://api.github.com/orgs/#{key}/members", headers()) do
+        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+          Jason.decode!(body)
+
+        {:ok, %HTTPoison.Response{status_code: 404}} ->
+          []
+
+        {:error, %HTTPoison.Error{reason: reason}} ->
+          Logger.error("Error getting members for '#{key}' from github: #{inspect(reason)}")
+          []
+      end
+
+    Map.put(org, "members", members)
+  end
+
   defp get_org(name) do
     case HTTPoison.get("https://api.github.com/orgs/#{name}", headers()) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         org = Jason.decode!(body)
-        Logger.info("Fetched organization #{name}! Getting repos..", ansi_color: :yellow)
-        org |> Map.put("key", name)
+        msg = "Fetched organization '#{name}'! Getting members and repos.."
+        Logger.info(msg, ansi_color: :yellow)
+        org |> Map.put("key", name) |> get_members()
 
       {:ok, %HTTPoison.Response{status_code: 404}} ->
         :error
