@@ -7,6 +7,7 @@ import {Org} from "../types";
 const OrgHeader:React.FC<{org: Org}> = ({org}) => {
     const marginTop = {marginTop: "1.8%"};
     const marginLeft = {marginLeft: "-1.5%"};
+    const mostImportanLanguages = org["languages"].slice(0, 5);
     return (
         <Jumbotron>
             <Container fluid className="container-org-header">
@@ -36,6 +37,19 @@ const OrgHeader:React.FC<{org: Org}> = ({org}) => {
                                         aria-label={"Follow @ " + org.login + " on GitHub"}>
                             Follow @{org.login}
                             </GitHubButton>
+                        </p>
+                        <p className="lang-tags">
+                            {mostImportanLanguages.map((language: { lang: string }) => {
+                                return (
+                                    <Button
+                                        key={language.lang}
+                                        color="info"
+                                        size="sm"
+                                    >
+                                        {language.lang}
+                                    </Button>
+                                );
+                            })}
                         </p>
                     </Col>
                 </Row>

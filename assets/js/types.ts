@@ -7,7 +7,9 @@ export type Owner = {
 }
 
 export type Language = {
-    [key: string]: any
+    lang: string,
+    bytes: number,
+    percent: number
 }
 
 export type Repo  = {
@@ -18,7 +20,7 @@ export type Repo  = {
     forks_count: number;
     html_url: string;
     owner: Owner;
-    languages: Language;
+    languages: Array<Language>;
     fork: boolean;
 }
 
@@ -33,4 +35,5 @@ export type Org = {
     blog: string;
     email: string;
     login: string;
+    languages: Language;
 }
