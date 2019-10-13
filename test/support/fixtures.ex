@@ -15,6 +15,7 @@ defmodule CoophubWeb.Fixtures do
       {"fiqus",
        %{
          "repos" => generate_repos(:fiqus),
+         "languages" => generate_languages(:surgex),
          "login" => "fiqus",
          "id" => 1_891_317,
          "node_id" => "MDEyOk9yZ2FuaXphdGlvbjE4OTEzMTc=",
@@ -51,6 +52,7 @@ defmodule CoophubWeb.Fixtures do
       {"test",
        %{
          "repos" => generate_repos(:test),
+         "languages" => generate_languages(:testone),
          "login" => "test",
          "id" => 123,
          "node_id" => "123",
@@ -405,43 +407,102 @@ defmodule CoophubWeb.Fixtures do
   end
 
   def generate_languages(:surgex) do
-    %{
-      "Elixir" => 142_649,
-      "Vue" => 54487,
-      "JavaScript" => 23030,
-      "CSS" => 13607,
-      "HTML" => 1050
-    }
+    [
+      %{
+        "lang" => "Elixir",
+        "bytes" => 142_649,
+        "percentage" => 60.75
+      },
+      %{
+        "lang" => "Vue",
+        "bytes" => 54487,
+        "percentage" => 23.2
+      },
+      %{
+        "lang" => "JavaScript",
+        "bytes" => 23030,
+        "percentage" => 9.81
+      },
+      %{
+        "lang" => "CSS",
+        "bytes" => 13607,
+        "percentage" => 5.79
+      },
+      %{
+        "lang" => "HTML",
+        "bytes" => 1050,
+        "percentage" => 0.45
+      }
+    ]
   end
 
   def generate_languages(:uktalk) do
-    %{
-      "CSS" => 642
-    }
+    [
+      %{
+        "lang" => "CSS",
+        "bytes" => 642,
+        "percentage" => 100
+      }
+    ]
   end
 
   def generate_languages(:testone) do
-    %{
-      "Elixir" => 10_000,
-      "Erlang" => 2_000,
-      "JavaScript" => 4_000,
-      "CSS" => 1_000,
-      "HTML" => 500
-    }
+    [
+      %{
+        "lang" => "Elixir",
+        "bytes" => 5_000,
+        "percentage" => 50
+      },
+      %{
+        "lang" => "Erlang",
+        "bytes" => 2_500,
+        "percentage" => 25
+      },
+      %{
+        "lang" => "JavaScript",
+        "bytes" => 1_500,
+        "percentage" => 15
+      },
+      %{
+        "lang" => "HTML",
+        "bytes" => 1_000,
+        "percentage" => 10
+      }
+    ]
   end
 
   def generate_languages(:testtwo) do
-    %{
-      "Python" => 5_000,
-      "CSS" => 2_000,
-      "HTML" => 1_000
-    }
+    [
+      %{
+        "lang" => "Python",
+        "bytes" => 7_000,
+        "percentage" => 70
+      },
+      %{
+        "lang" => "HTML",
+        "bytes" => 2_000,
+        "percentage" => 20
+      },
+      %{
+        "lang" => "CSS",
+        "bytes" => 1_000,
+        "percentage" => 10
+      }
+    ]
   end
 
   def generate_languages(:testthree) do
-    %{
-      "PHP" => 100,
-      "HTML" => 10
-    }
+    [
+      %{
+        "lang" => "PHP",
+        "bytes" => 90,
+        "percentage" => 90
+      },
+      %{
+        "lang" => "HTML",
+        "bytes" => 10,
+        "percentage" => 10
+      }
+    ]
   end
 end

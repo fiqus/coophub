@@ -6,7 +6,9 @@ defmodule CoophubWeb.RepoControllerTest do
       data = get_data(conn, :index)
       assert length(data) == 2
       assert Enum.at(data, 0)["email"] == "info@test.coop"
+      assert Enum.at(data, 0)["repos"] == nil
       assert Enum.at(data, 1)["email"] == "info@fiqus.coop"
+      assert Enum.at(data, 1)["repos"] == nil
     end
 
     test "lists all orgs sorted by: popular (direction default: desc)", %{conn: conn} do
@@ -38,12 +40,14 @@ defmodule CoophubWeb.RepoControllerTest do
       data = get_data(conn, :org, "fiqus")
       assert data["id"] == 1_891_317
       assert data["email"] == "info@fiqus.coop"
+      assert length(data["languages"]) == 5
     end
 
     test "get a specific org: test", %{conn: conn} do
       data = get_data(conn, :org, "test")
       assert data["id"] == 123
       assert data["email"] == "info@test.coop"
+      assert length(data["languages"]) == 4
     end
 
     test "404 when org is not found", %{conn: conn} do
@@ -58,8 +62,10 @@ defmodule CoophubWeb.RepoControllerTest do
       assert length(data) == 2
       assert Enum.at(data, 0)["id"] == 186_053_039
       assert Enum.at(data, 0)["name"] == "surgex"
+      assert length(Enum.at(data, 0)["languages"]) == 5
       assert Enum.at(data, 1)["id"] == 184_261_975
       assert Enum.at(data, 1)["name"] == "uk-talk"
+      assert length(Enum.at(data, 1)["languages"]) == 1
     end
 
     test "get a specific org repos: test", %{conn: conn} do
@@ -67,10 +73,13 @@ defmodule CoophubWeb.RepoControllerTest do
       assert length(data) == 3
       assert Enum.at(data, 0)["id"] == 123_111
       assert Enum.at(data, 0)["name"] == "testone"
+      assert length(Enum.at(data, 0)["languages"]) == 4
       assert Enum.at(data, 1)["id"] == 123_222
       assert Enum.at(data, 1)["name"] == "testtwo"
+      assert length(Enum.at(data, 1)["languages"]) == 3
       assert Enum.at(data, 2)["id"] == 123_333
       assert Enum.at(data, 2)["name"] == "testthree"
+      assert length(Enum.at(data, 2)["languages"]) == 2
     end
 
     test "get a specific org repos sorted by: popular (direction default: desc)", %{conn: conn} do
