@@ -90,6 +90,15 @@ defmodule CoophubWeb.Fixtures do
         "name" => "surgex",
         "full_name" => "fiqus/surgex",
         "private" => false,
+        "topics" => [
+          "elixir-lang",
+          "elixir-phoenix",
+          "vuejs",
+          "cirugias",
+          "salud",
+          "hospital",
+          "test"
+        ],
         "owner" => %{
           "login" => "fiqus",
           "id" => 1_891_317,
@@ -200,6 +209,9 @@ defmodule CoophubWeb.Fixtures do
         "name" => "uk-talk",
         "full_name" => "fiqus/uk-talk",
         "private" => false,
+        "topics" => [
+          "talks"
+        ],
         "owner" => %{
           "login" => "fiqus",
           "id" => 1_891_317,
@@ -309,6 +321,9 @@ defmodule CoophubWeb.Fixtures do
         "name" => "testone",
         "full_name" => "test/testone",
         "private" => false,
+        "topics" => [
+          "test"
+        ],
         "owner" => %{
           "login" => "test",
           "id" => 123
@@ -343,6 +358,7 @@ defmodule CoophubWeb.Fixtures do
         "name" => "testtwo",
         "full_name" => "test/testtwo",
         "private" => false,
+        "topics" => [],
         "owner" => %{
           "login" => "test",
           "id" => 123
@@ -377,6 +393,9 @@ defmodule CoophubWeb.Fixtures do
         "name" => "testthree",
         "full_name" => "test/testthree",
         "private" => false,
+        "topics" => [
+          "test"
+        ],
         "owner" => %{
           "login" => "test",
           "id" => 123

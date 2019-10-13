@@ -94,6 +94,7 @@ defmodule Coophub.Repos.Warmer do
             |> Jason.decode!()
             |> put_key(org)
             |> put_popularities()
+            |> put_topics(org)
             |> put_languages(org)
 
           Logger.info("Fetched #{length(repos)} repos for #{org}", ansi_color: :yellow)
@@ -157,6 +158,31 @@ defmodule Coophub.Repos.Warmer do
 
   defp put_popularities(repos) do
     Enum.map(repos, &Map.put(&1, "popularity", Repos.get_repo_popularity(&1)))
+  end
+
+  defp put_topics(repos, org) do
+    Enum.map(repos, fn repo ->
+      repo_name = repo["name"]
+      url = "https://api.github.com/repos/#{org}/#{repo_name}/topics"
+
+      topics =
+        case HTTPoison.get(url, headers()) do
+          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+            Jason.decode!(body)
+
+          {:ok, %HTTPoison.Response{status_code: 404}} ->
+            %{}
+
+          {:error, %HTTPoison.Error{reason: reason}} ->
+            Logger.error(
+              "Error getting the topics for '#{org}/#{repo_name}' from github: #{inspect(reason)}"
+            )
+
+            %{}
+        end
+
+      Map.put(repo, "topics", Map.get(topics, "names", []))
+    end)
   end
 
   defp put_languages(repos, org) do
@@ -237,12 +263,16 @@ defmodule Coophub.Repos.Warmer do
   end
 
   defp headers() do
+    headers = [
+      {"Accept", "application/vnd.github.mercy-preview+json"}
+    ]
+
     token = System.get_env("GITHUB_OAUTH_TOKEN")
 
     if is_binary(token) do
-      [{"Authorization", "token #{token}"}]
+      [{"Authorization", "token #{token}"} | headers]
     else
-      []
+      headers
     end
   end
 end

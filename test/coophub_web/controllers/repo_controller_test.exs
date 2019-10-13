@@ -16,6 +16,10 @@ defmodule CoophubWeb.RepoControllerTest do
       assert length(data) == 2
       assert Enum.at(data, 0)["email"] == "info@fiqus.coop"
       assert Enum.at(data, 1)["email"] == "info@test.coop"
+
+      data = get_data(conn, :index, %{"sort" => "popular", "dir" => "desc"})
+      assert Enum.at(data, 0)["email"] == "info@fiqus.coop"
+      assert Enum.at(data, 1)["email"] == "info@test.coop"
     end
 
     test "lists all orgs sorted by: popular (direction: asc)", %{conn: conn} do
@@ -30,6 +34,7 @@ defmodule CoophubWeb.RepoControllerTest do
       data = get_data(conn, :index, params)
       assert length(data) == 1
       assert Enum.at(data, 0)["email"] == "info@test.coop"
+
       data = get_data(conn, :index, %{"limit" => 2})
       assert length(data) == 2
     end
@@ -88,6 +93,11 @@ defmodule CoophubWeb.RepoControllerTest do
       assert Enum.at(data, 0)["name"] == "testone"
       assert Enum.at(data, 1)["name"] == "testtwo"
       assert Enum.at(data, 2)["name"] == "testthree"
+
+      data = get_data(conn, :org_repos, "test", %{"sort" => "popular", "dir" => "desc"})
+      assert Enum.at(data, 0)["name"] == "testone"
+      assert Enum.at(data, 1)["name"] == "testtwo"
+      assert Enum.at(data, 2)["name"] == "testthree"
     end
 
     test "get a specific org repos sorted by: popular (direction: asc)", %{conn: conn} do
@@ -103,6 +113,7 @@ defmodule CoophubWeb.RepoControllerTest do
       data = get_data(conn, :org_repos, "test", params)
       assert length(data) == 1
       assert Enum.at(data, 0)["name"] == "testthree"
+
       data = get_data(conn, :org_repos, "test", %{"limit" => 2})
       assert length(data) == 2
     end
@@ -142,6 +153,13 @@ defmodule CoophubWeb.RepoControllerTest do
       assert Enum.at(data, 2)["name"] == "testtwo"
       assert Enum.at(data, 3)["name"] == "testthree"
       assert Enum.at(data, 4)["name"] == "uk-talk"
+
+      data = get_data(conn, :repos, %{"sort" => "popular", "dir" => "desc"})
+      assert Enum.at(data, 0)["name"] == "testone"
+      assert Enum.at(data, 1)["name"] == "surgex"
+      assert Enum.at(data, 2)["name"] == "testtwo"
+      assert Enum.at(data, 3)["name"] == "testthree"
+      assert Enum.at(data, 4)["name"] == "uk-talk"
     end
 
     test "get all repos sorted by: popular (direction: asc)", %{conn: conn} do
@@ -160,6 +178,7 @@ defmodule CoophubWeb.RepoControllerTest do
       assert length(data) == 2
       assert Enum.at(data, 0)["name"] == "uk-talk"
       assert Enum.at(data, 1)["name"] == "testthree"
+
       data = get_data(conn, :repos, %{"limit" => 3})
       assert length(data) == 3
     end
@@ -167,8 +186,10 @@ defmodule CoophubWeb.RepoControllerTest do
     test "get all repos because limit value is not valid", %{conn: conn} do
       data = get_data(conn, :repos, %{"limit" => ""})
       assert length(data) == 5
+
       data = get_data(conn, :repos, %{"limit" => "0"})
       assert length(data) == 5
+
       data = get_data(conn, :repos, %{"limit" => "wrong!"})
       assert length(data) == 5
     end

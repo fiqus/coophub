@@ -160,6 +160,35 @@ defmodule Coophub.Repos do
     end)
   end
 
+  @spec search(binary | list) :: :error | [map]
+  def search(term) when is_binary(term), do: search([term])
+  @spec search(list, atom) :: :error | [map]
+  def search(terms, style \\ :and) when is_list(terms) do
+    case get_all_repos() do
+      repos when is_list(repos) ->
+        Enum.filter(repos, &is_repo_matching_terms?(&1, terms, style))
+
+      err ->
+        err
+    end
+  end
+
+  defp is_repo_matching_terms?(_repo, [], :and), do: true
+  defp is_repo_matching_terms?(_repo, [], _style), do: false
+
+  defp is_repo_matching_terms?(repo, [term | terms], style) do
+    matches? = is_repo_matching_term?(repo, term)
+
+    if style == :and,
+      do: matches? and is_repo_matching_terms?(repo, terms, style),
+      else: matches? or is_repo_matching_terms?(repo, terms, style)
+  end
+
+  # @TODO WIP: Add more fields to match?
+  defp is_repo_matching_term?(repo, term) do
+    Enum.find(repo["topics"], &(&1 == term)) != nil
+  end
+
   defp orgs_sort_by(orgs, %{"field" => "popular", "dir" => dir}, limit) do
     sort_and_take(orgs, &sort_field_popularity/1, dir, limit)
   end
