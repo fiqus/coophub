@@ -222,7 +222,7 @@ defmodule Coophub.Repos.Warmer do
 
     org
     |> Map.put("languages", stats)
-    |> convert_languages_to_array_and_sort()
+    |> convert_languages_to_list_and_sort()
   end
 
   defp put_org_popularity(org) do
@@ -235,18 +235,18 @@ defmodule Coophub.Repos.Warmer do
     Map.put(org, "last_activity", last_activity)
   end
 
-  defp convert_languages_to_array_and_sort(org) do
+  defp convert_languages_to_list_and_sort(org) do
     repos =
       org
       |> Map.get("repos", [])
-      |> Enum.map(&languages_map_to_array_and_sort/1)
+      |> Enum.map(&languages_map_to_list_and_sort/1)
 
     org
     |> Map.put("repos", repos)
-    |> languages_map_to_array_and_sort()
+    |> languages_map_to_list_and_sort()
   end
 
-  defp languages_map_to_array_and_sort(datamap) do
+  defp languages_map_to_list_and_sort(datamap) do
     languages =
       datamap
       |> Map.get("languages", [])
