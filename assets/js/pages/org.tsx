@@ -19,9 +19,10 @@ const OrgPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
     const response = useFetch(`/api/orgs/${orgName}`) as OrgResponse;
     const repos = useFetch(`/api/orgs/${orgName}/repos?sort=popular`) as OrgReposResponse;
     const org = response.data;
+    const maxLanguages = 5;
 
     return <>
-        <OrgHeader org={org}/>
+        <OrgHeader org={org} maxLanguages={maxLanguages}/>
         <Container>
             <CardColumns>
                 {repos.data.map((repo, i) => (

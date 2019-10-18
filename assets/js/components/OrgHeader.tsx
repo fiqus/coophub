@@ -5,10 +5,10 @@ import {GoLocation, GoLink, GoMail} from "react-icons/all";
 import LanguageTag from './LanguageTag'; 
 import {Org} from "../types";
 
-const OrgHeader:React.FC<{org: Org}> = ({org}) => {
+const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages}) => {
     const marginTop = {marginTop: "1.8%"};
     const marginLeft = {marginLeft: "-1.5%"};
-    const mostImportanLanguages = org.languages.slice(0, 5);
+    const mainLanguages = org.languages.slice(0, maxLanguages);
     return (
         <Jumbotron>
             <Container fluid className="container-org-header">
@@ -40,7 +40,7 @@ const OrgHeader:React.FC<{org: Org}> = ({org}) => {
                             </GitHubButton>
                         </p>
                         <ButtonGroup>
-                            {mostImportanLanguages.map(lang => <LanguageTag key={lang.lang} language={lang} />)}
+                            {mainLanguages.map(lang => <LanguageTag key={lang.lang} language={lang} />)}
                         </ButtonGroup>
                     </Col>
                 </Row>
