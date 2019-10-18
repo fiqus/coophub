@@ -8,10 +8,10 @@
   },
   "dependencies": {
     "@types/react-icons": "^3.0.0",
-    "@types/reactstrap": "^8.0.4",
+    "@types/reactstrap": "^8.0.5",
     "bootstrap": "^4.3.1",
     "fetch-suspense": "^1.2.0",
-    "npm": "^6.11.2",
+    "npm": "^6.12.0",
     "phoenix": "file:deps/phoenix",
     "phoenix_html": "file:deps/phoenix_html",
     "react": "^16.9.0",
@@ -22,11 +22,11 @@
     "reactstrap": "^8.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
+    "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-class-properties": "^7.5.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.5.4",
-    "@babel/preset-env": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-react": "^7.6.3",
     "@babel/preset-typescript": "^7.3.3",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
@@ -36,7 +36,7 @@
     "css-loader": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "typescript": "^3.5.3",
+    "typescript": "^3.6.4",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "4.28.4",
     "webpack-cli": "^3.2.1"

@@ -94,6 +94,7 @@ defmodule Coophub.Repos.Warmer do
             |> Jason.decode!()
             |> put_key(org)
             |> put_popularities()
+            |> put_topics(org)
             |> put_languages(org)
 
           Logger.info("Fetched #{length(repos)} repos for #{org}", ansi_color: :yellow)
@@ -111,7 +112,6 @@ defmodule Coophub.Repos.Warmer do
       org_info
       |> Map.put("repos", org_repos)
       |> put_org_languages_stats()
-      |> convert_languages_to_array_and_sort()
       |> put_org_popularity()
       |> put_org_last_activity()
 
@@ -160,6 +160,31 @@ defmodule Coophub.Repos.Warmer do
     Enum.map(repos, &Map.put(&1, "popularity", Repos.get_repo_popularity(&1)))
   end
 
+  defp put_topics(repos, org) do
+    Enum.map(repos, fn repo ->
+      repo_name = repo["name"]
+      url = "https://api.github.com/repos/#{org}/#{repo_name}/topics"
+
+      topics =
+        case HTTPoison.get(url, headers()) do
+          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+            Jason.decode!(body)
+
+          {:ok, %HTTPoison.Response{status_code: 404}} ->
+            %{}
+
+          {:error, %HTTPoison.Error{reason: reason}} ->
+            Logger.error(
+              "Error getting the topics for '#{org}/#{repo_name}' from github: #{inspect(reason)}"
+            )
+
+            %{}
+        end
+
+      Map.put(repo, "topics", Map.get(topics, "names", []))
+    end)
+  end
+
   defp put_languages(repos, org) do
     Enum.map(repos, fn repo ->
       repo_name = repo["name"]
@@ -194,7 +219,10 @@ defmodule Coophub.Repos.Warmer do
 
   defp put_org_languages_stats(org) do
     stats = Repos.get_org_languages_stats(org)
-    Map.put(org, "languages", stats)
+
+    org
+    |> Map.put("languages", stats)
+    |> convert_languages_to_list_and_sort()
   end
 
   defp put_org_popularity(org) do
@@ -207,34 +235,25 @@ defmodule Coophub.Repos.Warmer do
     Map.put(org, "last_activity", last_activity)
   end
 
-  def convert_languages_to_array_and_sort(org) do
-    languages =
-      Map.get(org, "languages", [])
-      |> Enum.map(fn {lang, stats} -> Map.put(stats, "lang", lang) end)
-      |> languages_sort()
-
-    Map.put(org, "languages", languages)
-    |> convert_repos_languages_to_array()
-  end
-
-  def convert_repos_languages_to_array(org) do
+  defp convert_languages_to_list_and_sort(org) do
     repos =
-      Map.get(org, "repos", [])
-      |> Enum.map(fn repo ->
-        languages =
-          Map.get(repo, "languages")
-          |> Enum.map(fn {lang, stats} -> Map.put(stats, "lang", lang) end)
-          |> languages_sort()
+      org
+      |> Map.get("repos", [])
+      |> Enum.map(&languages_map_to_list_and_sort/1)
 
-        Map.put(repo, "languages", languages)
-      end)
-
-    Map.put(org, "repos", repos)
+    org
+    |> Map.put("repos", repos)
+    |> languages_map_to_list_and_sort()
   end
 
-  def languages_sort(langs) do
-    langs
-    |> Enum.sort(&(&1["bytes"] > &2["bytes"]))
+  defp languages_map_to_list_and_sort(datamap) do
+    languages =
+      datamap
+      |> Map.get("languages", [])
+      |> Enum.map(fn {lang, stats} -> Map.put(stats, "lang", lang) end)
+      |> Enum.sort(&(&1["bytes"] > &2["bytes"]))
+
+    Map.put(datamap, "languages", languages)
   end
 
   defp read_yml() do
@@ -244,12 +263,16 @@ defmodule Coophub.Repos.Warmer do
   end
 
   defp headers() do
+    headers = [
+      {"Accept", "application/vnd.github.mercy-preview+json"}
+    ]
+
     token = System.get_env("GITHUB_OAUTH_TOKEN")
 
     if is_binary(token) do
-      [{"Authorization", "token #{token}"}]
+      [{"Authorization", "token #{token}"} | headers]
     else
-      []
+      headers
     end
   end
 end
