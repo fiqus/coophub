@@ -48,8 +48,11 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
         history.push(url);
     };
 
-    return <Navbar color="light" light expand="md">
-        <NavbarBrand to="/" tag={Link} className="mr-auto">CoopHub</NavbarBrand>
+    return <Navbar className="navbar-reduce navbar-b navbar-trans navbar-expand-md fixed-top">
+        <NavbarBrand to="/" tag={Link} className="js-scroll" >
+            <img id="logo" src="/images/coophub.png" alt=""/>
+            CoopHub
+        </NavbarBrand>
         <NavbarToggler onClick={toggleNavBar}/>
         <Collapse isOpen={!collapsed} navbar>
             <Nav className="ml-auto" navbar>

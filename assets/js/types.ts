@@ -4,6 +4,7 @@ export type ApiResponse<T> = {
 
 export type Owner = {
     login: string;
+    avatar_url: string;
 }
 
 export type Language = {

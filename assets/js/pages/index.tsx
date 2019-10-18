@@ -1,12 +1,13 @@
 import * as React from 'react';
 import {Suspense} from 'react';
 import {RouteComponentProps} from 'react-router-dom';
-import {CardDeck, Container, Jumbotron} from "reactstrap";
+import {CardDeck, Container} from "reactstrap";
 import useFetch from 'fetch-suspense';
 
 import 'bootstrap/dist/css/bootstrap.css';
+
 import {ApiResponse, Repo} from "../types";
-import RepoCardIndex from "../components/RepoCardIndex";
+import RepoCard from "../components/RepoCard";
 import FullWidthSpinner from "../components/FullWidthSpinner";
 
 type ReposResponse = ApiResponse<[Repo]>
@@ -15,25 +16,37 @@ type RepoListProps = {url:string}
 const RepoList: React.FC<RepoListProps> = ({url}) => {
     const response = useFetch(url) as ReposResponse;
     return <CardDeck>
-        {response.data.map((repo, i)=><RepoCardIndex repo={repo} key={i}/>)}
+        {response.data.map((repo, i)=><RepoCard repo={repo} key={i}/>)}
     </CardDeck>;
 };
 
 const HomePage: React.FC<RouteComponentProps> = () => {
     return <>
-        <Jumbotron fluid>
-            <Container fluid>
-                <h1 className="display-3">CoopHub</h1>
-            </Container>
-        </Jumbotron>
-
-        <Container>
-            <h2>Popular Repos</h2>
+        <Container className="pt-xl-5">
+            <div class="title-box text-center">
+                <h3 class="title-a">
+                Popular Repos
+                </h3>
+                <p class="subtitle-a">
+                Most popular repos from coops
+                </p>
+                <div class="line-mf"></div>
+            </div>
             <Suspense fallback={<FullWidthSpinner/>}>
                 <RepoList url={"/api/repos?limit=3&sort=popular"}/>
             </Suspense>
             <br />
-            <h2>Latest Repos</h2>
+            <br />
+            <br />
+            <div id="latest" class="title-box text-center">
+                <h3 class="title-a">
+                Latest Repos
+                </h3>
+                <p class="subtitle-a">
+                What's cooking at cooperatives?
+                </p>
+                <div class="line-mf"></div>
+            </div>
             <Suspense fallback={<FullWidthSpinner/>}>
                 <RepoList url={"/api/repos?limit=3&sort=latest"}/>
             </Suspense>

@@ -6,49 +6,49 @@ import LanguageTag from './LanguageTag';
 import {Org} from "../types";
 
 const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages}) => {
-    const marginTop = {marginTop: "1.8%"};
-    const marginLeft = {marginLeft: "-1.5%"};
     const mainLanguages = org.languages.slice(0, maxLanguages);
+
     return (
-        <Jumbotron>
-            <Container fluid className="container-org-header">
-                <Row>
-                    <Col xs={{size: 1.5, offset: 2}}>
-                      <img className="org-avatar" src={org.avatar_url}/>
-                    </Col>
-                    <Col xs="auto">
-                        <h1 className="display-4" style={marginTop}>{org.name}</h1>
-                        <div className="org-description">{org.description}</div>
-                        <ButtonGroup style={marginLeft}>
-                            <Button color="link">
-                                <GoLocation/> { org.location }
-                            </Button>
-                            <Button color="link">
-                                <GoMail/> { org.email }
-                            </Button>
-                            <Button color="link"> 
-                                <CardLink href={org.blog}> 
-                                    <GoLink/> { org.blog }
-                                </CardLink>
-                            </Button>
-                        </ButtonGroup>
-                        <p style={marginTop}>
-                            <GitHubButton href={"https://github.com/" + org.login} data-size="large"
-                                        data-show-count
-                                        aria-label={"Follow @ " + org.login + " on GitHub"}>
-                            Follow @{org.login}
-                            </GitHubButton>
-                        </p>
-                        <ButtonGroup>
-                            {mainLanguages.map(lang => <LanguageTag key={lang.lang} language={lang} />)}
-                        </ButtonGroup>
-                    </Col>
-                </Row>
-                <Row>
-                    
-                </Row>
-            </Container>
-        </Jumbotron>
+        
+        <Container>
+            
+            <div class="title-box text-center mt-5">
+                <img class="center-block" src={org.avatar_url} alt="" className="rounded-circle b-shadow-a avatar_coop"/>
+                <h3 class="title-a">
+                {org.name}
+                </h3>
+                <p class="subtitle-a">
+                {org.description}
+                </p>
+                <div class="line-mf mb-3"></div>
+                <ButtonGroup>
+                    <Button color="link">
+                        <GoLocation/> { org.location }
+                    </Button>
+                    <Button color="link">
+                        <GoMail/> { org.email }
+                    </Button>
+                    <Button color="link"> 
+                        <CardLink href={org.blog}> 
+                            <GoLink/> { org.blog }
+                        </CardLink>
+                    </Button>
+                </ButtonGroup>
+                <br/>
+                <ButtonGroup>
+                    {mainLanguages.map(lang => <LanguageTag key={lang.lang} language={lang} />)}
+                </ButtonGroup>
+                <p className="mt-2">
+                    <GitHubButton  href={"https://github.com/" + org.login} data-size="large"
+                                data-show-count
+                                aria-label={"Follow @ " + org.login + " on GitHub"}>
+                    Follow @{org.login}
+                    </GitHubButton>
+                </p>
+            </div>
+            
+        </Container>
+        
     );
 };
 

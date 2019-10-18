@@ -2,6 +2,7 @@ import * as React from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
 import Header from './components/Header';
+import Footer from './components/Footer';
 import HomePage from './pages';
 import OrgPage from './pages/org';
 import {Suspense} from "react";
@@ -19,6 +20,7 @@ export default class Root extends React.Component {
                             <Route path="/orgs/:name" component={OrgPage} />
                         </Switch>
                     </Suspense>
+                    <Footer/>
                 </BrowserRouter>
             </>
         )
