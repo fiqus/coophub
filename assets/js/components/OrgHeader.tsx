@@ -40,7 +40,7 @@ const OrgHeader:React.FC<{org: Org}> = ({org}) => {
                             </GitHubButton>
                         </p>
                         <ButtonGroup>
-                            {mostImportanLanguages.map(lang => <LanguageTag language={lang} />)}
+                            {mostImportanLanguages.map(lang => <LanguageTag key={lang.lang} language={lang} />)}
                         </ButtonGroup>
                     </Col>
                 </Row>
