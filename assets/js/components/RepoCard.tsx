@@ -6,7 +6,7 @@ import Helpers from "../helpers";
 
 const RepoCard:React.FC<{repo: Repo}> = ({repo}) => {
     return (
-        <Card className="card card-blog">
+        <Card className="card card-blog mb-4">
             <CardHeader style={{color: "grey"}}><h5><a href={repo.html_url}>{repo.name}</a></h5></CardHeader>
             <CardBody>
                 <div class="card-category-box">
