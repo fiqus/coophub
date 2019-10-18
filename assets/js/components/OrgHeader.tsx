@@ -2,6 +2,7 @@ import React from 'react';
 import GitHubButton from 'react-github-btn';
 import {Container, Jumbotron, ButtonGroup, Button, CardLink, Row, Col} from "reactstrap";
 import {GoLocation, GoLink, GoMail} from "react-icons/all";
+import LanguageTag from './LanguageTag'; 
 import {Org} from "../types";
 
 const OrgHeader:React.FC<{org: Org}> = ({org}) => {
@@ -38,19 +39,9 @@ const OrgHeader:React.FC<{org: Org}> = ({org}) => {
                             Follow @{org.login}
                             </GitHubButton>
                         </p>
-                        <p className="lang-tags">
-                            {mostImportanLanguages.map((language: { lang: string }) => {
-                                return (
-                                    <Button
-                                        key={language.lang}
-                                        color="info"
-                                        size="sm"
-                                    >
-                                        {language.lang}
-                                    </Button>
-                                );
-                            })}
-                        </p>
+                        <ButtonGroup>
+                            {mostImportanLanguages.map(lang => <LanguageTag language={lang} />)}
+                        </ButtonGroup>
                     </Col>
                 </Row>
                 <Row>

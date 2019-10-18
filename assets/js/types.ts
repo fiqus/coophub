@@ -9,7 +9,7 @@ export type Owner = {
 export type Language = {
     lang: string,
     bytes: number,
-    percent: number
+    percentage: number
 }
 
 export type Repo  = {
