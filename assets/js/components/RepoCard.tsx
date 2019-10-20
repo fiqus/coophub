@@ -9,22 +9,22 @@ const RepoCard:React.FC<{repo: Repo}> = ({repo}) => {
         <Card className="card card-blog mb-4">
             <CardHeader style={{color: "grey"}}><h5><a href={repo.html_url}>{repo.name}</a></h5></CardHeader>
             <CardBody>
-                <div class="card-category-box">
-                    <div class="card-category">
-                        <h6 class="category">{Helpers.get_languages(repo.languages)}</h6>
+                <div className="card-category-box">
+                    <div className="card-category">
+                        <h6 className="category">{Helpers.get_languages(repo.languages)}</h6>
                     </div>
                     
                 </div>
                 <CardText>{repo.fork ? "(fork) " : ""}{repo.description}</CardText>
             </CardBody>
             <CardFooter>
-                <div class="post-author">
+                <div className="post-author">
                     <a href={`orgs/${repo.key}`}>
-                        <img src={repo.owner.avatar_url} alt="" class="avatar rounded-circle"/>
-                        <span class="author">{repo.owner.login}</span>
+                        <img src={repo.owner.avatar_url} alt="" className="avatar rounded-circle"/>
+                        <span className="author">{repo.owner.login}</span>
                     </a>
                 </div>
-                <div class="post-date">
+                <div className="post-date">
                     <CardLink href={`${repo.html_url}/fork`}><GoRepoForked/> {repo.forks_count}</CardLink>
                     <CardLink href={`${repo.html_url}/stargazers`}><GoStar/>{repo.stargazers_count}</CardLink>
                 </div>

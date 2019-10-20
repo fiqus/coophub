@@ -1,12 +1,12 @@
 import * as React from "react";
 
 const Footer: React.FC = () =>
-    <footer class="mt-xl-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="copyright-box">
-                        <div class="credits">
+    <footer className="mt-xl-5">
+        <div className="container">
+            <div className="row">
+                <div className="col-sm-12">
+                    <div className="copyright-box">
+                        <div className="credits">
                         Created by <a href="https://fiqus.coop/">Fiqus</a>
                         </div>
                     </div>
