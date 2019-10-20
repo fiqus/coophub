@@ -10,9 +10,7 @@ const LanguageTag:React.FC<{language: Language}> = ({language}) => {
             size="sm"
             style={{marginRight: '10px'}}
         >
-            {language.lang}
-            {' | '}
-            {language.percentage}%
+            <b>{language.lang}</b> | {language.percentage}%
         </Button>
     );
 };

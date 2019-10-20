@@ -5,17 +5,20 @@ import {Repo} from "../types";
 import Helpers from "../helpers";
 
 const RepoCard:React.FC<{repo: Repo}> = ({repo}) => {
+    const langs = Helpers.list_languages(repo.languages);
+
     return (
         <Card className="card card-blog mb-4">
             <CardHeader style={{color: "grey"}}><h5><a href={repo.html_url}>{repo.name}</a></h5></CardHeader>
             <CardBody>
-                <div className="card-category-box">
-                    <div className="card-category">
-                        <h6 className="category">{Helpers.get_languages(repo.languages)}</h6>
+                {langs &&
+                    <div className="card-category-box">
+                        <div className="card-category">
+                            <h6 className="category">{langs}</h6>
+                        </div>
                     </div>
-                    
-                </div>
-                <CardText>{repo.fork ? "(fork) " : ""}{repo.description}</CardText>
+                }
+                <CardText>{repo.fork ? "(fork) " : ""}{repo.description || <i>- no description -</i>}</CardText>
             </CardBody>
             <CardFooter>
                 <div className="post-author">

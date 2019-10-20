@@ -1,13 +1,8 @@
 const Helpers = {
-  get_languages(langs) {
-    
-    if (langs.length > 1) {
-        return langs[0].lang + ", " + langs[1].lang;
-    } else if (langs.length === 1) {
-        return langs[0].lang;
-    } else {
-        return "";
-    }
+  list_languages(langs, num = 2, separator = "+") {
+    return langs.slice(0, num)
+      .map(l => l.lang)
+      .join(` ${separator} `);
   }
 };
 
