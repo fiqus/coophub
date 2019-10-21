@@ -1,3 +1,5 @@
+import 'bootstrap/dist/css/bootstrap.css';
+import '../css/theme.css';
 import '../css/app.css';
 
 import 'phoenix_html';

@@ -5,6 +5,7 @@ defmodule Coophub.Repos.Warmer do
 
   require Logger
 
+  @repos_max_fetch Application.get_env(:coophub, :fetch_max_repos)
   @repos_cache_name Application.get_env(:coophub, :cachex_name)
   @repos_cache_interval Application.get_env(:coophub, :cachex_interval)
   @repos_cache_dump Application.get_env(:coophub, :cachex_dump)
@@ -34,12 +35,12 @@ defmodule Coophub.Repos.Warmer do
           0
       end
 
-    if size < read_yml() |> Map.keys() |> length() do
+    if size != read_yml() |> Map.keys() |> length() do
       Logger.info("The dump data needs to be updated!", ansi_color: :yellow)
       load_cache() |> save_cache()
     else
       Logger.info("The dump was loaded with #{size} orgs!", ansi_color: :yellow)
-      :ignore
+      refresh_cache()
     end
   end
 
@@ -57,12 +58,12 @@ defmodule Coophub.Repos.Warmer do
         end
       end)
 
-    {:ok, repos}
+    {:ok, repos, ttl: :timer.minutes(@repos_cache_interval * 10)}
   end
 
-  defp save_cache({:ok, repos} = result) do
+  defp save_cache({:ok, repos, _}) do
     spawn(save_cache(repos))
-    result
+    {:ok, repos, ttl: :timer.minutes(@repos_cache_interval + 1)}
   end
 
   defp save_cache(repos) do
@@ -82,16 +83,22 @@ defmodule Coophub.Repos.Warmer do
     end
   end
 
+  defp refresh_cache() do
+    Cachex.keys(@repos_cache_name)
+    |> elem(1)
+    |> Enum.each(&Cachex.expire(@repos_cache_name, &1, :timer.minutes(@repos_cache_interval + 1)))
+
+    :ignore
+  end
+
   defp get_repos(org, org_info) do
     org_repos =
-      case HTTPoison.get(
-             "https://api.github.com/orgs/#{org}/repos?per_page=100&type=public&sort=pushed&direction=desc",
-             headers()
+      case call_api_get(
+             "orgs/#{org}/repos?per_page=#{@repos_max_fetch}&type=public&sort=pushed&direction=desc"
            ) do
-        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        {:ok, body} ->
           repos =
             body
-            |> Jason.decode!()
             |> put_key(org)
             |> put_popularities()
             |> put_topics(org)
@@ -100,10 +107,7 @@ defmodule Coophub.Repos.Warmer do
           Logger.info("Fetched #{length(repos)} repos for #{org}", ansi_color: :yellow)
           repos
 
-        {:ok, %HTTPoison.Response{status_code: 404}} ->
-          []
-
-        {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, reason} ->
           Logger.error("Error getting the repos for '#{org}' from github: #{inspect(reason)}")
           []
       end
@@ -120,14 +124,11 @@ defmodule Coophub.Repos.Warmer do
 
   defp get_members(%{"key" => key} = org) do
     members =
-      case HTTPoison.get("https://api.github.com/orgs/#{key}/members", headers()) do
-        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-          Jason.decode!(body)
+      case call_api_get("orgs/#{key}/members") do
+        {:ok, body} ->
+          body
 
-        {:ok, %HTTPoison.Response{status_code: 404}} ->
-          []
-
-        {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, reason} ->
           Logger.error("Error getting members for '#{key}' from github: #{inspect(reason)}")
           []
       end
@@ -136,17 +137,15 @@ defmodule Coophub.Repos.Warmer do
   end
 
   defp get_org(name) do
-    case HTTPoison.get("https://api.github.com/orgs/#{name}", headers()) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        org = Jason.decode!(body)
-        msg = "Fetched organization '#{name}'! Getting members and repos.."
+    case call_api_get("orgs/#{name}") do
+      {:ok, org} ->
+        msg =
+          "Fetched '#{name}' organization! Getting members and repos (max=#{@repos_max_fetch}).."
+
         Logger.info(msg, ansi_color: :yellow)
         org |> Map.put("key", name) |> get_members()
 
-      {:ok, %HTTPoison.Response{status_code: 404}} ->
-        :error
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
+      {:error, reason} ->
         Logger.error("Error getting the organization '#{name}' from github: #{inspect(reason)}")
         :error
     end
@@ -163,17 +162,13 @@ defmodule Coophub.Repos.Warmer do
   defp put_topics(repos, org) do
     Enum.map(repos, fn repo ->
       repo_name = repo["name"]
-      url = "https://api.github.com/repos/#{org}/#{repo_name}/topics"
 
       topics =
-        case HTTPoison.get(url, headers()) do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            Jason.decode!(body)
+        case call_api_get("repos/#{org}/#{repo_name}/topics") do
+          {:ok, body} ->
+            body
 
-          {:ok, %HTTPoison.Response{status_code: 404}} ->
-            %{}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
+          {:error, reason} ->
             Logger.error(
               "Error getting the topics for '#{org}/#{repo_name}' from github: #{inspect(reason)}"
             )
@@ -188,17 +183,13 @@ defmodule Coophub.Repos.Warmer do
   defp put_languages(repos, org) do
     Enum.map(repos, fn repo ->
       repo_name = repo["name"]
-      url = "https://api.github.com/repos/#{org}/#{repo_name}/languages"
 
       languages =
-        case HTTPoison.get(url, headers()) do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            Jason.decode!(body)
+        case call_api_get("repos/#{org}/#{repo_name}/languages") do
+          {:ok, body} ->
+            body
 
-          {:ok, %HTTPoison.Response{status_code: 404}} ->
-            %{}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
+          {:error, reason} ->
             Logger.error(
               "Error getting the languages for '#{org}/#{repo_name}' from github: #{
                 inspect(reason)
@@ -273,6 +264,21 @@ defmodule Coophub.Repos.Warmer do
       [{"Authorization", "token #{token}"} | headers]
     else
       headers
+    end
+  end
+
+  defp call_api_get(path) do
+    url = "https://api.github.com/#{path}"
+
+    case HTTPoison.get(url, headers()) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        {:ok, Jason.decode!(body)}
+
+      {:ok, %HTTPoison.Response{status_code: 404}} ->
+        {:error, "Not found: #{url}"}
+
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, reason}
     end
   end
 end

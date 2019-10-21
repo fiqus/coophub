@@ -6,6 +6,7 @@ config :coophub, CoophubWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+# Configures Cachex
 config :coophub,
   cachex_name: :repos_cache_test
 

@@ -12,46 +12,47 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages
         
         <Container>
             
-            <div class="title-box text-center mt-5">
-                <img className="center-block" src={org.avatar_url} alt="" className="rounded-circle b-shadow-a avatar_coop"/>
+            <div className="title-box text-center mt-5">
+                <img src={org.avatar_url} alt="" className="center-block rounded-circle b-shadow-a avatar_coop"/>
                 <h3 className="title-a mt-4">
                 {org.name}
                 </h3>
-                <p class="subtitle-a">
+                <p className="subtitle-a">
                 {org.description}
                 </p>
-                <div class="line-mf mb-3"></div>
-                <Row>
-                    <Container>
-                        <div class="skill-mf">
-                            <Row>
-                                {mainLanguages.map(lang => <LanguageProgressBar key={lang.lang} language={lang} />)}
-                            </Row>
-                        </div>
-                        <ButtonGroup>
-                            <Button color="link">
-                                <GoLocation/> { org.location }
-                            </Button>
-                            <Button color="link">
-                                <GoMail/> { org.email }
-                            </Button>
-                            <Button color="link"> 
-                                <CardLink href={org.blog}> 
-                                    <GoLink/> { org.blog }
-                                </CardLink>
-                            </Button>
-                        </ButtonGroup>
-                        <br/>
-                        <p className="mt-2">
-                            <GitHubButton  href={"https://github.com/" + org.login} data-size="large"
-                                        data-show-count
-                                        aria-label={"Follow @ " + org.login + " on GitHub"}>
-                            Follow @{org.login}
-                            </GitHubButton>
-                        </p>
-                    </Container>
-                </Row>
-                
+                <div className="line-mf mb-3"></div>
+                <div class="skill-mf">
+                    <Row>
+                        {mainLanguages.map(lang => <LanguageProgressBar key={lang.lang} language={lang} />)}
+                    </Row>
+                </div>
+                <ButtonGroup>
+                    {org.location &&
+                        <Button color="link">
+                            <GoLocation/> { org.location }
+                        </Button>
+                    }
+                    {org.email &&
+                        <Button color="link">
+                            <GoMail/> { org.email }
+                        </Button>
+                    }
+                    {org.blog &&
+                        <Button color="link">
+                            <CardLink href={org.blog}> 
+                            <GoLink/> { org.blog }
+                        </CardLink>
+                        </Button>
+                    }
+                </ButtonGroup>
+                <br/>
+                <p className="mt-2">
+                    <GitHubButton  href={"https://github.com/" + org.login} data-size="large"
+                                data-show-count
+                                aria-label={"Follow @ " + org.login + " on GitHub"}>
+                    Follow @{org.login}
+                    </GitHubButton>
+                </p>
             </div>
             
             

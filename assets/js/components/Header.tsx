@@ -24,7 +24,7 @@ type CoopListProps = {
 
 const fetchAndSortOrgs = () => {
     const response = useFetch('/api/orgs') as OrgsResponse;
-    return Object.values(response.data).sort((a, b) => (a.name.toLowerCase() <= b.name.toLowerCase()) ? 1 : -1);
+    return Object.values(response.data).sort((a, b) => (a.name.toLowerCase() <= b.name.toLowerCase()) ? -1 : 1);
 };
 
 const CoopList: React.FC<CoopListProps> = ({navigate}) => {
