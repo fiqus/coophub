@@ -9,7 +9,7 @@ use Mix.Config
 config :coophub,
        CoophubWeb.Endpoint,
        http: [
-         port: 4000
+         port: System.get_env("PORT", "4000")
        ],
        debug_errors: true,
        code_reloader: true,
