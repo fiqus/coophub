@@ -50,8 +50,7 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
 
     return <Navbar className="navbar-reduce navbar-b navbar-trans navbar-expand-md fixed-top">
         <NavbarBrand to="/" tag={Link} className="js-scroll" >
-            <img id="logo" src="/images/coophub.png" alt=""/>
-            CoopHub
+            <img id="logo" src="/images/logo-light.png" alt=""/>
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavBar}/>
         <Collapse isOpen={!collapsed} navbar>
