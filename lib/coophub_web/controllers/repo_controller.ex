@@ -44,6 +44,13 @@ defmodule CoophubWeb.RepoController do
     end
   end
 
+  def topics(conn, _params) do
+    case Repos.get_topics() do
+      :error -> render_status(conn, 500)
+      topics -> render(conn, "topics.json", topics: topics)
+    end
+  end
+
   defp get_sort(params) do
     %{
       "field" => Map.get(params, "sort", "latest"),

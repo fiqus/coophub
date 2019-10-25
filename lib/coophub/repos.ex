@@ -100,6 +100,19 @@ defmodule Coophub.Repos do
     end
   end
 
+  def get_topics() do
+    case get_all_repos() do
+      :error ->
+        :error
+
+      repos ->
+        repos
+        |> Enum.map(fn repo -> Map.get(repo, "topics", []) end)
+        |> List.flatten()
+        |> Enum.uniq()
+    end
+  end
+
   # based on https://gist.github.com/soulim/d69e5dabc511c325f089
   @spec get_repo_popularity(map) :: float
   def get_repo_popularity(repo) do
