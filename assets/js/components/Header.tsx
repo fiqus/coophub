@@ -14,11 +14,15 @@ import {
     UncontrolledDropdown
 } from "reactstrap";
 import useFetch from 'fetch-suspense';
-import {ApiResponse, Org} from "../types";
+import {ApiResponse, Org, Topic} from "../types";
 
 type OrgsResponse = ApiResponse<[Org]>
 
 type CoopListProps = {
+    navigate: (url: string) => void;
+}
+
+type TopicsListProps = {
     navigate: (url: string) => void;
 }
 
@@ -32,6 +36,16 @@ const CoopList: React.FC<CoopListProps> = ({navigate}) => {
     return <>
         {orgs.map((org, i) => <DropdownItem key={i} onClick={()=>navigate(`/orgs/${org.key}`)}>
             {org.name}
+        </DropdownItem>)}
+    </>
+};
+
+type TopicsResponse = ApiResponse<[Topic]>
+const TopicsList: React.FC<TopicsListProps> = ({navigate}) => {
+    const topics = useFetch("/api/topics") as TopicsResponse;
+    return <>
+        {topics.data.map((topic: Topic, i) => <DropdownItem key={i} onClick={()=>navigate(`/search/${topic}`)}>
+            {topic}
         </DropdownItem>)}
     </>
 };
@@ -62,6 +76,17 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
                     <DropdownMenu right>
                         <Suspense fallback={<DropdownItem>Loading...</DropdownItem>}>
                             <CoopList navigate={navigate}/>
+                        </Suspense>
+                    </DropdownMenu>
+                </UncontrolledDropdown>
+
+                <UncontrolledDropdown nav inNavbar>
+                    <DropdownToggle nav caret>
+                        Topics
+                    </DropdownToggle>
+                    <DropdownMenu right>
+                        <Suspense fallback={<DropdownItem>Loading...</DropdownItem>}>
+                            <TopicsList navigate={navigate}/>
                         </Suspense>
                     </DropdownMenu>
                 </UncontrolledDropdown>

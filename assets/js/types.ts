@@ -38,3 +38,7 @@ export type Org = {
     login: string;
     languages: Array<Language>;
 }
+
+export type Topic = string;
+
+export type Topics = Array<Topic>;
