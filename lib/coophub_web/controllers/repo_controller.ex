@@ -44,6 +44,15 @@ defmodule CoophubWeb.RepoController do
     end
   end
 
+  def search(conn, params) do
+    topic = get_topic(params)
+
+    case Repos.search(topic) do
+      :error -> render_status(conn, 500)
+      repos -> render(conn, "repos.json", repos: repos)
+    end
+  end
+
   def topics(conn, _params) do
     case Repos.get_topics() do
       :error -> render_status(conn, 500)
@@ -64,6 +73,14 @@ defmodule CoophubWeb.RepoController do
         num when num > 0 -> num
         _ -> nil
       end
+    rescue
+      _ -> nil
+    end
+  end
+
+  defp get_topic(params) do
+    try do
+      Map.get(params, "topic")
     rescue
       _ -> nil
     end

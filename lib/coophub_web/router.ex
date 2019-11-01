@@ -21,6 +21,7 @@ defmodule CoophubWeb.Router do
     get "/orgs/:name/repos", RepoController, :org_repos
     get "/repos", RepoController, :repos
     get "/topics", RepoController, :topics
+    get "/search", RepoController, :search
   end
 
   scope "/", CoophubWeb do
