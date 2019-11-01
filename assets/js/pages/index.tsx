@@ -7,15 +7,19 @@ import useFetch from 'fetch-suspense';
 import {ApiResponse, Repo} from "../types";
 import RepoCard from "../components/RepoCard";
 import FullWidthSpinner from "../components/FullWidthSpinner";
+import _ from "lodash";
 
 type ReposResponse = ApiResponse<[Repo]>
 type RepoListProps = {url:string}
 
 const RepoList: React.FC<RepoListProps> = ({url}) => {
     const response = useFetch(url) as ReposResponse;
-    return <CardDeck>
-        {response.data.map((repo, i)=><RepoCard repo={repo} key={i}/>)}
-    </CardDeck>;
+    return <>
+        {_.chunk(response.data, 3).map((row, i)=>
+            <CardDeck key={i}>
+                {row.map((repo, j)=><RepoCard repo={repo} key={i*10+j}/>)}
+            </CardDeck>)}
+    </>;
 };
 
 const HomePage: React.FC<RouteComponentProps> = () => {
@@ -28,10 +32,10 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                 <p className="subtitle-a">
                 Most popular repos from coops
                 </p>
-                <div className="line-mf"></div>
+                <div className="line-mf"/>
             </div>
             <Suspense fallback={<FullWidthSpinner/>}>
-                <RepoList url={"/api/repos?limit=3&sort=popular"}/>
+                <RepoList url={"/api/repos?limit=6&sort=popular"}/>
             </Suspense>
             <br />
             <br />
@@ -43,10 +47,10 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                 <p className="subtitle-a">
                 What's cooking at cooperatives?
                 </p>
-                <div className="line-mf"></div>
+                <div className="line-mf"/>
             </div>
             <Suspense fallback={<FullWidthSpinner/>}>
-                <RepoList url={"/api/repos?limit=3&sort=latest"}/>
+                <RepoList url={"/api/repos?limit=6&sort=latest"}/>
             </Suspense>
         </Container>
     </>;
