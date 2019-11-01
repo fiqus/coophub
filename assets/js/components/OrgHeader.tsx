@@ -20,8 +20,8 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages
                 <p className="subtitle-a">
                 {org.description}
                 </p>
-                <div className="line-mf mb-3"></div>
-                <div class="skill-mf">
+                <div className="line-mf mb-3"/>
+                <div className="skill-mf">
                     <Row>
                         {mainLanguages.map(lang => <LanguageProgressBar key={lang.lang} language={lang} />)}
                     </Row>
