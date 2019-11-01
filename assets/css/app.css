@@ -11,3 +11,26 @@
 body { padding-top: 85px; background-color: white;}
 
 #logo { height: 60px }
+
+div.line-mf{
+  background-color: #00aad4;
+}
+.navbar-b.navbar-reduce .nav-link, .navbar-b.navbar-reduce .nav-link:hover{
+  color: #00aad4;
+}
+
+.navbar-b.navbar-reduce .nav-link:before{
+  background-color: #00aad4;
+}
+
+.skill-mf .progress .progress-bar{
+  background-color: #00aad4;
+}
+
+.skill-mf .progress{
+  background-color: #b0f4ff;
+}
+
+.btn-link, a:hover {
+  color: #00aad4;
+}
