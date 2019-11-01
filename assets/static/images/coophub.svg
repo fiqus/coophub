@@ -27,10 +27,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.2563314"
-     inkscape:cx="466.91666"
-     inkscape:cy="553.73497"
+     inkscape:cx="464.52875"
+     inkscape:cy="588.75757"
      inkscape:document-units="mm"
-     inkscape:current-layer="g982"
+     inkscape:current-layer="g967"
      inkscape:document-rotation="0"
      showgrid="false"
      inkscape:window-width="1440"
@@ -197,6 +197,56 @@
            x="93.383675"
            y="140.36055"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:10.58329999999999949px;font-family:Comfortaa;-inkscape-font-specification:'Comfortaa weight=255 Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#333333;fill-opacity:1;stroke:none;stroke-width:0.264583;">CoopHub</tspan></text>
+      <g
+         style="opacity:1;stroke:#00aad4;stroke-width:0.4;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;stop-opacity:1"
+         transform="translate(89.338662,-13.742976)"
+         id="g858-2-2">
+        <path
+           style="fill:none;stroke:#00aad4;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 76.634672,133.85082 2.220609,-1.51191 5.10268,4.48847 z"
+           id="path847-9-75"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#00aad4;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 76.63467,133.85082 -1.748139,-7.65402 3.96875,6.14211 z"
+           id="path849-8-07"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#00aad4;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 78.855281,132.33891 3.260045,-9.59114 -7.228795,3.44903 z"
+           id="path851-0-3"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#00aad4;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 74.886531,126.1968 6.047621,-4.29948 1.181174,0.85045 z"
+           id="path853-7-5"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#00aad4;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 82.115326,122.74777 6.283854,1.27567 0.377975,6.28385 z"
+           id="path855-6-3"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#00aad4;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 78.855281,132.33891 9.921872,-2.03162 -6.661827,-7.55952 z"
+           id="path857-2-6"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#00aad4;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 80.934152,121.89732 7.465028,2.12612 -6.283854,-1.27567 z"
+           id="path859-9-8"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#00aad4;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 83.957961,136.82738 4.819192,-6.52009 -9.921872,2.03162 z"
+           id="path861-8-2"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#00aad4;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 88.777153,130.30729 0.0945,1.08668 -4.91369,5.43341 z"
+           id="path863-5-74"
+           inkscape:connector-curvature="0" />
+      </g>
     </g>
     <g
        id="g982-4"
