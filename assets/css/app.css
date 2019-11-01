@@ -34,3 +34,9 @@ div.line-mf{
 .btn-link, a:hover {
   color: #00aad4;
 }
+
+.card-header h5{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
