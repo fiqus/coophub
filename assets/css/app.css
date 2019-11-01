@@ -10,7 +10,15 @@
 
 body { padding-top: 85px; background-color: white;}
 
-#logo { height: 60px }
+#logo {
+  height: 30px;
+  margin: 0;
+}
+
+@media (min-width: 1200px) {
+  #logo { height: 60px }
+}
+
 
 div.line-mf{
   background-color: #00aad4;
