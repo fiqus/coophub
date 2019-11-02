@@ -44,7 +44,7 @@ type TopicsResponse = ApiResponse<[Topic]>
 const TopicsList: React.FC<TopicsListProps> = ({navigate}) => {
     const topics = useFetch("/api/topics") as TopicsResponse;
     return <>
-        {topics.data.map((topic: Topic, i) => <DropdownItem key={i} onClick={()=>navigate(`/search/${topic}`)}>
+        {topics.data.map((topic: Topic, i) => <DropdownItem key={i} onClick={()=>navigate(`/topics/${topic}`)}>
             {topic}
         </DropdownItem>)}
     </>

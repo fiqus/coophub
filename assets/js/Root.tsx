@@ -19,7 +19,7 @@ export default class Root extends React.Component {
                         <Switch>
                             <Route exact path="/" component={HomePage}/>
                             <Route path="/orgs/:name" component={OrgPage} />
-                            <Route path="/search/:topic" component={ResultsPage} />
+                            <Route path="/topics/:topic" component={ResultsPage} />
                         </Switch>
                     </Suspense>
                     <Footer/>

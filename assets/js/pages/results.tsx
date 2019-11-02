@@ -28,7 +28,7 @@ const ResultsPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
                     {topic} Repos
                 </h3>
                 <p className="subtitle-a">
-                    Repositories by {topic} topic
+                    Repositories by <b>{topic}</b> topic
                 </p>
                 <div className="line-mf"></div>
             </div>
