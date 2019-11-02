@@ -107,9 +107,10 @@ defmodule Coophub.Repos do
 
       repos ->
         repos
-        |> Enum.map(fn repo -> Map.get(repo, "topics", []) end)
+        |> Enum.map(&(Map.get(&1, "topics", [])))
         |> List.flatten()
         |> Enum.uniq()
+        |> Enum.sort(&(&1 < &2))
     end
   end
 
