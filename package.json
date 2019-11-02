@@ -8,19 +8,19 @@
   },
   "dependencies": {
     "@types/react-icons": "^3.0.0",
-    "@types/reactstrap": "^8.0.5",
+    "@types/reactstrap": "^8.0.6",
     "bootstrap": "^4.3.1",
     "fetch-suspense": "^1.2.0",
     "lodash": "^4.17.15",
-    "npm": "^6.12.0",
+    "npm": "^6.12.1",
     "phoenix": "file:deps/phoenix",
     "phoenix_html": "file:deps/phoenix_html",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-github-btn": "^1.0.0",
-    "react-icons": "^3.7.0",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-github-btn": "^1.1.1",
+    "react-icons": "^3.8.0",
     "react-router-dom": "^5.0.1",
-    "reactstrap": "^8.0.1"
+    "reactstrap": "^8.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
@@ -30,8 +30,8 @@
     "@babel/preset-react": "^7.6.3",
     "@babel/preset-typescript": "^7.3.3",
     "@types/lodash": "^4.14.144",
-    "@types/react": "^16.8.23",
-    "@types/react-dom": "^16.8.4",
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.3",
     "@types/react-router-dom": "^4.3.4",
     "babel-loader": "^8.0.0",
     "copy-webpack-plugin": "^5.0.4",
@@ -41,6 +41,6 @@
     "typescript": "^3.6.4",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "4.28.4",
-    "webpack-cli": "^3.2.1"
+    "webpack-cli": "^3.3.10"
   }
 }
