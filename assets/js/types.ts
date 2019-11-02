@@ -39,6 +39,10 @@ export type Org = {
     languages: Array<Language>;
 }
 
-export type Topic = string;
+export type Topic = {
+    topic: string;
+    count: number;
+    orgs: Array<string>;
+};
 
 export type Topics = Array<Topic>;

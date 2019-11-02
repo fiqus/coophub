@@ -100,6 +100,7 @@ defmodule Coophub.Repos do
     end
   end
 
+  @spec get_topics() :: [map] | :error
   def get_topics() do
     case get_all_repos() do
       :error ->
@@ -107,10 +108,9 @@ defmodule Coophub.Repos do
 
       repos ->
         repos
-        |> Enum.map(&(Map.get(&1, "topics", [])))
-        |> List.flatten()
-        |> Enum.uniq()
-        |> Enum.sort(&(&1 < &2))
+        |> Enum.reduce(%{}, &process_topics/2)
+        |> Map.values()
+        |> Enum.sort(&(&1["topic"] < &2["topic"]))
     end
   end
 
@@ -191,7 +191,7 @@ defmodule Coophub.Repos do
   defp is_repo_matching_terms?(_repo, [], _style), do: false
 
   defp is_repo_matching_terms?(repo, [term | terms], style) do
-    matches? = is_repo_matching_term?(repo, term)
+    matches? = repo_matches_term?(repo, term)
 
     if style == :and,
       do: matches? and is_repo_matching_terms?(repo, terms, style),
@@ -199,8 +199,23 @@ defmodule Coophub.Repos do
   end
 
   # @TODO WIP: Add more fields to match?
-  defp is_repo_matching_term?(repo, term) do
+  defp repo_matches_term?(repo, term) do
     Enum.find(repo["topics"], &(&1 == term)) != nil
+  end
+
+  defp process_topics(repo, topics) do
+    repo
+    |> Map.get("topics", [])
+    |> Enum.reduce(topics, fn topic, acc ->
+      stats = %{
+        "topic" => topic,
+        "count" => (Map.get(acc, topic, %{}) |> Map.get("count", 0)) + 1,
+        "orgs" =>
+          [Map.get(repo, "key") | Map.get(acc, topic, %{}) |> Map.get("orgs", [])] |> Enum.uniq()
+      }
+
+      Map.put(acc, topic, stats)
+    end)
   end
 
   defp orgs_sort_by(orgs, %{"field" => "popular", "dir" => dir}, limit) do

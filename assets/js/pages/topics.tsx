@@ -7,7 +7,7 @@ import RepoCard from "../components/RepoCard";
 
 type ReposResponse = ApiResponse<[Repo]>
 
-function searchRepos (topic: Topic) {
+function searchRepos (topic: string) {
     const url = `/api/search?topic=${topic}`
     const response = useFetch(url) as ReposResponse;
     return response;
@@ -17,7 +17,7 @@ type MatchParams = {
     topic: string
 }
 
-const ResultsPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
+const TopicsPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
     const topic = match.params.topic;
     const repos = searchRepos(topic);
 
@@ -28,7 +28,7 @@ const ResultsPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
                     {topic} Repos
                 </h3>
                 <p className="subtitle-a">
-                    Repositories by <b>{topic}</b> topic
+                    Repositories having <b>{topic}</b> topic
                 </p>
                 <div className="line-mf"></div>
             </div>
@@ -40,4 +40,4 @@ const ResultsPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
         </Container>
     </>
 };
-export default ResultsPage;
+export default TopicsPage;
