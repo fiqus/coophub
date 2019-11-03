@@ -25,6 +25,9 @@ const RepoList: React.FC<RepoListProps> = ({url}) => {
 const HomePage: React.FC<RouteComponentProps> = () => {
     return <>
         <Container className="pt-xl-5">
+            <form action="/api/search" method="get" className="text-center">
+                <input name="q" placeholder="Search repos.."/>
+            </form>
             <div className="title-box text-center">
                 <h3 className="title-a">
                 Popular Repos
