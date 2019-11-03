@@ -174,33 +174,47 @@ defmodule Coophub.Repos do
     end)
   end
 
-  @spec search(binary | list) :: :error | [map]
-  def search(term) when is_binary(term), do: search([term])
-  @spec search(list, atom) :: :error | [map]
-  def search(terms, style \\ :and) when is_list(terms) do
+  @spec search(binary | list | map, atom) :: :error | [map]
+  def search(terms, style \\ :and)
+  def search(term, style) when is_binary(term), do: search([term], style)
+  def search(terms, style) when is_list(terms), do: search(%{"terms" => terms}, style)
+
+  def search(query, style) do
     case get_all_repos() do
       repos when is_list(repos) ->
-        Enum.filter(repos, &is_repo_matching_terms?(&1, terms, style))
+        Enum.filter(repos, &is_repo_matching_query?(&1, query, style))
 
       err ->
         err
     end
   end
 
-  defp is_repo_matching_terms?(_repo, [], :and), do: true
-  defp is_repo_matching_terms?(_repo, [], _style), do: false
+  defp is_repo_matching_query?(repo, %{"terms" => [_ | _] = terms}, style),
+    do: is_repo_matching_func?(repo, &repo_matches_term?/2, terms, style)
 
-  defp is_repo_matching_terms?(repo, [term | terms], style) do
-    matches? = repo_matches_term?(repo, term)
+  defp is_repo_matching_query?(repo, %{"topics" => [_ | _] = terms}, style),
+    do: is_repo_matching_func?(repo, &repo_matches_topic?/2, terms, style)
+
+  defp is_repo_matching_query?(_repo, _query, _style), do: false
+
+  defp is_repo_matching_func?(_repo, _func, [], :and), do: true
+  defp is_repo_matching_func?(_repo, _func, [], _style), do: false
+
+  defp is_repo_matching_func?(repo, func, [term | terms], style) do
+    matches? = func.(repo, term)
 
     if style == :and,
-      do: matches? and is_repo_matching_terms?(repo, terms, style),
-      else: matches? or is_repo_matching_terms?(repo, terms, style)
+      do: matches? and is_repo_matching_func?(repo, func, terms, style),
+      else: matches? or is_repo_matching_func?(repo, func, terms, style)
   end
 
   # @TODO WIP: Add more fields to match?
   defp repo_matches_term?(repo, term) do
-    Enum.find(repo["topics"], &(&1 == term)) != nil
+    repo_matches_topic?(repo, term)
+  end
+
+  defp repo_matches_topic?(repo, topic) do
+    Enum.find(repo["topics"], &(&1 == topic)) != nil
   end
 
   defp process_topics(repo, topics) do

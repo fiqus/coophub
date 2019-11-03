@@ -195,6 +195,48 @@ defmodule CoophubWeb.RepoControllerTest do
     end
   end
 
+  describe "GET /api/topics" do
+    test "lists all topics", %{conn: conn} do
+      data = get_data(conn, :topics)
+      assert length(data) == 8
+
+      assert data = [
+               %{"count" => 1, "orgs" => ["fiqus"], "topic" => "cirugias"},
+               %{"count" => 1, "orgs" => ["fiqus"], "topic" => "elixir-lang"},
+               %{"count" => 1, "orgs" => ["fiqus"], "topic" => "elixir-phoenix"},
+               %{"count" => 1, "orgs" => ["fiqus"], "topic" => "hospital"},
+               %{"count" => 1, "orgs" => ["fiqus"], "topic" => "salud"},
+               %{"count" => 1, "orgs" => ["fiqus"], "topic" => "talks"},
+               %{"count" => 3, "orgs" => ["test", "fiqus"], "topic" => "test"},
+               %{"count" => 1, "orgs" => ["fiqus"], "topic" => "vuejs"}
+             ]
+    end
+  end
+
+  describe "GET /api/search" do
+    test "searches by a single topic", %{conn: conn} do
+      data = get_data(conn, :search, %{"topic" => "test"})
+      assert length(data) == 3
+      assert Enum.at(data, 0)["name"] == "surgex"
+      assert Enum.at(data, 1)["name"] == "testone"
+      assert Enum.at(data, 2)["name"] == "testthree"
+    end
+
+    test "searches by a multiple topics", %{conn: conn} do
+      data = get_data(conn, :search, %{"topic" => "test,salud"})
+      assert length(data) == 1
+      assert Enum.at(data, 0)["name"] == "surgex"
+      data = get_data(conn, :search, %{"topic" => "salud hospital"})
+      assert length(data) == 1
+      assert Enum.at(data, 0)["name"] == "surgex"
+    end
+
+    test "searches with no results because no params were given", %{conn: conn} do
+      data = get_data(conn, :search, %{})
+      assert length(data) == 0
+    end
+  end
+
   defp get_data(conn, path, params \\ %{}) do
     api_call_get(conn, Routes.repo_path(conn, path, params))
   end

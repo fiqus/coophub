@@ -45,9 +45,9 @@ defmodule CoophubWeb.RepoController do
   end
 
   def search(conn, params) do
-    topic = get_topic(params)
+    query = get_search_query(params)
 
-    case Repos.search(topic) do
+    case Repos.search(query) do
       :error -> render_status(conn, 500)
       repos -> render(conn, "repos.json", repos: repos)
     end
@@ -78,11 +78,12 @@ defmodule CoophubWeb.RepoController do
     end
   end
 
-  defp get_topic(params) do
-    try do
-      Map.get(params, "topic")
-    rescue
-      _ -> nil
-    end
+  defp get_search_query(params) do
+    %{
+      "terms" => Map.get(params, "q", "") |> split_values(),
+      "topics" => Map.get(params, "topic", "") |> split_values()
+    }
   end
+
+  defp split_values(string), do: String.split(string, [" ", ","], trim: true)
 end

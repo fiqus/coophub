@@ -83,6 +83,7 @@ defmodule CoophubWeb.Fixtures do
   def generate_repos(:fiqus) do
     [
       %{
+        "key" => "fiqus",
         "languages" => generate_languages(:surgex),
         "popularity" => 4,
         "id" => 186_053_039,
@@ -202,6 +203,7 @@ defmodule CoophubWeb.Fixtures do
         }
       },
       %{
+        "key" => "fiqus",
         "languages" => generate_languages(:uktalk),
         "popularity" => 1,
         "id" => 184_261_975,
@@ -314,6 +316,7 @@ defmodule CoophubWeb.Fixtures do
   def generate_repos(:test) do
     [
       %{
+        "key" => "test",
         "languages" => generate_languages(:testone),
         "popularity" => 5,
         "id" => 123_111,
@@ -351,6 +354,7 @@ defmodule CoophubWeb.Fixtures do
         "disabled" => false
       },
       %{
+        "key" => "test",
         "languages" => generate_languages(:testtwo),
         "popularity" => 3,
         "id" => 123_222,
@@ -386,6 +390,7 @@ defmodule CoophubWeb.Fixtures do
         "disabled" => false
       },
       %{
+        "key" => "test",
         "languages" => generate_languages(:testthree),
         "popularity" => 2,
         "id" => 123_333,
