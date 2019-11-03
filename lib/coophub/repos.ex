@@ -208,9 +208,14 @@ defmodule Coophub.Repos do
       else: matches? or is_repo_matching_func?(repo, func, terms, style)
   end
 
-  # @TODO WIP: Add more fields to match?
   defp repo_matches_term?(repo, term) do
-    repo_matches_topic?(repo, term)
+    re = Regex.compile!(term, "iu")
+
+    Regex.match?(re, repo["key"]) ||
+      Regex.match?(re, repo["name"]) ||
+      Regex.match?(re, repo["description"] || "") ||
+      Enum.find(repo["topics"], &Regex.match?(re, &1)) != nil ||
+      Enum.find(repo["languages"], &Regex.match?(re, &1["lang"])) != nil
   end
 
   defp repo_matches_topic?(repo, topic) do

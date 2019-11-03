@@ -222,13 +222,35 @@ defmodule CoophubWeb.RepoControllerTest do
       assert Enum.at(data, 2)["name"] == "testthree"
     end
 
-    test "searches by a multiple topics", %{conn: conn} do
+    test "searches by multiple topics", %{conn: conn} do
       data = get_data(conn, :search, %{"topic" => "test,salud"})
       assert length(data) == 1
       assert Enum.at(data, 0)["name"] == "surgex"
       data = get_data(conn, :search, %{"topic" => "salud hospital"})
       assert length(data) == 1
       assert Enum.at(data, 0)["name"] == "surgex"
+    end
+
+    test "searches by a single term", %{conn: conn} do
+      data = get_data(conn, :search, %{"q" => "lIxIr"})
+      assert length(data) == 2
+      assert Enum.at(data, 0)["name"] == "surgex"
+      assert Enum.at(data, 1)["name"] == "testone"
+
+      data = get_data(conn, :search, %{"q" => "Fiqus"})
+      assert length(data) == 2
+      assert Enum.at(data, 0)["name"] == "surgex"
+      assert Enum.at(data, 1)["name"] == "uk-talk"
+    end
+
+    test "searches by multiple terms", %{conn: conn} do
+      data = get_data(conn, :search, %{"q" => "lIxIr fiqus surgex"})
+      assert length(data) == 1
+      assert Enum.at(data, 0)["name"] == "surgex"
+
+      data = get_data(conn, :search, %{"q" => "fiqus talks css"})
+      assert length(data) == 1
+      assert Enum.at(data, 0)["name"] == "uk-talk"
     end
 
     test "searches with no results because no params were given", %{conn: conn} do
