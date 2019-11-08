@@ -204,7 +204,7 @@ defmodule Coophub.Repos.Warmer do
   end
 
   defp put_repo_languages_stats(repo, languages) do
-    stats = Repos.get_languages_stats(languages)
+    stats = Repos.get_percentages_by_language(languages)
     Map.put(repo, "languages", stats)
   end
 

@@ -141,8 +141,8 @@ defmodule Coophub.Repos do
     Enum.reduce(repos, 0, fn %{"popularity" => pop}, acc -> acc + pop end)
   end
 
-  @spec get_languages_stats(map) :: map
-  def get_languages_stats(languages) do
+  @spec get_percentages_by_language(map) :: map
+  def get_percentages_by_language(languages) do
     total = Enum.reduce(languages, 0, fn {_lang, bytes}, acc -> acc + bytes end)
 
     Enum.reduce(languages, %{}, fn {lang, bytes}, acc ->
@@ -161,7 +161,27 @@ defmodule Coophub.Repos do
         end)
       end)
 
-    get_languages_stats(languages)
+    get_percentages_by_language(languages)
+  end
+
+  @spec get_languages() :: map
+  def get_languages() do
+    case get_all_orgs() do
+      orgs when is_map(orgs) ->
+        orgs
+        |> Enum.map(fn {_org_name, %{"languages" => languages}} -> 
+          languages
+        end)
+        |> List.flatten
+        |> Enum.map(fn %{"lang" => lang, "bytes" => bytes} ->
+          %{lang => bytes}
+        end)
+        |> Enum.reduce(%{}, fn (lang_orgs_stats, acc) -> Map.merge(lang_orgs_stats, acc, fn (key, x1, x2) -> x1 + x2 end ) end )
+        |> get_percentages_by_language
+        |> IO.inspect
+      :error ->
+        :error
+    end
   end
 
   @spec get_org_last_activity(map) :: float

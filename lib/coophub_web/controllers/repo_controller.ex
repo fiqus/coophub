@@ -60,6 +60,13 @@ defmodule CoophubWeb.RepoController do
     end
   end
 
+  def languages(conn, _params) do
+    case Repos.get_languages() do
+      :error -> render_status(conn, 500)
+      languages -> render(conn, "languages.json", languages: languages)
+    end
+  end
+
   defp get_sort(params) do
     %{
       "field" => Map.get(params, "sort", "latest"),

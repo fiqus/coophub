@@ -1,18 +1,18 @@
 import * as React from 'react';
 import {Suspense} from 'react';
 import {RouteComponentProps} from 'react-router-dom';
-import {CardDeck, Container} from "reactstrap";
+import {CardDeck, Container, Row} from "reactstrap";
 import useFetch from 'fetch-suspense';
-
-import {ApiResponse, Repo} from "../types";
+import {ApiResponse, Repo, TotalLanguage} from "../types";
 import RepoCard from "../components/RepoCard";
 import FullWidthSpinner from "../components/FullWidthSpinner";
+import LanguagesChart from '../components/LanguagesChart'; 
 import _ from "lodash";
 
 type ReposResponse = ApiResponse<[Repo]>
-type RepoListProps = {url:string}
+type urlProp = {url:string}
 
-const RepoList: React.FC<RepoListProps> = ({url}) => {
+const RepoList: React.FC<urlProp> = ({url}) => {
     const response = useFetch(url) as ReposResponse;
     return <>
         {_.chunk(response.data, 3).map((row, i)=>
@@ -22,12 +22,15 @@ const RepoList: React.FC<RepoListProps> = ({url}) => {
     </>;
 };
 
+
 const HomePage: React.FC<RouteComponentProps> = () => {
     return <>
         <Container className="pt-xl-5">
-            <form action="/api/search" method="get" className="text-center">
-                <input name="q" placeholder="Search repos.."/>
-            </form>
+            <Row>
+                <Container className="col-6 mb-5">
+                    <LanguagesChart url={"/api/languages"}/>    
+                </Container>
+            </Row>
             <div className="title-box text-center">
                 <h3 className="title-a">
                 Popular Repos

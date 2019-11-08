@@ -13,6 +13,13 @@ export type Language = {
     percentage: number
 }
 
+export type TotalLanguage = {
+    [key: string]: {
+        bytes: number,
+        percentage: number
+    }
+}
+
 export type Repo  = {
     key: string;
     description: string;
