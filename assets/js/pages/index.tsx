@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Suspense} from 'react';
 import {RouteComponentProps} from 'react-router-dom';
-import {CardDeck, Container, Row} from "reactstrap";
+import {CardDeck, Card, CardHeader, CardBody, Container, Row} from "reactstrap";
 import useFetch from 'fetch-suspense';
 import {ApiResponse, Repo, TotalLanguage} from "../types";
 import RepoCard from "../components/RepoCard";
@@ -26,11 +26,6 @@ const RepoList: React.FC<urlProp> = ({url}) => {
 const HomePage: React.FC<RouteComponentProps> = () => {
     return <>
         <Container className="pt-xl-5">
-            <Row>
-                <Container className="col-6 mb-5">
-                    <LanguagesChart url={"/api/languages"}/>    
-                </Container>
-            </Row>
             <div className="title-box text-center">
                 <h3 className="title-a">
                 Popular Repos
@@ -58,6 +53,30 @@ const HomePage: React.FC<RouteComponentProps> = () => {
             <Suspense fallback={<FullWidthSpinner/>}>
                 <RepoList url={"/api/repos?limit=6&sort=latest"}/>
             </Suspense>
+            <br />
+            <br />
+            <br />
+            <div className="title-box text-center">
+                <h3 className="title-a">
+                Some facts
+                </h3>
+                <p className="subtitle-a">
+                With nice charts!
+                </p>
+                <div className="line-mf"/>
+            </div>
+            <Row>
+                <Container className="col-6 mb-5">
+                    <CardDeck>
+                        <Card className="card card-blog mb-4">
+                            <CardHeader style={{color: "grey"}}><h5>Popular Languages</h5></CardHeader>
+                            <CardBody>
+                                <LanguagesChart url={"/api/languages"}/>
+                            </CardBody>
+                        </Card>
+                    </CardDeck>
+                </Container>
+            </Row>
         </Container>
     </>;
 };
