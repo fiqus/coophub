@@ -6,7 +6,8 @@ import useFetch from 'fetch-suspense';
 import {ApiResponse, Repo, TotalLanguage} from "../types";
 import RepoCard from "../components/RepoCard";
 import FullWidthSpinner from "../components/FullWidthSpinner";
-import LanguagesChart from '../components/LanguagesChart'; 
+import LanguagesChart from '../components/LanguagesChart';
+import FakeChart from '../components/FakeChart'; 
 import _ from "lodash";
 
 type ReposResponse = ApiResponse<[Repo]>
@@ -66,12 +67,18 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                 <div className="line-mf"/>
             </div>
             <Row>
-                <Container className="col-6 mb-5">
+                <Container className="col-12 mb-5">
                     <CardDeck>
                         <Card className="card card-blog mb-4">
                             <CardHeader style={{color: "grey"}}><h5>Popular Languages</h5></CardHeader>
                             <CardBody>
                                 <LanguagesChart url={"/api/languages"}/>
+                            </CardBody>
+                        </Card>
+                        <Card className="card card-blog mb-4">
+                            <CardHeader style={{color: "grey"}}><h5>Commits per month</h5></CardHeader>
+                            <CardBody>
+                                <FakeChart/>
                             </CardBody>
                         </Card>
                     </CardDeck>
