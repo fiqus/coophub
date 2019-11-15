@@ -77,7 +77,7 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
                     <DropdownToggle nav caret>
                         Coops
                     </DropdownToggle>
-                    <DropdownMenu right>
+                    <DropdownMenu right style={{overflowY: "auto", maxHeight: 300}}>
                         <Suspense fallback={<DropdownItem>Loading...</DropdownItem>}>
                             <CoopList navigate={navigate}/>
                         </Suspense>
@@ -88,7 +88,7 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
                     <DropdownToggle nav caret>
                         Topics
                     </DropdownToggle>
-                    <DropdownMenu right>
+                    <DropdownMenu right style={{overflowY: "auto", maxHeight: 300}}>
                         <Suspense fallback={<DropdownItem>Loading...</DropdownItem>}>
                             <TopicsList navigate={navigate}/>
                         </Suspense>
