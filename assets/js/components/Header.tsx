@@ -11,7 +11,8 @@ import {
     NavbarBrand,
     NavbarToggler,
     NavItem, NavLink,
-    UncontrolledDropdown
+    UncontrolledDropdown,
+    Input
 } from "reactstrap";
 import useFetch from 'fetch-suspense';
 import {ApiResponse, Org, Topic} from "../types";
@@ -68,8 +69,8 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavBar}/>
         <Collapse isOpen={!collapsed} navbar>
-            <form action="/api/search" method="get" className="ml-auto">
-                <input name="q" placeholder="Search repos.."/>
+            <form action="/search" method="get" className="ml-auto">
+                <Input name="q" placeholder="Search repos.."/>
             </form>
             <Nav className="ml-auto" navbar>
                 <UncontrolledDropdown nav inNavbar>

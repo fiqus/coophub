@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import HomePage from './pages';
 import OrgPage from './pages/org';
 import TopicsPage from './pages/topics';
+import SearchResultsPage from './pages/searchResults';
 import {Suspense} from "react";
 import FullWidthSpinner from "./components/FullWidthSpinner";
 
@@ -20,6 +21,7 @@ export default class Root extends React.Component {
                             <Route exact path="/" component={HomePage}/>
                             <Route path="/orgs/:name" component={OrgPage} />
                             <Route path="/topics/:topic" component={TopicsPage} />
+                            <Route path="/search" component={SearchResultsPage} />
                         </Switch>
                     </Suspense>
                     <Footer/>
