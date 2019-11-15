@@ -19,6 +19,21 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
+function resultsMessage(resultsLength: number, query: string | null) {
+  if (resultsLength) {
+    return (
+      <p className="subtitle-a">
+        Repositories founded with <b>{query}</b> query
+      </p>
+    )
+  }
+  return (
+    <p className="subtitle-a">
+      No repositories founded with <b>{query}</b> query
+    </p>
+  )
+}
+
 const SearchResultsPage: React.FC<RouteComponentProps> = () => {
   const query = useQuery();
   const search = query.get("q");
@@ -30,9 +45,7 @@ const SearchResultsPage: React.FC<RouteComponentProps> = () => {
             <h3 className="title-a">
                 Results
             </h3>
-            <p className="subtitle-a">
-                Repositories founded with <b>{search}</b> query
-            </p>
+            {resultsMessage(repos.data.length, search)}
             <div className="line-mf"></div>
         </div>
         <CardColumns>
