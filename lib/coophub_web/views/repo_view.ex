@@ -16,7 +16,7 @@ defmodule CoophubWeb.RepoView do
   def render("topics.json", %{topics: topics}) do
     %{data: topics}
   end
-  
+
   def render("languages.json", %{languages: languages}) do
     %{data: languages}
   end

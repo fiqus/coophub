@@ -8,7 +8,7 @@ config :coophub, CoophubWeb.Endpoint,
 
 # Configures Cachex
 config :coophub,
-  cachex_name: :repos_cache_test
+  main_cache_name: :repos_cache_test
 
 # Print only warnings and errors during test
 config :logger, level: :warn

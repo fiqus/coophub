@@ -17,7 +17,7 @@ config :coophub, CoophubWeb.Endpoint,
 config :coophub,
   fetch_max_repos: 50,
   # Configures Cachex
-  cachex_interval: 30
+  cache_interval: 30
 
 # Do not print debug messages in production
 config :logger, level: :info

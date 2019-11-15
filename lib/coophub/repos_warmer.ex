@@ -6,9 +6,9 @@ defmodule Coophub.Repos.Warmer do
   require Logger
 
   @repos_max_fetch Application.get_env(:coophub, :fetch_max_repos)
-  @repos_cache_name Application.get_env(:coophub, :cachex_name)
-  @repos_cache_interval Application.get_env(:coophub, :cachex_interval)
-  @repos_cache_dump Application.get_env(:coophub, :cachex_dump)
+  @repos_cache_name Application.get_env(:coophub, :main_cache_name)
+  @repos_cache_interval Application.get_env(:coophub, :cache_interval)
+  @repos_cache_dump_file Application.get_env(:coophub, :main_cache_dump_file)
 
   @doc """
   Returns the interval for this warmer.
@@ -26,12 +26,12 @@ defmodule Coophub.Repos.Warmer do
     Process.sleep(2000)
 
     size =
-      case Cachex.load(@repos_cache_name, @repos_cache_dump) do
+      case Cachex.load(@repos_cache_name, @repos_cache_dump_file) do
         {:ok, true} ->
           Cachex.size(@repos_cache_name) |> elem(1)
 
         _ ->
-          Logger.info("Dump not found '#{@repos_cache_dump}'", ansi_color: :yellow)
+          Logger.info("Dump not found '#{@repos_cache_dump_file}'", ansi_color: :yellow)
           0
       end
 
@@ -70,10 +70,12 @@ defmodule Coophub.Repos.Warmer do
     fn ->
       Process.sleep(2000)
 
-      case Cachex.dump(@repos_cache_name, @repos_cache_dump) do
+      case Cachex.dump(@repos_cache_name, @repos_cache_dump_file) do
         {:ok, true} ->
           Logger.info(
-            "Saved repos cache dump with #{length(repos)} orgs to local file '#{@repos_cache_dump}'",
+            "Saved repos cache dump with #{length(repos)} orgs to local file '#{
+              @repos_cache_dump_file
+            }'",
             ansi_color: :green
           )
 

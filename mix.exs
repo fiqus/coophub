@@ -60,7 +60,7 @@ defmodule Coophub.MixProject do
   end
 
   defp remove_dump_file(_) do
-    cache_dump_file = Application.get_env(:coophub, :cachex_dump)
+    cache_dump_file = Application.get_env(:coophub, :main_cache_dump_file)
     Mix.shell().info("Removing dump file '#{cache_dump_file}'..")
     Mix.shell().cmd("rm #{cache_dump_file}")
   end

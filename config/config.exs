@@ -18,9 +18,10 @@ config :coophub, CoophubWeb.Endpoint,
 config :coophub,
   fetch_max_repos: 10,
   # Configures Cachex
-  cachex_name: :repos_cache,
-  cachex_interval: 60,
-  cachex_dump: "repos-cache.dump"
+  main_cache_name: :repos_cache,
+  cache_interval: 60,
+  main_cache_dump_file: "repos-cache.dump",
+  uris_cache_name: :uris_cache
 
 # Configures Elixir's Logger
 config :logger, :console,

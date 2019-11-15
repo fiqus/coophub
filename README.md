@@ -32,6 +32,9 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - GET api/orgs/:name (detail of a coop)
 - GET api/orgs/:name/repos (repos of a coop)
 - GET api/repos (all coops repos)
+- GET api/search?q=term_to_search
+- GET api/topics (all the repos topics)
+- GET api/languages (all the programming languages with bytes and %)
 
 ## Allowed query params
 - `limit` - Number

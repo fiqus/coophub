@@ -8,7 +8,9 @@ defmodule Coophub.Application do
   import Cachex.Spec
   require Logger
 
-  @repos_cache_name Application.get_env(:coophub, :cachex_name)
+  @repos_cache_name Application.get_env(:coophub, :main_cache_name)
+  @uris_cache_name Application.get_env(:coophub, :uris_cache_name)
+  @cache_interval Application.get_env(:coophub, :cache_interval)
 
   def start(_type, _args) do
     check_github_token()
@@ -21,7 +23,13 @@ defmodule Coophub.Application do
       # {Coophub.Worker, arg},
       %{
         id: CachexRepos,
-        start: {Cachex, :start_link, [@repos_cache_name, cachex_opts(Mix.env())]}
+        start: {Cachex, :start_link, [@repos_cache_name, main_cache_opts(Mix.env())]}
+      },
+      %{
+        id: CachexUris,
+        start:
+          {Cachex, :start_link,
+           [@uris_cache_name, [expiration: expiration(default: :timer.minutes(@cache_interval))]]}
       }
     ]
 
@@ -38,14 +46,14 @@ defmodule Coophub.Application do
     :ok
   end
 
-  defp cachex_opts(:test), do: []
+  defp main_cache_opts(:test), do: []
 
-  defp cachex_opts(_) do
+  defp main_cache_opts(_) do
     [
       warmers: [
         warmer(module: Coophub.Repos.Warmer)
       ],
-      expiration: expiration(default: :timer.minutes(60))
+      expiration: expiration(default: :timer.minutes(@cache_interval))
     ]
   end
 

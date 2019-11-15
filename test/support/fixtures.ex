@@ -1,5 +1,5 @@
 defmodule CoophubWeb.Fixtures do
-  @repos_cache_name Application.get_env(:coophub, :cachex_name)
+  @repos_cache_name Application.get_env(:coophub, :main_cache_name)
 
   def generate() do
     data = generate_orgs()

@@ -1,7 +1,7 @@
 defmodule Coophub.Repos do
   require Logger
 
-  @repos_cache_name Application.get_env(:coophub, :cachex_name)
+  @repos_cache_name Application.get_env(:coophub, :main_cache_name)
   @forks_factor 1.7
   @stargazers_factor 1.5
   @open_issues_factor 1.3
@@ -169,16 +169,18 @@ defmodule Coophub.Repos do
     case get_all_orgs() do
       orgs when is_map(orgs) ->
         orgs
-        |> Enum.map(fn {_org_name, %{"languages" => languages}} -> 
+        |> Enum.map(fn {_org_name, %{"languages" => languages}} ->
           languages
         end)
-        |> List.flatten
+        |> List.flatten()
         |> Enum.map(fn %{"lang" => lang, "bytes" => bytes} ->
           %{lang => bytes}
         end)
-        |> Enum.reduce(%{}, fn (lang_orgs_stats, acc) -> Map.merge(lang_orgs_stats, acc, fn (key, x1, x2) -> x1 + x2 end ) end )
+        |> Enum.reduce(%{}, fn lang_orgs_stats, acc ->
+          Map.merge(lang_orgs_stats, acc, fn _key, x1, x2 -> x1 + x2 end)
+        end)
         |> get_percentages_by_language
-        |> IO.inspect
+
       :error ->
         :error
     end
