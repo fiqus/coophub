@@ -22,7 +22,7 @@ const RepoCard:React.FC<{repo: Repo}> = ({repo}) => {
             </CardBody>
             <CardFooter>
                 <div className="post-author">
-                    <a href={`orgs/${repo.key}`}>
+                    <a href={`/orgs/${repo.key}`}>
                         <img src={repo.owner.avatar_url} alt="" className="avatar rounded-circle"/>
                         <span className="author">{repo.owner.login}</span>
                     </a>
