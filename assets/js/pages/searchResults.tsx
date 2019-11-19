@@ -23,13 +23,13 @@ function resultsMessage(resultsLength: number, query: string | null) {
   if (resultsLength) {
     return (
       <p className="subtitle-a">
-        Repositories founded with <b>{query}</b> query
+        Found <b>{resultsLength}</b> repositories for <b>{query}</b>
       </p>
     )
   }
   return (
     <p className="subtitle-a">
-      No repositories founded with <b>{query}</b> query
+      No repositories found for <b>{query}</b>
     </p>
   )
 }
@@ -43,7 +43,7 @@ const SearchResultsPage: React.FC<RouteComponentProps> = () => {
     <Container className="pt-xl-5">
         <div className="title-box text-center">
             <h3 className="title-a">
-                Results
+                Search results
             </h3>
             {resultsMessage(repos.data.length, search)}
             <div className="line-mf"></div>
