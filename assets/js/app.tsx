@@ -1,6 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.css';
+import '../css/normalize.css';
 import '../css/theme.css';
 import '../css/app.css';
+//import '../css/charts.css'; @TODO Breaks all the styles! And search inside for: NOT FOUND.. breaks webpack build!
 
 import 'phoenix_html';
 

@@ -41,7 +41,8 @@ html {
     margin: 0 auto;
   }
   .circle {
-    background: 50% 50% url("../img/loader.png") no-repeat;
+    /* @TODO NOT FOUND.. breaks webpack build!
+    background: 50% 50% url("../img/loader.png") no-repeat;*/
   }
   /*
    * Remove text-shadow in selection highlight:
@@ -178,7 +179,8 @@ html {
     margin: 0 0 0 2.5%;
     float: left;
     display: block;
-    background: url("../img/dot.gif") repeat-y 0 0;
+    /* @TODO NOT FOUND.. breaks webpack build!
+    background: url("../img/dot.gif") repeat-y 0 0;*/
   }
   .first {
     margin-left: 0px;
@@ -4735,7 +4737,8 @@ html {
     bottom: 0;
     z-index: 4;
     opacity: 0.65;
-    background: url("../img/noise.gif") no-repeat 50% 50%;
+    /* @TODO NOT FOUND.. breaks webpack build!
+    background: url("../img/noise.gif") no-repeat 50% 50%;*/
     background-size: cover;
   }
   .dude {
@@ -4745,7 +4748,8 @@ html {
     top: 0;
     width: 100%;
     height: 100%;
-    background: url("../img/dude.png") no-repeat 50% 50%;
+    /* @TODO NOT FOUND.. breaks webpack build!
+    background: url("../img/dude.png") no-repeat 50% 50%;*/
     background-size: cover;
   }
   canvas {
