@@ -7,6 +7,8 @@ import {Org} from "../types";
 
 const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages}) => {
     const mainLanguages = org.languages.slice(0, maxLanguages);
+    const orgDate = new Date(org.created_at);
+    const createdDate = `${orgDate.toLocaleString('default', { month: 'long' })} ${orgDate.getFullYear()}`
 
     return (
         
@@ -44,6 +46,9 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages
                         </CardLink>
                         </Button>
                     }
+                    <Button color="link">
+                        Created in {createdDate}
+                    </Button>
                 </ButtonGroup>
                 <br/>
                 <p className="mt-2">
