@@ -4,9 +4,10 @@ defmodule Coophub.Repos do
   @repos_cache_name Application.get_env(:coophub, :main_cache_name)
   @forks_factor 1.7
   @stargazers_factor 1.5
-  @open_issues_factor 1.3
+  @open_issues_factor 0.3
   @fork_coeficient 0.5
   @gravity 1.8
+  @percentage_for_updated_time 0.8
 
   @spec get_all_orgs :: map | :error
   def get_all_orgs() do
@@ -133,7 +134,7 @@ defmodule Coophub.Repos do
          3600)
       |> :math.pow(@gravity)
 
-    rating / divisor
+    rating + rating * @percentage_for_updated_time / divisor
   end
 
   @spec get_org_popularity(map) :: float
