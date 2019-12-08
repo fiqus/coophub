@@ -58,7 +58,9 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
     const toggleNavBar = () => {
         setCollapsed(!collapsed);
     };
-
+    const parseSearchQuery = () => {
+        return (new URLSearchParams(location.search)).get("q") || "";
+    }
     const navigate = (url: string) =>{
         history.push(url);
     };
@@ -70,7 +72,7 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
         <NavbarToggler onClick={toggleNavBar}/>
         <Collapse isOpen={!collapsed} navbar>
             <form action="/search" method="get" className="ml-auto">
-                <Input name="q" placeholder="Search repos.."/>
+                <Input name="q" placeholder="Search repos.." defaultValue={parseSearchQuery()}/>
             </form>
             <Nav className="ml-auto" navbar>
                 <UncontrolledDropdown nav inNavbar>
