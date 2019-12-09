@@ -1,10 +1,11 @@
 import * as React from 'react';
 import {RouteComponentProps} from 'react-router';
-import {CardColumns, Container} from "reactstrap";
+import {CardDeck, Container} from "reactstrap";
 import RepoCard from "../components/RepoCard";
 import OrgHeader from "../components/OrgHeader";
 import {ApiResponse, Org, Repos} from "../types";
 import useFetch from 'fetch-suspense';
+import _ from "lodash";
 
 
 type MatchParams = {
@@ -24,11 +25,10 @@ const OrgPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
     return <>
         <OrgHeader org={org} maxLanguages={maxLanguages}/>
         <Container>
-            <CardColumns>
-                {repos.data.map((repo, i) => (
-                    <RepoCard key={i} repo={repo}/>
-                ))}
-            </CardColumns>
+            {_.chunk(repos.data, 3).map((row, i)=>
+            <CardDeck key={i}>
+                {row.map((repo, j)=><RepoCard repo={repo} key={i*10+j}/>)}
+            </CardDeck>)}
         </Container>
     </>
 };

@@ -13,7 +13,6 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages
     return (
         
         <Container>
-            
             <div className="title-box text-center mt-5">
                 <img src={org.avatar_url} alt="" className="center-block rounded-circle b-shadow-a avatar_coop"/>
                 <h3 className="title-a mt-4">
