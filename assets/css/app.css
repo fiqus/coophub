@@ -19,7 +19,6 @@ body { padding-top: 85px; background-color: white;}
   #logo { height: 60px }
 }
 
-
 div.line-mf{
   background-color: #00aad4;
 }
@@ -47,4 +46,10 @@ div.line-mf{
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.org-repos-cards .card {
+  flex: 0 0 31%;
+  margin-left: 1%;
+  margin-right: 1%;
 }
