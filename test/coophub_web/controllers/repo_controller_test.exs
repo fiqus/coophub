@@ -217,9 +217,9 @@ defmodule CoophubWeb.RepoControllerTest do
     test "searches by a single topic", %{conn: conn} do
       data = get_data(conn, :search, %{"topic" => "test"})
       assert length(data) == 3
-      assert Enum.at(data, 0)["name"] == "surgex"
-      assert Enum.at(data, 1)["name"] == "testone"
-      assert Enum.at(data, 2)["name"] == "testthree"
+      assert repo_in(data, "surgex")
+      assert repo_in(data, "testone")
+      assert repo_in(data, "testthree")
     end
 
     test "searches by multiple topics", %{conn: conn} do
@@ -234,8 +234,9 @@ defmodule CoophubWeb.RepoControllerTest do
     test "searches by a single term", %{conn: conn} do
       data = get_data(conn, :search, %{"q" => "lIxIr"})
       assert length(data) == 2
-      assert Enum.at(data, 0)["name"] == "surgex"
-      assert Enum.at(data, 1)["name"] == "testone"
+      assert repo_in(data, "surgex")
+      assert repo_in(data, "testone")
+
 
       data = get_data(conn, :search, %{"q" => "Fiqus"})
       assert length(data) == 2
@@ -271,4 +272,6 @@ defmodule CoophubWeb.RepoControllerTest do
     response = conn |> get(uri) |> json_response(200)
     response["data"]
   end
+
+  defp repo_in(repos, name), do: Enum.find(repos, & &1["name"] == name) !== nil
 end

@@ -57,18 +57,18 @@ defmodule Coophub.ReposTest do
     test "returns a list with matching repos for a single term" do
       repos = Repos.search("test")
       assert length(repos) == 4
-      assert Enum.at(repos, 0)["name"] == "surgex"
-      assert Enum.at(repos, 1)["name"] == "testone"
-      assert Enum.at(repos, 2)["name"] == "testtwo"
-      assert Enum.at(repos, 3)["name"] == "testthree"
+      assert repo_in(repos, "surgex")
+      assert repo_in(repos, "testone")
+      assert repo_in(repos, "testtwo")
+      assert repo_in(repos, "testthree")
     end
 
     test "returns a list with matching repos for a single topic" do
       repos = Repos.search(%{"topics" => ["test"]})
       assert length(repos) == 3
-      assert Enum.at(repos, 0)["name"] == "surgex"
-      assert Enum.at(repos, 1)["name"] == "testone"
-      assert Enum.at(repos, 2)["name"] == "testthree"
+      assert repo_in(repos, "surgex")
+      assert repo_in(repos, "testone")
+      assert repo_in(repos, "testthree")
     end
 
     test "returns a list with matching repos for multiple terms" do
@@ -78,11 +78,11 @@ defmodule Coophub.ReposTest do
 
       repos = Repos.search(["test", "elixir-lang", "talks"], :or)
       assert length(repos) == 5
-      assert Enum.at(repos, 0)["name"] == "surgex"
-      assert Enum.at(repos, 1)["name"] == "uk-talk"
-      assert Enum.at(repos, 2)["name"] == "testone"
-      assert Enum.at(repos, 3)["name"] == "testtwo"
-      assert Enum.at(repos, 4)["name"] == "testthree"
+      assert repo_in(repos, "surgex")
+      assert repo_in(repos, "uk-talk")
+      assert repo_in(repos, "testone")
+      assert repo_in(repos, "testtwo")
+      assert repo_in(repos, "testthree")
     end
 
     test "returns a list with matching repos for a multiple topics" do
@@ -91,4 +91,6 @@ defmodule Coophub.ReposTest do
       assert Enum.at(repos, 0)["name"] == "surgex"
     end
   end
+
+  defp repo_in(repos, name), do: Enum.find(repos, & &1["name"] == name) !== nil
 end
