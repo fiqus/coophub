@@ -15,3 +15,28 @@ cambalab:
   url: https://www.camba.coop
   description: ""
   location: CABA
+
+devecoop:
+  name: Cooperativa de Trabajo Devecoop Ltda.
+  url: http://www.devecoop.com
+  description: ""
+  location: CABA
+
+Unixono:
+  name: Cooperativa de Trabajo Uníxono Ltda.
+  url: http://www.unixono.com
+  description: ""
+  location: Bahía Blanca
+
+geneos:
+  name: Geneos Cooperativa Software Libre Ltda.
+  url: http://www.geneos.com.ar
+  description: ""
+  location: Tandil
+
+bitson:
+  name: Cooperativa de Trabajo Bitson Ltda.
+  url: https://bitson.group/
+  description: ""
+  location: CABA
+  

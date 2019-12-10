@@ -71,13 +71,14 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavBar}/>
         <Collapse isOpen={!collapsed} navbar>
+            <span className="slogan">Open source from cooperatives over the world!</span>
             <form action="/search" method="get" className="ml-auto">
                 <Input name="q" placeholder="Search repos.." defaultValue={parseSearchQuery()}/>
             </form>
             <Nav className="ml-auto" navbar>
                 <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret>
-                        Coops
+                        Cooperatives
                     </DropdownToggle>
                     <DropdownMenu right style={{overflowY: "auto", maxHeight: 300}}>
                         <Suspense fallback={<DropdownItem>Loading...</DropdownItem>}>

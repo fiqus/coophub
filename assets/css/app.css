@@ -48,3 +48,7 @@ div.line-mf{
   overflow: hidden;
   white-space: nowrap;
 }
+
+.slogan {
+  padding-top: 5px;
+}
