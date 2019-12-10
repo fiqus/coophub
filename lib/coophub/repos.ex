@@ -205,7 +205,9 @@ defmodule Coophub.Repos do
   def search(query, style) do
     case get_all_repos() do
       repos when is_list(repos) ->
-        Enum.filter(repos, &is_repo_matching_query?(&1, query, style))
+        repos
+        |> Enum.filter(&is_repo_matching_query?(&1, query, style))
+        |> sort_and_take(&sort_field_popularity/1, "desc", nil)
 
       err ->
         err

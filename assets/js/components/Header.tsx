@@ -54,6 +54,10 @@ const TopicsList: React.FC<TopicsListProps> = ({navigate}) => {
 
 const Header: React.FC<RouteComponentProps> = ({history}) => {
 
+    const redirectToJoin = () => {
+        window.location.assign("https://github.com/fiqus/coophub#add-your-co-operative");
+    };
+
     const [collapsed, setCollapsed] = useState(true);
     const toggleNavBar = () => {
         setCollapsed(!collapsed);
@@ -72,8 +76,8 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
         <NavbarToggler onClick={toggleNavBar}/>
         <Collapse isOpen={!collapsed} navbar>
             <span className="slogan">Open source from cooperatives over the world!</span>
-            <form action="/search" method="get" className="ml-auto">
-                <Input name="q" placeholder="Search repos.." defaultValue={parseSearchQuery()}/>
+            <form action="/search" method="get" className="ml-auto search-form">
+                <Input name="q" placeholder="Search repos, coops or technologies" defaultValue={parseSearchQuery()}/>
             </form>
             <Nav className="ml-auto" navbar>
                 <UncontrolledDropdown nav inNavbar>
@@ -96,6 +100,11 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
                             <TopicsList navigate={navigate}/>
                         </Suspense>
                     </DropdownMenu>
+                </UncontrolledDropdown>
+                <UncontrolledDropdown nav onClick={redirectToJoin}>
+                    <DropdownToggle nav>
+                        How to join?
+                    </DropdownToggle>
                 </UncontrolledDropdown>
             </Nav>
         </Collapse>

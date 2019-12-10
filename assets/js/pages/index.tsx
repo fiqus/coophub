@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Suspense} from 'react';
 import {RouteComponentProps} from 'react-router-dom';
-import {CardDeck, Card, CardHeader, CardBody, Container, Row} from "reactstrap";
+import {CardDeck, Card, CardHeader, CardBody, Container, Row, Button} from "reactstrap";
 import useFetch from 'fetch-suspense';
 import {ApiResponse, Repo, TotalLanguage} from "../types";
 import RepoCard from "../components/RepoCard";
@@ -10,6 +10,7 @@ import LanguagesChart from '../components/LanguagesChart';
 import FakeChart from '../components/FakeChart'; 
 import _ from "lodash";
 
+type LanguagesResponse = ApiResponse<[TotalLanguage]>;
 type ReposResponse = ApiResponse<[Repo]>
 type urlProp = {url:string}
 
@@ -23,8 +24,8 @@ const RepoList: React.FC<urlProp> = ({url}) => {
     </>;
 };
 
-
 const HomePage: React.FC<RouteComponentProps> = () => {
+    const languagesResponse = useFetch("/api/languages") as LanguagesResponse;
     return <>
         <Container className="pt-xl-5">
             <div className="title-box text-center">
@@ -59,6 +60,30 @@ const HomePage: React.FC<RouteComponentProps> = () => {
             <br />
             <div className="title-box text-center">
                 <h3 className="title-a">
+                Languages
+                </h3>
+                <p className="subtitle-a">
+                Search repositories by the technologies we use
+                </p>
+                <div className="line-mf"/>
+            </div>
+            <div>
+                    {Object.keys(languagesResponse.data).map(lang => {
+                        const color = _.sample(['info', 'primary', 'secondary']);
+                        return (
+                            <a href={'/search?q=' + lang}>
+                                <Button color={color} className="ml-md-1 mt-md-3">
+                                    {lang}
+                                </Button>
+                            </a>
+                        )
+                    })}
+            </div>
+            <br />
+            <br />
+            <br />
+            <div className="title-box text-center">
+                <h3 className="title-a">
                 Some facts
                 </h3>
                 <p className="subtitle-a">
@@ -70,9 +95,9 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                 <Container className="col-12 mb-5">
                     <CardDeck>
                         <Card className="card card-blog mb-4">
-                            <CardHeader style={{color: "grey"}}><h5>Most Popular Languages</h5></CardHeader>
+                            <CardHeader style={{color: "grey"}}><h5>Most popular languages</h5></CardHeader>
                             <CardBody>
-                                <LanguagesChart url={"/api/languages"}/>
+                                <LanguagesChart languages={languagesResponse}/>
                             </CardBody>
                         </Card>
                         <Card className="card card-blog mb-4">

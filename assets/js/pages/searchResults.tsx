@@ -2,8 +2,9 @@ import * as React from 'react';
 import useFetch from 'fetch-suspense';
 import {RouteComponentProps, useLocation} from 'react-router';
 import {ApiResponse, Repo} from "../types";
-import {Container, CardColumns} from "reactstrap";
+import {Container, CardDeck} from "reactstrap";
 import RepoCard from "../components/RepoCard";
+import _ from "lodash";
 
 type ReposResponse = ApiResponse<[Repo]>
 
@@ -40,7 +41,7 @@ const SearchResultsPage: React.FC<RouteComponentProps> = () => {
   const repos = searchRepos(search);
 
   return <>
-    <Container className="pt-xl-5">
+    <Container className="pt-xl-5 result-repos-cards">
         <div className="title-box text-center">
             <h3 className="title-a">
                 Search results
@@ -48,11 +49,10 @@ const SearchResultsPage: React.FC<RouteComponentProps> = () => {
             {resultsMessage(repos.data.length, search)}
             <div className="line-mf"></div>
         </div>
-        <CardColumns>
-            {repos.data.map((repo, i) => (
-                <RepoCard key={i} repo={repo}/>
-            ))}
-        </CardColumns>
+        {_.chunk(repos.data, 3).map((row, i)=>
+          <CardDeck key={i}>
+              {row.map((repo, j)=><RepoCard repo={repo} key={i*10+j}/>)}
+          </CardDeck>)}
     </Container>
   </>
 }
