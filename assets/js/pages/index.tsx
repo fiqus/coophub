@@ -70,7 +70,7 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                 <Container className="col-12 mb-5">
                     <CardDeck>
                         <Card className="card card-blog mb-4">
-                            <CardHeader style={{color: "grey"}}><h5>Popular Languages</h5></CardHeader>
+                            <CardHeader style={{color: "grey"}}><h5>Most Popular Languages</h5></CardHeader>
                             <CardBody>
                                 <LanguagesChart url={"/api/languages"}/>
                             </CardBody>

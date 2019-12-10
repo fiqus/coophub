@@ -11,7 +11,7 @@ const LanguagesChart: React.FC<urlProp> = ({url}) => {
     const response = useFetch(url) as LanguagesResponse;
     const firstsLanguages = Object.keys(response.data).sort(
         (lA, lB) => response.data[lB].percentage - response.data[lA].percentage
-    ).slice(0, 16);
+    ).slice(0, 8);
     const langs = firstsLanguages.map(function(key) {
          return key;
     });
