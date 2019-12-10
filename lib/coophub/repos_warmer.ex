@@ -19,7 +19,7 @@ defmodule Coophub.Repos.Warmer do
   @doc """
   Executes this cache warmer.
   """
-  def execute(_state), do: maybe_warm(Mix.env())
+  def execute(_state), do: maybe_warm(Coophub.Application.env())
 
   defp maybe_warm(:dev) do
     Logger.info("Warming repos into cache from dump..", ansi_color: :yellow)

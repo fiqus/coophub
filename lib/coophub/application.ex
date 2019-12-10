@@ -23,7 +23,7 @@ defmodule Coophub.Application do
       # {Coophub.Worker, arg},
       %{
         id: CachexRepos,
-        start: {Cachex, :start_link, [@repos_cache_name, main_cache_opts(Mix.env())]}
+        start: {Cachex, :start_link, [@repos_cache_name, main_cache_opts(env())]}
       },
       %{
         id: CachexUris,
@@ -45,6 +45,9 @@ defmodule Coophub.Application do
     CoophubWeb.Endpoint.config_change(changed, removed)
     :ok
   end
+
+  def env, do: Application.get_env(:coophub, CoophubWeb.Endpoint)[:environment]
+  def env?(environment), do: env() == environment
 
   defp main_cache_opts(:test), do: []
 

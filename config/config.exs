@@ -9,6 +9,7 @@ use Mix.Config
 
 # Configures the endpoint
 config :coophub, CoophubWeb.Endpoint,
+  environment: Mix.env(),
   url: [host: "localhost"],
   secret_key_base: "j8dPu7alWBB8pf3xaMOJ1ulQBBm23vHIROUbGOyLthlPUiSg5wv/j+KevCnbsjWV",
   render_errors: [view: CoophubWeb.ErrorView, accepts: ~w(html json)],
@@ -25,7 +26,7 @@ config :coophub,
 
 # Configures Elixir's Logger
 config :logger, :console,
-  format: "$time $metadata[$level] $message\n",
+  format: "[$level][$date $time] $metadata$message\n",
   metadata: [:request_id]
 
 # Use Jason for JSON parsing in Phoenix
