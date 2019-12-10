@@ -4,6 +4,7 @@ defmodule CoophubWeb.RepoController do
   require Logger
 
   @uris_cache_name Application.get_env(:coophub, :uris_cache_name)
+  @uris_cache_success [:ok, :commit, :ignore]
   action_fallback(CoophubWeb.FallbackController)
 
   def index(conn, params) do
@@ -13,7 +14,7 @@ defmodule CoophubWeb.RepoController do
     fallback_mfa = {Repos, :get_orgs, [sort, limit]}
 
     case maybe_get_response_from_cache(conn, fallback_mfa) do
-      {status, orgs} when status in [:ok, :commit] -> render(conn, "index.json", orgs: orgs)
+      {status, orgs} when status in @uris_cache_success -> render(conn, "index.json", orgs: orgs)
       _ -> render_status(conn, 500)
     end
   end
@@ -23,7 +24,7 @@ defmodule CoophubWeb.RepoController do
 
     case maybe_get_response_from_cache(conn, fallback_mfa) do
       {_, nil} -> render_status(conn, 404)
-      {status, org} when status in [:ok, :commit] -> render(conn, "org.json", org: org)
+      {status, org} when status in @uris_cache_success -> render(conn, "org.json", org: org)
       _ -> render_status(conn, 500)
     end
   end
@@ -36,7 +37,7 @@ defmodule CoophubWeb.RepoController do
 
     case maybe_get_response_from_cache(conn, fallback_mfa) do
       {_, nil} -> render_status(conn, 404)
-      {status, org} when status in [:ok, :commit] -> render(conn, "org.json", org: org)
+      {status, org} when status in @uris_cache_success -> render(conn, "org.json", org: org)
       _ -> render_status(conn, 500)
     end
   end
@@ -48,8 +49,11 @@ defmodule CoophubWeb.RepoController do
     fallback_mfa = {Repos, :get_repos, [sort, limit]}
 
     case maybe_get_response_from_cache(conn, fallback_mfa) do
-      {status, repos} when status in [:ok, :commit] -> render(conn, "repos.json", repos: repos)
-      _ -> render_status(conn, 500)
+      {status, repos} when status in @uris_cache_success ->
+        render(conn, "repos.json", repos: repos)
+
+      _ ->
+        render_status(conn, 500)
     end
   end
 
@@ -59,8 +63,11 @@ defmodule CoophubWeb.RepoController do
     fallback_mfa = {Repos, :search, [query]}
 
     case maybe_get_response_from_cache(conn, fallback_mfa) do
-      {status, repos} when status in [:ok, :commit] -> render(conn, "repos.json", repos: repos)
-      _ -> render_status(conn, 500)
+      {status, repos} when status in @uris_cache_success ->
+        render(conn, "repos.json", repos: repos)
+
+      _ ->
+        render_status(conn, 500)
     end
   end
 
@@ -68,8 +75,11 @@ defmodule CoophubWeb.RepoController do
     fallback_mfa = {Repos, :get_topics, []}
 
     case maybe_get_response_from_cache(conn, fallback_mfa) do
-      {status, topics} when status in [:ok, :commit] -> render(conn, "topics.json", topics: topics)
-      _ -> render_status(conn, 500)
+      {status, topics} when status in @uris_cache_success ->
+        render(conn, "topics.json", topics: topics)
+
+      _ ->
+        render_status(conn, 500)
     end
   end
 
@@ -77,8 +87,11 @@ defmodule CoophubWeb.RepoController do
     fallback_mfa = {Repos, :get_languages, []}
 
     case maybe_get_response_from_cache(conn, fallback_mfa) do
-      {status, languages} when status in [:ok, :commit] -> render(conn, "languages.json", languages: languages)
-      _ -> render_status(conn, 500)
+      {status, languages} when status in @uris_cache_success ->
+        render(conn, "languages.json", languages: languages)
+
+      _ ->
+        render_status(conn, 500)
     end
   end
 
@@ -118,6 +131,7 @@ defmodule CoophubWeb.RepoController do
 
       case apply(mod, fun, args) do
         :error -> {:ignore, :error}
+        empty when empty in [[], %{}] -> {:ignore, empty}
         results -> {:commit, results}
       end
     end)
