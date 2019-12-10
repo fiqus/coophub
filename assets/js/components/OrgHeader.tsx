@@ -1,16 +1,16 @@
 import React from 'react';
 // @TODO [#22] Disabled because it breaks assets prod deploy with: npm run deploy
 //import GitHubButton from 'react-github-btn';
-import {Container, Jumbotron, ButtonGroup, Button, CardLink, Row, Col} from "reactstrap";
+import {Container, ButtonGroup, Button, CardLink, Row} from "reactstrap";
 import {GoLocation, GoLink, GoMail} from "react-icons/all";
-import LanguageProgressBar from './LanguageProgressBar'; 
 import {Org} from "../types";
+import {HorizontalBar} from 'react-chartjs-2'
+import LanguagesProgressBar from './LanguagesProgressBar';
 
 const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages}) => {
-    const mainLanguages = org.languages.slice(0, maxLanguages);
     const orgDate = new Date(org.created_at);
     const createdDate = `${orgDate.toLocaleString('default', { month: 'long' })} ${orgDate.getFullYear()}`
-
+    
     return (
         
         <Container>
@@ -25,7 +25,7 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages
                 <div className="line-mf mb-3"/>
                 <div className="skill-mf">
                     <Row>
-                        {mainLanguages.map(lang => <LanguageProgressBar key={lang.lang} language={lang} />)}
+                        <LanguagesProgressBar languages={org.languages} maxLanguages={maxLanguages}></LanguagesProgressBar>
                     </Row>
                 </div>
                 <ButtonGroup>
