@@ -240,7 +240,7 @@ defmodule Coophub.Repos do
       Regex.match?(re, repo["name"]) ||
       Regex.match?(re, repo["description"] || "") ||
       Enum.find(repo["topics"], &Regex.match?(re, &1)) != nil ||
-      Enum.find(repo["languages"] |> Enum.take(2), &Regex.match?(re, &1["lang"])) != nil
+      Enum.find(repo["languages"], &Regex.match?(re, &1["lang"])) != nil
   end
 
   defp repo_matches_topic?(repo, topic) do
