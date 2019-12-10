@@ -7,16 +7,19 @@ import 'chartjs-plugin-colorschemes';
 type LanguagesResponse = ApiResponse<[TotalLanguage]>;
 type urlProp = {url:string};
 
-const LanguagesChart: React.FC<urlProp> = ({url}) => {
-    const response = useFetch(url) as LanguagesResponse;
-    const firstsLanguages = Object.keys(response.data).sort(
-        (lA, lB) => response.data[lB].percentage - response.data[lA].percentage
+const LanguagesChart: React.FC<urlProp> = ({languages}) => {
+    // const response = useFetch(url) as LanguagesResponse;
+    if (!languages.data) {
+        return null;
+    }
+    const firstsLanguages = Object.keys(languages.data).sort(
+        (lA, lB) => languages.data[lB].percentage - languages.data[lA].percentage
     ).slice(0, 8);
     const langs = firstsLanguages.map(function(key) {
          return key;
     });
     const percentages = firstsLanguages.map(function(key) {
-        const lang = response.data[key];
+        const lang = languages.data[key];
         return lang.percentage;
     });
 
