@@ -9,14 +9,17 @@ type urlProp = {url:string};
 
 const LanguagesChart: React.FC<urlProp> = ({url}) => {
     const response = useFetch(url) as LanguagesResponse;
-    const langs = Object.keys(response.data).map(function(key) {
+    const firstsLanguages = Object.keys(response.data).sort(
+        (lA, lB) => response.data[lB].percentage - response.data[lA].percentage
+    ).slice(0, 16);
+    const langs = firstsLanguages.map(function(key) {
          return key;
     });
-    const percentages = Object.keys(response.data).map(function(key) {
+    const percentages = firstsLanguages.map(function(key) {
         const lang = response.data[key];
         return lang.percentage;
     });
-    
+
     const data = {
         labels: langs,
         datasets: [{
