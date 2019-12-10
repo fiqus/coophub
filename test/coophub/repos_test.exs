@@ -92,5 +92,5 @@ defmodule Coophub.ReposTest do
     end
   end
 
-  defp repo_in(repos, name), do: Enum.find(repos, & &1["name"] == name) !== nil
+  defp repo_in(repos, name), do: Enum.find(repos, &(&1["name"] == name)) !== nil
 end

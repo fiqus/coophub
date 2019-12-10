@@ -237,7 +237,6 @@ defmodule CoophubWeb.RepoControllerTest do
       assert repo_in(data, "surgex")
       assert repo_in(data, "testone")
 
-
       data = get_data(conn, :search, %{"q" => "Fiqus"})
       assert length(data) == 2
       assert Enum.at(data, 0)["name"] == "surgex"
@@ -273,5 +272,5 @@ defmodule CoophubWeb.RepoControllerTest do
     response["data"]
   end
 
-  defp repo_in(repos, name), do: Enum.find(repos, & &1["name"] == name) !== nil
+  defp repo_in(repos, name), do: Enum.find(repos, &(&1["name"] == name)) !== nil
 end
