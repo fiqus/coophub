@@ -12,12 +12,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Check code format
-      run: mix format --check-formatted
     - name: Install Dependencies
       run: |
         mix local.rebar --force
         mix local.hex --force
         mix deps.get
+    - name: Check code format
+      run: mix format --check-formatted
     - name: Run Tests
       run: mix test
