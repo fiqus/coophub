@@ -10,6 +10,7 @@ defmodule Coophub.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      releases: releases(),
       aliases: aliases(),
       preferred_cli_env: [
         coverage: :test
@@ -46,6 +47,16 @@ defmodule Coophub.MixProject do
       {:httpoison, "~> 1.4"},
       {:yaml_elixir, "~> 2.4"},
       {:cachex, "~> 3.1"}
+    ]
+  end
+
+  # App releases configuration.
+  defp releases do
+    [
+      coophub: [
+        include_executables_for: [:unix],
+        applications: [runtime_tools: :permanent, coophub: :permanent]
+      ]
     ]
   end
 

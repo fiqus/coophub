@@ -10,7 +10,10 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :coophub, CoophubWeb.Endpoint,
-  url: [host: "example.com", port: 80],
+  server: true,
+  http: [:inet6, port: System.get_env("PORT", "80")],
+  url: [host: nil, port: 443],
+  secret_key_base: System.fetch_env!("SECRET_KEY_BASE"),
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Configures app options
@@ -55,7 +58,3 @@ config :logger, level: :info
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
-
-# Finally import the config/prod.secret.exs which loads secrets
-# and configuration from environment variables.
-import_config "prod.secret.exs"
