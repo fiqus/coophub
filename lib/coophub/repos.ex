@@ -205,7 +205,9 @@ defmodule Coophub.Repos do
   def search(query, style) do
     case get_all_repos() do
       repos when is_list(repos) ->
-        Enum.filter(repos, &is_repo_matching_query?(&1, query, style))
+        repos
+        |> Enum.filter(&is_repo_matching_query?(&1, query, style))
+        |> sort_and_take(&sort_field_popularity/1, "desc", nil)
 
       err ->
         err
@@ -238,7 +240,7 @@ defmodule Coophub.Repos do
       Regex.match?(re, repo["name"]) ||
       Regex.match?(re, repo["description"] || "") ||
       Enum.find(repo["topics"], &Regex.match?(re, &1)) != nil ||
-      Enum.find(repo["languages"], &Regex.match?(re, &1["lang"])) != nil
+      Enum.find(repo["languages"] |> Enum.take(2), &Regex.match?(re, &1["lang"])) != nil
   end
 
   defp repo_matches_topic?(repo, topic) do
