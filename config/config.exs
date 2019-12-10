@@ -26,7 +26,7 @@ config :coophub,
 
 # Configures Elixir's Logger
 config :logger, :console,
-  format: "$time $metadata[$level] $message\n",
+  format: "[$level][$date $time] $metadata$message\n",
   metadata: [:request_id]
 
 # Use Jason for JSON parsing in Phoenix
