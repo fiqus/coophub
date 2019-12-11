@@ -95,6 +95,18 @@ defmodule CoophubWeb.RepoController do
     end
   end
 
+  def language(conn, %{"lang" => lang}) do
+    fallback_mfa = {Repos, :get_repos_by_language, [lang]}
+
+    case maybe_get_response_from_cache(conn, fallback_mfa) do
+      {status, repos} when status in @uris_cache_success ->
+        render(conn, "repos.json", repos: repos)
+
+      _ ->
+        render_status(conn, 500)
+    end
+  end
+
   defp get_sort(params) do
     %{
       "field" => Map.get(params, "sort", "latest"),

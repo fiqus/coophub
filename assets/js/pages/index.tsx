@@ -71,7 +71,7 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                     {Object.keys(languagesResponse.data).map(lang => {
                         const color = _.sample(['info', 'primary', 'secondary']);
                         return (
-                            <a href={'/search?q=' + lang}>
+                            <a href={'/languages/' + lang.toLowerCase()}>
                                 <Button color={color} className="ml-md-1 mt-md-3">
                                     {lang}
                                 </Button>

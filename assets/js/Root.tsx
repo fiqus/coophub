@@ -7,6 +7,7 @@ import HomePage from './pages';
 import OrgPage from './pages/org';
 import TopicsPage from './pages/topics';
 import SearchResultsPage from './pages/searchResults';
+import LanguageReposPage from './pages/languageRepos';
 import {Suspense} from "react";
 import FullWidthSpinner from "./components/FullWidthSpinner";
 
@@ -22,6 +23,7 @@ export default class Root extends React.Component {
                             <Route path="/orgs/:name" component={OrgPage} />
                             <Route path="/topics/:topic" component={TopicsPage} />
                             <Route path="/search" component={SearchResultsPage} />
+                            <Route path="/languages/:lang" component={LanguageReposPage} />
                         </Switch>
                     </Suspense>
                     <Footer/>

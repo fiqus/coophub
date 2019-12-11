@@ -9,7 +9,27 @@ defmodule Coophub.Repos do
   @gravity 1.8
   @percentage_for_updated_time 0.8
 
-  @spec get_all_orgs :: map | :error
+  @typedoc """
+  Org is a map representing an organisation
+  """
+  @type org :: Map.t()
+
+  @typedoc """
+  Repo is a map representing a repository
+  """
+  @type repo :: Map.t()
+
+  @typedoc """
+  Repos is a list of repo maps
+  """
+  @type repos :: List.t(repo()) | []
+
+  @typedoc """
+  Orgs is a list of org maps
+  """
+  @type orgs :: List.t(org()) | []
+
+  @spec get_all_orgs :: org() | :error
   def get_all_orgs() do
     case Cachex.keys(@repos_cache_name) do
       {:ok, keys} ->
@@ -26,7 +46,7 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_all_repos :: [map] | :error
+  @spec get_all_repos :: repos() | :error
   def get_all_repos() do
     case Cachex.keys(@repos_cache_name) do
       {:ok, keys} ->
@@ -44,7 +64,7 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_orgs(map, integer | nil) :: [map] | :error
+  @spec get_orgs(map, integer | nil) :: orgs() | :error
   def get_orgs(sort, limit \\ nil) do
     case get_all_orgs() do
       orgs when is_map(orgs) ->
@@ -58,7 +78,7 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_org(String.t()) :: map | nil | :error
+  @spec get_org(String.t()) :: org() | nil | :error
   def get_org(org_name) do
     case Cachex.get(@repos_cache_name, org_name) do
       {:ok, org} ->
@@ -70,7 +90,7 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_org_info(String.t()) :: map | nil | :error
+  @spec get_org_info(String.t()) :: org() | nil | :error
   def get_org_info(org_name) do
     case get_org(org_name) do
       nil -> nil
@@ -79,7 +99,7 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_org_repos(String.t(), map, integer | nil) :: [map] | nil | :error
+  @spec get_org_repos(String.t(), map, integer | nil) :: repos() | nil | :error
   def get_org_repos(org_name, sort, limit \\ nil) do
     case get_org(org_name) do
       %{"repos" => repos} ->
@@ -90,7 +110,7 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_repos(map, integer | nil) :: [map] | nil | :error
+  @spec get_repos(map, integer | nil) :: repos() | nil | :error
   def get_repos(sort, limit \\ nil) do
     case get_all_repos() do
       repos when is_list(repos) ->
@@ -187,7 +207,27 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_org_last_activity(map) :: float
+  @spec get_repos_by_language(any) :: repos() | :error
+  def get_repos_by_language(lang) do
+    case get_all_repos() do
+      :error ->
+        :error
+
+      repos ->
+        repos
+        |> Enum.filter(&repo_has_lang?(&1, lang))
+        |> sort_and_take(&sort_field_popularity/1, "desc", nil)
+    end
+  end
+
+  @spec repo_has_lang?(repo(), String.t()) :: Boolean.t()
+  defp repo_has_lang?(repo, lang) do
+    Enum.find(repo["languages"], fn %{"lang" => repo_lang} ->
+      String.downcase(repo_lang) == String.downcase(lang)
+    end) !== nil
+  end
+
+  @spec get_org_last_activity(org()) :: float
   def get_org_last_activity(org) do
     init = org["updated_at"] || org["created_at"]
 
@@ -197,7 +237,7 @@ defmodule Coophub.Repos do
     end)
   end
 
-  @spec search(binary | list | map, atom) :: :error | [map]
+  @spec search(binary | list | map, atom) :: :error | repos()
   def search(terms, style \\ :and)
   def search(term, style) when is_binary(term), do: search([term], style)
   def search(terms, style) when is_list(terms), do: search(%{"terms" => terms}, style)

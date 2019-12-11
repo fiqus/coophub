@@ -23,6 +23,7 @@ defmodule CoophubWeb.Router do
     get "/topics", RepoController, :topics
     get "/search", RepoController, :search
     get "/languages", RepoController, :languages
+    get "/languages/:lang", RepoController, :language
   end
 
   scope "/", CoophubWeb do
