@@ -2,7 +2,7 @@ import React from 'react';
 // @TODO [#22] Disabled because it breaks assets prod deploy with: npm run deploy
 //import GitHubButton from 'react-github-btn';
 import {Container, ButtonGroup, Button, CardLink, Row} from "reactstrap";
-import {GoLocation, GoLink, GoMail} from "react-icons/all";
+import {GoLocation, GoLink, GoMail, IoMdCalendar} from "react-icons/all";
 import {Org} from "../types";
 import {HorizontalBar} from 'react-chartjs-2'
 import LanguagesProgressBar from './LanguagesProgressBar';
@@ -14,7 +14,7 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages
     return (
         
         <Container>
-            <div className="title-box text-center mt-5">
+            <div className="title-box text-center mt-5 org-header">
                 <img src={org.avatar_url} alt="" className="center-block rounded-circle b-shadow-a avatar_coop"/>
                 <h3 className="title-a mt-4">
                 {org.name}
@@ -30,25 +30,26 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages
                 </div>
                 <ButtonGroup>
                     {org.location &&
-                        <Button color="link">
+                        <span>
                             <GoLocation/> { org.location }
-                        </Button>
+                        </span>
                     }
                     {org.email &&
-                        <Button color="link">
+                        <span className="ml-4">
                             <GoMail/> { org.email }
-                        </Button>
+                        </span>
                     }
                     {org.blog &&
-                        <Button color="link">
+                        <Button color="link" className="ml-4 pt-0">
                             <CardLink href={org.blog}> 
-                            <GoLink/> { org.blog }
-                        </CardLink>
+                                <GoLink/> { org.blog }
+                            </CardLink>
                         </Button>
                     }
-                    <Button color="link">
+                    <span className="ml-4">
+                        <IoMdCalendar />
                         Created in {createdDate}
-                    </Button>
+                    </span>
                 </ButtonGroup>
                 {/* <br/>
                 <p className="mt-2">
