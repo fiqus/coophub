@@ -48,7 +48,7 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                 Latest Repos
                 </h3>
                 <p className="subtitle-a">
-                What's cooking at cooperatives?
+                Follow the recently updated repos
                 </p>
                 <div className="line-mf"/>
             </div>
@@ -63,7 +63,7 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                 Languages
                 </h3>
                 <p className="subtitle-a">
-                Search repositories by the technologies we use
+                Search repositories by the used languages
                 </p>
                 <div className="line-mf"/>
             </div>
@@ -92,18 +92,12 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                 <div className="line-mf"/>
             </div>
             <Row>
-                <Container className="col-12 mb-5">
+                <Container className="col-6 mb-5">
                     <CardDeck>
                         <Card className="card card-blog mb-4">
                             <CardHeader style={{color: "grey"}}><h5>Most popular languages</h5></CardHeader>
                             <CardBody>
                                 <LanguagesChart languages={languagesResponse}/>
-                            </CardBody>
-                        </Card>
-                        <Card className="card card-blog mb-4">
-                            <CardHeader style={{color: "grey"}}><h5>Commits per month</h5></CardHeader>
-                            <CardBody>
-                                <FakeChart/>
                             </CardBody>
                         </Card>
                     </CardDeck>

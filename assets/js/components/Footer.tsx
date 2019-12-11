@@ -7,7 +7,7 @@ const Footer: React.FC = () =>
                 <div className="col-sm-12">
                     <div className="copyright-box">
                         <div className="credits">
-                        Created by <a href="https://fiqus.coop/">Fiqus</a>
+                        Created with ♥ by <a href="https://fiqus.coop/">Fiqus</a> | View the <a href="https://github.com/fiqus/coophub">GitHub repo</a>
                         </div>
                     </div>
                 </div>

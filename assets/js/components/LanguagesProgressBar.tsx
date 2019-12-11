@@ -15,7 +15,7 @@ const LanguagesProgressBar:React.FC<{languages: Array<Language>, maxLanguages: n
      }
      mainLanguages.push({bytes: 0,lang: "other", percentage: 100.0 - (mainLanguages.reduce((acc, lang) => acc + lang.percentage, 0))})
      const data ={ 
-       datasets: mainLanguages.map(i => {return {label: `${i.lang} - ${Number(i.percentage).toFixed(2)}%`, 
+       datasets: mainLanguages.map(i => {return {label: `${i.lang} (${Number(i.percentage).toFixed(2)}%)`, 
                                                  barThickness: 10, 
                                                  data: [i.percentage]}}),
        labels:['languages']
