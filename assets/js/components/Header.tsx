@@ -64,7 +64,7 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavBar}/>
         <Collapse isOpen={!collapsed} navbar>
-            <span className="slogan">Open source from cooperatives around the world!</span>
+            <span className="slogan">Repos from cooperatives around the world!</span>
             <form action="/search" method="get" className="ml-auto search-form">
                 <Input name="q" placeholder="Search repos, coops or technologies" defaultValue={parseSearchQuery()}/>
             </form>
