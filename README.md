@@ -8,7 +8,14 @@ The main goal is to find in-the-same-place all the open source projects that can
 
 ## Add your co-operative
 1. [Fork this repo](https://github.com/fiqus/coophub/fork).
-2. Add your co-op in the [cooperatives.yml](https://github.com/fiqus/coophub/blob/master/cooperatives.yml) file.
+2. Add your co-op in the [cooperatives.yml](https://github.com/fiqus/coophub/blob/master/cooperatives.yml) file:
+```
+github_org_name:
+  name: <NAME_OF_THE_COOP>
+  url: <URL_OF_THE_COOP>
+  description: <DESCRIPTION>
+  location: <LOCATION>
+```
 3. Add-commit-push and send us a Pull Request!
 
 ## Development
