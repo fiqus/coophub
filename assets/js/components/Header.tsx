@@ -41,17 +41,6 @@ const CoopList: React.FC<CoopListProps> = ({navigate}) => {
     </>
 };
 
-type TopicsResponse = ApiResponse<[Topic]>
-const TopicsList: React.FC<TopicsListProps> = ({navigate}) => {
-    const topics = useFetch("/api/topics") as TopicsResponse;
-    return <>
-        {topics.data.map((t: Topic, i) => <DropdownItem key={i} onClick={()=>navigate(`/topics/${t.topic}`)}>
-            {t.topic}
-        </DropdownItem>)}
-    </>
-};
-
-
 const Header: React.FC<RouteComponentProps> = ({history}) => {
 
     const redirectToJoin = () => {
@@ -91,16 +80,6 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
                     </DropdownMenu>
                 </UncontrolledDropdown>
 
-                <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle nav caret>
-                        Topics
-                    </DropdownToggle>
-                    <DropdownMenu right style={{overflowY: "auto", maxHeight: 300}}>
-                        <Suspense fallback={<DropdownItem>Loading...</DropdownItem>}>
-                            <TopicsList navigate={navigate}/>
-                        </Suspense>
-                    </DropdownMenu>
-                </UncontrolledDropdown>
                 <UncontrolledDropdown nav onClick={redirectToJoin}>
                     <DropdownToggle nav>
                         How to join?

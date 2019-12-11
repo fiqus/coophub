@@ -9,7 +9,7 @@ import LanguagesProgressBar from './LanguagesProgressBar';
 
 const OrgHeader:React.FC<{org: Org, maxLanguages: number}> = ({org, maxLanguages}) => {
     const orgDate = new Date(org.created_at);
-    const createdDate = `${orgDate.toLocaleString('default', { month: 'long' })} ${orgDate.getFullYear()}`
+    const createdDate = `${orgDate.toLocaleString('en', { month: 'long' })} ${orgDate.getFullYear()}`
     
     return (
         

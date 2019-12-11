@@ -4,11 +4,9 @@ import {Doughnut} from 'react-chartjs-2';
 import useFetch from 'fetch-suspense';
 import 'chartjs-plugin-colorschemes';
 
-type LanguagesResponse = ApiResponse<[TotalLanguage]>;
 type urlProp = {url:string};
 
 const LanguagesChart: React.FC<urlProp> = ({languages}) => {
-    // const response = useFetch(url) as LanguagesResponse;
     if (!languages.data) {
         return null;
     }

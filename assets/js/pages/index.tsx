@@ -3,15 +3,15 @@ import {Suspense} from 'react';
 import {RouteComponentProps} from 'react-router-dom';
 import {CardDeck, Card, CardHeader, CardBody, Container, Row, Button} from "reactstrap";
 import useFetch from 'fetch-suspense';
-import {ApiResponse, Repo, TotalLanguage} from "../types";
+import {ApiResponse, Repo, TotalLanguage, Topic} from "../types";
 import RepoCard from "../components/RepoCard";
 import FullWidthSpinner from "../components/FullWidthSpinner";
 import LanguagesChart from '../components/LanguagesChart';
-import FakeChart from '../components/FakeChart'; 
 import _ from "lodash";
 
 type LanguagesResponse = ApiResponse<[TotalLanguage]>;
 type ReposResponse = ApiResponse<[Repo]>
+type TopicsResponse = ApiResponse<[Topic]>
 type urlProp = {url:string}
 
 const RepoList: React.FC<urlProp> = ({url}) => {
@@ -24,8 +24,14 @@ const RepoList: React.FC<urlProp> = ({url}) => {
     </>;
 };
 
-const HomePage: React.FC<RouteComponentProps> = () => {
+
+const HomePage: React.FC<RouteComponentProps> = ({history}) => {
     const languagesResponse = useFetch("/api/languages") as LanguagesResponse;
+    const topics = useFetch("/api/topics") as TopicsResponse;
+    const navigate = (url: string) =>{
+        history.push(url);
+    };
+
     return <>
         <Container className="pt-xl-5">
             <div className="title-box text-center">
@@ -78,6 +84,25 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                             </a>
                         )
                     })}
+            </div>
+            <br />
+            <br />
+            <br />
+            <div className="title-box text-center">
+                <h3 className="title-a">
+                Topics
+                </h3>
+                <p className="subtitle-a">
+                Search repositories by topics
+                </p>
+                <div className="line-mf"/>
+            </div>
+            <div>
+                {
+                    topics.data.map((t: Topic, i) => <Button className="ml-md-1 mt-md-1" outline size="sm" key={i} onClick={()=>navigate(`/topics/${t.topic}`)}>
+                        {t.topic}
+                    </Button>)
+                }
             </div>
             <br />
             <br />

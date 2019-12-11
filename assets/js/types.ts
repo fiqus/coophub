@@ -44,6 +44,7 @@ export type Org = {
     email: string;
     login: string;
     languages: Array<Language>;
+    created_at: string;
 }
 
 export type Topic = {
