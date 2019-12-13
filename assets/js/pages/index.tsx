@@ -78,7 +78,7 @@ const HomePage: React.FC<RouteComponentProps> = ({history}) => {
                     {Object.keys(languagesResponse.data).map(lang => {
                         const color = getLangColor(lang);
                         return (
-                            <Button className="ml-md-1 mt-md-3" key={lang} tag={Link} style={{backgroundColor: color}} to={'/languages/' + lang.toLowerCase()}>
+                            <Button key={lang} tag={Link} style={{backgroundColor: color}} to={'/languages/' + lang.toLowerCase()}>
                                  {lang} 
                             </Button>
                         )
@@ -99,7 +99,7 @@ const HomePage: React.FC<RouteComponentProps> = ({history}) => {
             <div className="topic-button-container">
                 {
                     topics.data.map((t: Topic, i) => 
-                    <Button className="ml-md-1 mt-md-1" tag={Link} outline size="sm" key={i} to={`/topics/${t.topic}`}>
+                    <Button tag={Link} outline size="sm" key={i} to={`/topics/${t.topic}`}>
                         {t.topic}
                     </Button>)
                 }
