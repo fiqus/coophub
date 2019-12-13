@@ -6,7 +6,7 @@ import Helpers from "../helpers";
 import getLangColor from '../languageColors';
 
 const RepoCard:React.FC<{repo: Repo}> = ({repo}) => {
-    const langs = repo.languages.slice(0, 2).map(l => l.lang);
+    const langs = repo.languages.filter(l => l.percentage > 30).sort((a,b)=>b.percentage - a.percentage).map(l => l.lang);
     const langColors = (langs.length == 1?[langs[0], langs[0]]:langs).map(l=>getLangColor(l)).join(",");
 
     return (
