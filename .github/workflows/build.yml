@@ -65,7 +65,7 @@ jobs:
           APPLICATION: coophub
 
       - name: Publish package
-      - uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v1
         with:
           name: coophub-release
           path: ${{ steps.build_package.outputs.archive }}
