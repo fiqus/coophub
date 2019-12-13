@@ -750,7 +750,7 @@ a:hover {
 ======================================*/
 
 .counter-box {
-  color: #fff;
+  color: #000;
   text-align: center;
 }
 
@@ -766,7 +766,7 @@ a:hover {
 }
 
 .counter-num .counter {
-  font-size: 2rem;
+  font-size: 3rem;
   margin-bottom: 0;
 }
 
