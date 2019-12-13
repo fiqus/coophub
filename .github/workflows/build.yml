@@ -1,0 +1,71 @@
+name: CI - Build
+
+on:
+  push:
+    branches:
+      #- master @TODO Enable master once testing is done!
+      - ci-deploy
+
+jobs:
+  build:
+    name: OTP ${{ matrix.otp }} | Elixir ${{ matrix.elixir }} | Node ${{ matrix.node }} | OS ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04]
+        otp: [22.0.7]
+        elixir: [1.9.1]
+        node: [12.8.0]
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-elixir@v1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install dependencies
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix archive.install --force https://raw.githubusercontent.com/phoenixframework/archives/master/phx_new.ez
+          mix deps.get
+          npm install
+
+      - name: Check code format
+        run: mix format --check-formatted
+      - name: Run tests
+        run: mix test
+
+      - name: Build release
+        run: |
+          export SECRET_KEY_BASE=$(MIX_ENV=test mix phx.gen.secret)
+          mix compile
+          npm run deploy
+          mix phx.digest
+          mix release
+        env:
+          MIX_ENV: prod
+
+      - name: Build package
+        run: |
+          version="`date '+%Y%m%d-%H%M%S'`-`echo $REVISION | cut -c1-8 `"
+          release="$RELEASE_PATH/$APPLICATION"
+          archive="$APPLICATION-rel-$version.tar.gz"
+          echo $REVISION > $release/REVISION
+          echo $version > $release/VERSION
+          tar -zcvf $archive -C $RELEASE_PATH .
+        env:
+          REVISION: ${{ github.sha }}
+          RELEASE_PATH: _build/prod/rel
+          APPLICATION: coophub
+
+      - name: Publish package
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: 'coophub-rel-*'
