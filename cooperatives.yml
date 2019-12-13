@@ -45,3 +45,9 @@ nayracoop:
   url: https://nayra.coop/
   description: ""
   location: Provincia de Buenos Aires
+
+hyphacoop:
+  name: Hypha Worker Co-op
+  url: https://hypha.coop
+  description: "We cultivate collective growth and meaningful livelihoods through learning and building technologies together."
+  location: Toronto, Canada
