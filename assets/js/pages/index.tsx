@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Suspense} from 'react';
-import {RouteComponentProps} from 'react-router-dom';
+import {RouteComponentProps, Link} from 'react-router-dom';
 import {CardDeck, Card, CardHeader, CardBody, Container, Row, Button} from "reactstrap";
 import useFetch from 'fetch-suspense';
 import {ApiResponse, Repo, TotalLanguage, Topic} from "../types";
@@ -8,6 +8,7 @@ import RepoCard from "../components/RepoCard";
 import FullWidthSpinner from "../components/FullWidthSpinner";
 import LanguagesChart from '../components/LanguagesChart';
 import _ from "lodash";
+import getLangColor from '../languageColors';
 
 type LanguagesResponse = ApiResponse<[TotalLanguage]>;
 type ReposResponse = ApiResponse<[Repo]>
@@ -73,15 +74,13 @@ const HomePage: React.FC<RouteComponentProps> = ({history}) => {
                 </p>
                 <div className="line-mf"/>
             </div>
-            <div>
+            <div className="language-button-container">
                     {Object.keys(languagesResponse.data).map(lang => {
-                        const color = _.sample(['info', 'primary', 'secondary']);
+                        const color = getLangColor(lang);
                         return (
-                            <a href={'/languages/' + lang.toLowerCase()}>
-                                <Button color={color} className="ml-md-1 mt-md-3">
-                                    {lang}
-                                </Button>
-                            </a>
+                            <Button className="ml-md-1 mt-md-3" key={lang} tag={Link} style={{backgroundColor: color}} to={'/languages/' + lang.toLowerCase()}>
+                                 {lang} 
+                            </Button>
                         )
                     })}
             </div>
@@ -97,9 +96,10 @@ const HomePage: React.FC<RouteComponentProps> = ({history}) => {
                 </p>
                 <div className="line-mf"/>
             </div>
-            <div>
+            <div className="topic-button-container">
                 {
-                    topics.data.map((t: Topic, i) => <Button className="ml-md-1 mt-md-1" outline size="sm" key={i} onClick={()=>navigate(`/topics/${t.topic}`)}>
+                    topics.data.map((t: Topic, i) => 
+                    <Button className="ml-md-1 mt-md-1" tag={Link} outline size="sm" key={i} to={`/topics/${t.topic}`}>
                         {t.topic}
                     </Button>)
                 }
