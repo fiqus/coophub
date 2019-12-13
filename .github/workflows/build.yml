@@ -57,15 +57,15 @@ jobs:
           archive="$APPLICATION-rel-$version.tar.gz"
           echo $REVISION > $release/REVISION
           echo $version > $release/VERSION
-          tar -zcvf $archive -C $RELEASE_PATH .
+          tar -zcf $archive -C $RELEASE_PATH .
+          echo "##[set-output name=archive;]$archive"
         env:
           REVISION: ${{ github.sha }}
           RELEASE_PATH: _build/prod/rel
           APPLICATION: coophub
 
       - name: Publish package
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v1
         with:
-          args: 'coophub-rel-*'
+          name: coophub-release
+          path: ${{ steps.build_package.outputs.archive }}
