@@ -51,6 +51,7 @@ jobs:
           MIX_ENV: prod
 
       - name: Build package
+        id: build_package
         run: |
           version="`date '+%Y%m%d-%H%M%S'`-`echo $REVISION | cut -c1-8 `"
           release="$RELEASE_PATH/$APPLICATION"
@@ -58,7 +59,7 @@ jobs:
           echo $REVISION > $release/REVISION
           echo $version > $release/VERSION
           tar -zcf $archive -C $RELEASE_PATH .
-          echo "::set-output name=archive::test_$archive"
+          echo "::set-output name=archive::$archive"
           echo "Release package built at $archive"
         env:
           REVISION: ${{ github.sha }}
