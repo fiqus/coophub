@@ -58,8 +58,8 @@ jobs:
           echo $REVISION > $release/REVISION
           echo $version > $release/VERSION
           tar -zcf $archive -C $RELEASE_PATH .
-          echo "::set-output name=archive::$archive"
-          echo "Release archive built at $archive"
+          echo "::set-output name=archive::test_$archive"
+          echo "Release package built at $archive"
         env:
           REVISION: ${{ github.sha }}
           RELEASE_PATH: _build/prod/rel
