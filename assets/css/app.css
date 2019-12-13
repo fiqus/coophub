@@ -1,63 +1,103 @@
 /* This file is for your main application css. */
 
 .container-org-header .org-avatar {
-  width: 200px;
-  border: solid 1px white;
-}
-.container-org-header .org-description {
-  color: #777777;
+    width: 200px;
+    border: solid 1px white;
 }
 
-body { padding-top: 85px; background-color: white;}
+.container-org-header .org-description {
+    color: #777777;
+}
+
+body {
+    padding-top: 85px;
+    background-color: white;
+}
 
 #logo {
-  height: 30px;
-  margin: 0;
+    height: 30px;
+    margin: 0;
 }
 
 @media (min-width: 1200px) {
-  #logo { height: 60px }
+    #logo {
+        height: 60px
+    }
 }
 
-div.line-mf{
-  background-color: #00aad4;
-}
-.navbar-b.navbar-reduce .nav-link, .navbar-b.navbar-reduce .nav-link:hover{
-  color: #00aad4;
+div.line-mf {
+    background-color: #00aad4;
 }
 
-.navbar-b.navbar-reduce .nav-link:before{
-  background-color: #00aad4;
+.navbar-b.navbar-reduce .nav-link,
+.navbar-b.navbar-reduce .nav-link:hover {
+    color: #00aad4;
 }
 
-.skill-mf .progress .progress-bar{
-  background-color: #00aad4;
+.navbar-b.navbar-reduce .nav-link:before {
+    background-color: #00aad4;
 }
 
-.skill-mf .progress{
-  background-color: #b0f4ff;
+.skill-mf .progress .progress-bar {
+    background-color: #00aad4;
 }
 
-.btn-link, a:hover {
-  color: #00aad4;
+.skill-mf .progress {
+    background-color: #b0f4ff;
 }
 
-.card-header h5{
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+.btn-link,
+a:hover {
+    color: #00aad4;
 }
 
-.org-repos-cards .card, .result-repos-cards .card {
-  flex: 0 0 31%;
-  margin-left: 1%;
-  margin-right: 1%;
+.card-header h5 {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.org-repos-cards .card,
+.result-repos-cards .card {
+    flex: 0 0 31%;
+    margin-left: 1%;
+    margin-right: 1%;
 }
 
 .search-form input {
-  width: 300px;
+    width: 300px;
 }
 
 .slogan {
-  padding-top: 5px;
+    padding-top: 5px;
+}
+
+.language-button-container,
+.topic-button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.language-button-container>a {
+    border: none;
+    margin: 5px;
+}
+
+.topic-button-container>a {
+    margin: 5px;
+}
+
+.card-blog .card-category {
+    padding-top: 3px;
+    background-color: rgba(131, 140, 150, .8);
+}
+
+.card-category-border {
+    display: inline-block;
+    padding: 2px;
+    overflow: hidden;
+    background-color: #838c96;
+    border-radius: 6px;
+    line-height: .8;
 }
