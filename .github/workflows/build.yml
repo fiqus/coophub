@@ -55,19 +55,45 @@ jobs:
         run: |
           version="`date '+%Y%m%d-%H%M%S'`-`echo $REVISION | cut -c1-8 `"
           release="$RELEASE_PATH/$APPLICATION"
-          archive="$APPLICATION-rel-$version.tar.gz"
+          archive="$APPLICATION-$version.tar.gz"
+          cp cooperatives.yml $release/
           echo $REVISION > $release/REVISION
           echo $version > $release/VERSION
-          tar -zcf $archive -C $RELEASE_PATH .
+          tar -zcf $archive -C $RELEASE_PATH
           echo "::set-output name=archive::$archive"
+          echo "::set-output name=version::$version"
           echo "Release package built at $archive"
         env:
           REVISION: ${{ github.sha }}
           RELEASE_PATH: _build/prod/rel
           APPLICATION: coophub
 
-      - name: Publish package
+      - name: Upload package artifact
         uses: actions/upload-artifact@v1
         with:
           name: coophub-release
           path: ${{ steps.build_package.outputs.archive }}
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: latest
+          target_commitish: master
+          release_name: Release v${{ steps.build_package.outputs.version }}
+          body: Release for commit ${{ github.sha }}
+          draft: false
+          prerelease: false
+
+      - name: Upload release asset
+        id: upload_release 
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_package.outputs.archive }}
+          asset_name: ${{ steps.build_package.outputs.archive }}
+          asset_content_type: application/tar+gzip
