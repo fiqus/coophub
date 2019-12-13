@@ -3,6 +3,7 @@ import {ApiResponse, Repo, TotalLanguage} from "../types";
 import {Doughnut} from 'react-chartjs-2';
 import useFetch from 'fetch-suspense';
 import 'chartjs-plugin-colorschemes';
+import getLangColor from '../languageColors';
 
 type urlProp = {url:string};
 
@@ -24,7 +25,8 @@ const LanguagesChart: React.FC<urlProp> = ({languages}) => {
     const data = {
         labels: langs,
         datasets: [{
-            data: percentages
+            data: percentages,
+            backgroundColor: langs.map(getLangColor)
         }],
     };
 
@@ -46,11 +48,6 @@ const LanguagesChart: React.FC<urlProp> = ({languages}) => {
         responsive: true,
         rotation: 1 * Math.PI,
         circumference: 1 * Math.PI,
-        plugins: {
-            colorschemes: {
-                scheme: 'tableau.Tableau20'
-            }
-        },
         tooltips: {
             callbacks: {
                 label: function(tooltipItem, data) {
