@@ -87,3 +87,17 @@ a:hover {
 .topic-button-container>a {
     margin: 5px;
 }
+
+.card-blog .card-category {
+    padding-top: 3px;
+    background-color: rgba(131, 140, 150, .8);
+}
+
+.card-category-border {
+    display: inline-block;
+    padding: 2px;
+    overflow: hidden;
+    background-color: #838c96;
+    border-radius: 6px;
+    line-height: .8;
+}
