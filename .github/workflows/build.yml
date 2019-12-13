@@ -59,7 +59,7 @@ jobs:
           cp cooperatives.yml $release/
           echo $REVISION > $release/REVISION
           echo $version > $release/VERSION
-          tar -zcf $archive -C $RELEASE_PATH
+          tar -zcf $archive -C $RELEASE_PATH $APPLICATION
           echo "::set-output name=archive::$archive"
           echo "::set-output name=version::$version"
           echo "Release package built at $archive"
