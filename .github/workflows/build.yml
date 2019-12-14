@@ -82,7 +82,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: latest
+          tag_name: v${{ steps.build_package.outputs.timestamp }}
           target_commitish: ${{ github.sha }}
           release_name: Release v${{ steps.build_package.outputs.timestamp }}
           body: Release for commit ${{ github.sha }}
