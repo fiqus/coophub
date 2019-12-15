@@ -1,14 +1,12 @@
 name: CI - Build
 
 on:
-  push:
-    branches:
-      #- master @TODO Enable master once testing is done!
-      - ci-deploy
+  release:
+    types: [published]
 
 jobs:
   build:
-    name: OTP ${{ matrix.otp }} | Elixir ${{ matrix.elixir }} | Node ${{ matrix.node }} | OS ${{ matrix.os }}
+    name: Build OTP ${{ matrix.otp }} | Elixir ${{ matrix.elixir }} | Node ${{ matrix.node }} | OS ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -76,18 +74,18 @@ jobs:
           name: coophub-release
           path: ${{ steps.build_package.outputs.archive }}
 
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ steps.build_package.outputs.timestamp }}
-          target_commitish: ${{ github.sha }}
-          release_name: Release v${{ steps.build_package.outputs.timestamp }}
-          body: Release for commit ${{ github.sha }}
-          draft: false
-          prerelease: false
+      # - name: Create release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: v${{ steps.build_package.outputs.timestamp }}
+      #     target_commitish: master
+      #     release_name: Release v${{ steps.build_package.outputs.timestamp }}
+      #     body: Release for commit ${{ github.sha }}
+      #     draft: true
+      #     prerelease: false
 
       - name: Upload release asset
         id: upload_release 
@@ -95,7 +93,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          #upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ github.event.release.upload_url }}
           asset_path: ${{ steps.build_package.outputs.archive }}
           asset_name: ${{ steps.build_package.outputs.archive }}
           asset_content_type: application/tar+gzip

@@ -1,12 +1,6 @@
 name: CI - Test
 
-on:
-  # pull_request:
-  #   branches:
-  #     - '**'
-  push:
-    branches-ignore:
-      - master
+on: [push, pull_request]
 
 jobs:
   test:
