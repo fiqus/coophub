@@ -1,6 +1,5 @@
 import React from 'react';
-// @TODO [#22] Disabled because it breaks assets prod deploy with: npm run deploy
-//import GitHubButton from 'react-github-btn';
+import GitHubButton from 'react-github-btn';
 import {Container, ButtonGroup, Button, CardLink, Row} from "reactstrap";
 import {GoLocation, GoLink, GoMail, IoMdCalendar} from "react-icons/all";
 import {Org} from "../types";
@@ -79,19 +78,20 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, reposQuantity: number,
                         Created in {createdDate}
                     </span>
                 </ButtonGroup>
-                {/* <br/>
+                <br/>
                 <p className="mt-2">
-                    <GitHubButton  href={"https://github.com/" + org.login} data-size="large"
-                                data-show-count
-                                aria-label={"Follow @ " + org.login + " on GitHub"}>
-                    Follow @{org.login}
+                    <GitHubButton
+                        href={`https://github.com/${org.login}`}
+                        data-size="large"
+                        data-show-count
+                        aria-label={`Follow @${org.login} on GitHub`}
+                    >
+                        Follow @{org.login}
                     </GitHubButton>
-                </p> */}
+                </p>
             </div>
-            
-            
         </Container>
-        
+
     );
 };
 
