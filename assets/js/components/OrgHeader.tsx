@@ -16,8 +16,8 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, reposQuantity: number,
         <Container>
             <div className="title-box text-center mt-5 org-header">
                 <Row>
-                    <Container className="col-2 pt-5">
-                        <div className="counter-box counter-box pt-4 pt-md-0">
+                    <Container className="col-1">
+                        <div className="counter-box counter-box mt-5">
                             <div className="counter-ico">
                                 <span className="ico-circle"><GoStar/></span>
                             </div>
@@ -27,7 +27,7 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, reposQuantity: number,
                             </div>
                         </div>
                     </Container>
-                    <Container className="col">
+                    <Container className="col-10">
                         <img src={org.avatar_url} alt="" className="center-block rounded-circle b-shadow-a avatar_coop"/>
                         <h3 className="title-a mt-4">
                         {org.name}
@@ -36,8 +36,8 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, reposQuantity: number,
                         {org.description}
                         </p>
                     </Container>
-                    <Container className="col-2 pt-5">
-                        <div className="counter-box counter-box pt-4 pt-md-0">
+                    <Container className="col-1">
+                        <div className="counter-box counter-box mt-5">
                             <div className="counter-ico">
                                 <span className="ico-circle"><GoCode/></span>
                             </div>
