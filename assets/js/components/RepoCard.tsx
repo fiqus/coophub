@@ -12,7 +12,7 @@ const RepoCard:React.FC<{repo: Repo}> = ({repo}) => {
 
     return (
         <Card className="card card-blog mb-4">
-            <CardHeader style={{color: "grey"}}><h5><a href={repo.html_url}>{repo.name}</a></h5></CardHeader>
+            <CardHeader style={{color: "grey"}}><h5><a href={repo.html_url} target="_blank">{repo.name}</a></h5></CardHeader>
             <CardBody>
                 {langs.length ?
                     <div className="card-category-box">
@@ -26,7 +26,7 @@ const RepoCard:React.FC<{repo: Repo}> = ({repo}) => {
                     </div>
                 : ""}
                 <CardText>
-                    {repo.fork && repo.parent ? <a href={repo.parent.url} className="card-fork"><GoRepoForked/>{repo.parent.name}</a> : ""}
+                    {repo.fork && repo.parent ? <a href={repo.parent.url} target="_blank" className="card-fork"><GoRepoForked/>{repo.parent.name}</a> : ""}
                     {repo.description ? <Emoji text={repo.description}/> : <i>- no description -</i>}
                 </CardText>
             </CardBody>
@@ -38,8 +38,8 @@ const RepoCard:React.FC<{repo: Repo}> = ({repo}) => {
                     </a>
                 </div>
                 <div className="post-date">
-                    <CardLink href={`${repo.html_url}/fork`}><GoRepoForked/> {repo.forks_count}</CardLink>
-                    <CardLink href={`${repo.html_url}/stargazers`}><GoStar/>{repo.stargazers_count}</CardLink>
+                    <CardLink href={`${repo.html_url}/fork`} target="_blank"><GoRepoForked/> {repo.forks_count}</CardLink>
+                    <CardLink href={`${repo.html_url}/stargazers`} target="_blank"><GoStar/>{repo.stargazers_count}</CardLink>
                 </div>
                 
             </CardFooter>
