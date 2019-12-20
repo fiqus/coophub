@@ -105,6 +105,7 @@ defmodule Coophub.Repos.Warmer do
             |> put_popularities()
             |> put_topics(org)
             |> put_languages(org)
+            |> put_repo_data(org)
 
           Logger.info("Fetched #{length(repos)} repos for #{org}", ansi_color: :yellow)
           repos
@@ -202,6 +203,35 @@ defmodule Coophub.Repos.Warmer do
         end
 
       put_repo_languages_stats(repo, languages)
+    end)
+  end
+
+  defp put_repo_data(repos, org) do
+    Enum.map(repos, fn repo ->
+      repo_name = repo["name"]
+
+      repo_data =
+        case call_api_get("repos/#{org}/#{repo_name}") do
+          {:ok, body} ->
+            body
+
+          {:error, reason} ->
+            Logger.error(
+              "Error getting repo data for '#{org}/#{repo_name}' from github: #{inspect(reason)}"
+            )
+
+            %{}
+        end
+
+      parent = Map.get(repo_data, "parent")
+
+      case parent do
+        %{"full_name" => name, "html_url" => url} ->
+          Map.put(repo, "parent", %{"name" => name, "url" => url})
+
+        _ ->
+          repo
+      end
     end)
   end
 

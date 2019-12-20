@@ -101,3 +101,9 @@ a:hover {
     border-radius: 6px;
     line-height: .8;
 }
+
+a.card-fork {
+    display: block;
+    font-size: small;
+    margin-bottom: 6px;
+}
