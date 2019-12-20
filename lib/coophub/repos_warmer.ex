@@ -217,19 +217,20 @@ defmodule Coophub.Repos.Warmer do
 
           {:error, reason} ->
             Logger.error(
-              "Error getting repo data for '#{org}/#{repo_name}' from github: #{
-                inspect(reason)
-              }"
+              "Error getting repo data for '#{org}/#{repo_name}' from github: #{inspect(reason)}"
             )
 
             %{}
         end
-      
+
       parent = Map.get(repo_data, "parent")
+
       case parent do
         %{"full_name" => name, "html_url" => url} ->
           Map.put(repo, "parent", %{"name" => name, "url" => url})
-        _ -> repo 
+
+        _ ->
+          repo
       end
     end)
   end
