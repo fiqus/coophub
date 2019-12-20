@@ -27,7 +27,7 @@ const RepoCard:React.FC<{repo: Repo}> = ({repo}) => {
                 : ""}
                 <CardText>
                     {repo.fork && repo.parent ? <a href={repo.parent.url} className="card-fork"><GoRepoForked/>{repo.parent.name}</a> : ""}
-                    {<Emoji text={repo.description}/> || <i>- no description -</i>}
+                    {repo.description ? <Emoji text={repo.description}/> : <i>- no description -</i>}
                 </CardText>
             </CardBody>
             <CardFooter>
