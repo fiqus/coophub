@@ -30,6 +30,7 @@ export type Repo  = {
     owner: Owner;
     languages: Array<Language>;
     fork: boolean;
+    parent: {name:string, url:string}
 }
 
 export type Repos = Array<Repo>
