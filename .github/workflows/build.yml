@@ -56,8 +56,8 @@ jobs:
           apppath="$RELEASE_PATH/$APPLICATION"
           archive="$APPLICATION-$version.tar.gz"
           cp cooperatives.yml $apppath/
-          echo $REVISION > $apppath/REVISION
-          echo $version > $apppath/VERSION
+          echo "$REVISION @ $REF" > $apppath/REVISION
+          echo "$version @ $REF" > $apppath/VERSION
           tar -zcf $archive -C $RELEASE_PATH $APPLICATION
           echo "::set-output name=timestamp::$timestamp"
           echo "::set-output name=version::$version"
@@ -65,6 +65,7 @@ jobs:
           echo "Release package built at $archive"
         env:
           REVISION: ${{ github.sha }}
+          REF: ${{ github.ref }}
           RELEASE_PATH: _build/prod/rel
           APPLICATION: coophub
 
