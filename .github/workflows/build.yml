@@ -1,0 +1,95 @@
+name: CI - Build release asset
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Build OTP ${{ matrix.otp }} | Elixir ${{ matrix.elixir }} | Node ${{ matrix.node }} | OS ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04]
+        otp: [22.0.7]
+        elixir: [1.9.1]
+        node: [12.8.0]
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-elixir@v1.1.0
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install dependencies
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix archive.install --force https://raw.githubusercontent.com/phoenixframework/archives/master/phx_new.ez
+          mix deps.get
+          npm install
+
+      - name: Check code format
+        run: mix format --check-formatted
+      - name: Run tests
+        run: mix test
+
+      - name: Build release
+        run: |
+          export SECRET_KEY_BASE=$(MIX_ENV=test mix phx.gen.secret)
+          mix compile
+          npm run deploy
+          mix phx.digest
+          mix release
+        env:
+          MIX_ENV: prod
+
+      - name: Build package
+        id: build_package
+        run: |
+          timestamp="`date '+%Y%m%d-%H%M%S'`"
+          version="$timestamp-`echo $REVISION | cut -c1-8 `"
+          apppath="$RELEASE_PATH/$APPLICATION"
+          archive="$APPLICATION-$version.tar.gz"
+          cp cooperatives.yml $apppath/
+          echo "$REVISION @ $REF" > $apppath/REVISION
+          echo "$version @ $REF" > $apppath/VERSION
+          tar -zcf $archive -C $RELEASE_PATH $APPLICATION
+          echo "::set-output name=timestamp::$timestamp"
+          echo "::set-output name=version::$version"
+          echo "::set-output name=archive::$archive"
+          echo "Release package built at $archive"
+        env:
+          REVISION: ${{ github.sha }}
+          REF: ${{ github.ref }}
+          RELEASE_PATH: _build/prod/rel
+          APPLICATION: coophub
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: coophub-release
+          path: ${{ steps.build_package.outputs.archive }}
+
+      - name: Upload release asset
+        id: upload_release 
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.build_package.outputs.archive }}
+          asset_name: ${{ steps.build_package.outputs.archive }}
+          asset_content_type: application/tar+gzip
+      
+      - name: Dispatch release
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_DISPATCH_TOKEN }}
+          repository: ${{ secrets.REPO_DISPATCH_PATH }}
+          event-type: coophub-release
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'

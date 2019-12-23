@@ -19,34 +19,24 @@ defmodule Coophub.Repos.Warmer do
   @doc """
   Executes this cache warmer.
   """
-  def execute(_state), do: maybe_warm(Coophub.Application.env())
-
-  defp maybe_warm(:dev) do
-    Logger.info("Warming repos into cache from dump..", ansi_color: :yellow)
+  def execute(_state) do
+    ## Delay the execution a bit to ensure Cachex is available
     Process.sleep(2000)
 
-    size =
-      case Cachex.load(@repos_cache_name, @repos_cache_dump_file) do
-        {:ok, true} ->
-          Cachex.size(@repos_cache_name) |> elem(1)
-
-        _ ->
-          Logger.info("Dump not found '#{@repos_cache_dump_file}'", ansi_color: :yellow)
-          0
-      end
-
-    if size != read_yml() |> Map.keys() |> length() do
-      Logger.info("The dump data needs to be updated!", ansi_color: :yellow)
-      load_cache() |> save_cache()
-    else
-      Logger.info("The dump was loaded with #{size} orgs!", ansi_color: :yellow)
-      refresh_cache()
-    end
+    prev_size = Cachex.size(@repos_cache_name) |> elem(1)
+    curr_size = maybe_load_dump(prev_size)
+    maybe_warm_cache(Coophub.Application.env(), prev_size, curr_size)
   end
 
-  defp maybe_warm(_), do: load_cache()
+  ## Just load dump on the first warm cycle
+  defp maybe_load_dump(0), do: load_cache_dump()
+  defp maybe_load_dump(prev_size), do: prev_size
 
-  defp load_cache() do
+  ## Ignore the first warm cycle if we are at :dev and if dump has entries
+  defp maybe_warm_cache(:dev, 0, curr_size) when curr_size > 0, do: :ignore
+  defp maybe_warm_cache(_, _, _), do: warm_cache()
+
+  defp warm_cache() do
     Logger.info("Warming repos into cache from github..", ansi_color: :yellow)
 
     repos =
@@ -58,16 +48,17 @@ defmodule Coophub.Repos.Warmer do
         end
       end)
 
-    {:ok, repos, ttl: :timer.minutes(@repos_cache_interval * 10)}
+    spawn(save_cache_dump(repos))
+
+    ## Set a very high TTL to ensure that memory and dump data don't expire
+    ## in the case we aren't able to refresh data from github API, but..
+    ## we will try to refresh it anyways every ":cache_interval" minutes!
+    {:ok, repos, ttl: :timer.hours(24 * 365)}
   end
 
-  defp save_cache({:ok, repos, _}) do
-    spawn(save_cache(repos))
-    {:ok, repos, ttl: :timer.minutes(@repos_cache_interval + 1)}
-  end
-
-  defp save_cache(repos) do
+  defp save_cache_dump(repos) do
     fn ->
+      ## Delay the execution a bit to ensure cache data is available
       Process.sleep(2000)
 
       case Cachex.dump(@repos_cache_name, @repos_cache_dump_file) do
@@ -85,13 +76,30 @@ defmodule Coophub.Repos.Warmer do
     end
   end
 
-  defp refresh_cache() do
-    Cachex.keys(@repos_cache_name)
-    |> elem(1)
-    |> Enum.each(&Cachex.expire(@repos_cache_name, &1, :timer.minutes(@repos_cache_interval + 1)))
+  defp load_cache_dump() do
+    Logger.info("Warming repos into cache from dump..", ansi_color: :yellow)
 
-    :ignore
+    case Cachex.load(@repos_cache_name, @repos_cache_dump_file) do
+      {:ok, true} ->
+        size = Cachex.size(@repos_cache_name) |> elem(1)
+        Logger.info("The dump was loaded with #{size} orgs!", ansi_color: :yellow)
+        size
+
+      _ ->
+        Logger.info("Dump not found '#{@repos_cache_dump_file}'", ansi_color: :yellow)
+        0
+    end
   end
+
+  defp read_yml() do
+    path = Path.join(File.cwd!(), "cooperatives.yml")
+    {:ok, coops} = YamlElixir.read_from_file(path)
+    coops
+  end
+
+  ##
+  ## Github API calls and handling functions
+  ##
 
   defp get_repos(org, org_info) do
     org_repos =
@@ -277,12 +285,6 @@ defmodule Coophub.Repos.Warmer do
       |> Enum.sort(&(&1["bytes"] > &2["bytes"]))
 
     Map.put(datamap, "languages", languages)
-  end
-
-  defp read_yml() do
-    path = Path.join(File.cwd!(), "cooperatives.yml")
-    {:ok, coops} = YamlElixir.read_from_file(path)
-    coops
   end
 
   defp headers() do
