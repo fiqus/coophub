@@ -12,7 +12,7 @@ use Mix.Config
 config :coophub, CoophubWeb.Endpoint,
   server: true,
   force_ssl: [hsts: true],
-  url: [host: nil, port: 443],
+  url: [host: "coophub.io", port: 443],
   http: [:inet6, port: System.get_env("PORT", "4000")],
   https: [
     :inet6,
