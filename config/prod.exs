@@ -14,7 +14,10 @@ config :coophub, CoophubWeb.Endpoint,
   force_ssl: [hsts: true],
   url: [host: nil, port: 443],
   http: [:inet6, port: System.get_env("PORT", "4000")],
-  https: [:inet6, port: 4443, cipher_suite: :strong,
+  https: [
+    :inet6,
+    port: 4443,
+    cipher_suite: :strong,
     keyfile: "priv/ssl/privkey.pem",
     certfile: "priv/ssl/cert.pem"
   ],
