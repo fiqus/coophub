@@ -11,8 +11,13 @@ use Mix.Config
 # before starting your production server.
 config :coophub, CoophubWeb.Endpoint,
   server: true,
+  force_ssl: [hsts: true],
+  url: [host: nil, port: 443],
   http: [:inet6, port: System.get_env("PORT", "4000")],
-  url: [host: nil, port: System.get_env("PORT", "4000")],
+  https: [:inet6, port: 4443, cipher_suite: :strong,
+    keyfile: "priv/ssl/privkey.pem",
+    certfile: "priv/ssl/cert.pem"
+  ],
   secret_key_base: System.fetch_env!("SECRET_KEY_BASE"),
   cache_static_manifest: "priv/static/cache_manifest.json"
 

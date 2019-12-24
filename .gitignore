@@ -33,6 +33,9 @@ node_modules/
 # this depending on your deployment strategy.
 /priv/static/
 
+# Ignore SSL certificates
+/priv/ssl/*.pem
+
 /config/*.secret.exs
 .elixir_ls
 .vscode
