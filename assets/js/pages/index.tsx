@@ -45,7 +45,7 @@ const HomePage: React.FC<RouteComponentProps> = ({history}) => {
                 <div className="line-mf"/>
             </div>
             <Suspense fallback={<FullWidthSpinner/>}>
-                <RepoList url={"/api/repos?limit=6&sort=popular"}/>
+                <RepoList url={"/api/repos?limit=6&sort=popular&exclude_forks=true"}/>
             </Suspense>
             <br />
             <br />
@@ -60,7 +60,7 @@ const HomePage: React.FC<RouteComponentProps> = ({history}) => {
                 <div className="line-mf"/>
             </div>
             <Suspense fallback={<FullWidthSpinner/>}>
-                <RepoList url={"/api/repos?limit=6&sort=latest"}/>
+                <RepoList url={"/api/repos?limit=6&sort=latest&exclude_forks=true"}/>
             </Suspense>
             <br />
             <br />

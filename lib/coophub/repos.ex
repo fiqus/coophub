@@ -110,11 +110,11 @@ defmodule Coophub.Repos do
     end
   end
 
-  @spec get_repos(map, integer | nil) :: repos() | nil | :error
-  def get_repos(sort, limit \\ nil) do
+  @spec get_repos(map, integer | nil, boolean()) :: repos() | nil | :error
+  def get_repos(sort, limit, exclude_forks \\ false) do
     case get_all_repos() do
       repos when is_list(repos) ->
-        repos_sort_by(repos, sort, limit)
+        repos_sort_by(repos, sort, limit, exclude_forks)
 
       err ->
         err
@@ -175,11 +175,15 @@ defmodule Coophub.Repos do
   @spec get_org_languages_stats(map) :: map
   def get_org_languages_stats(%{"repos" => repos}) do
     languages =
-      Enum.reduce(repos, %{}, fn %{"languages" => langs}, acc ->
-        Enum.reduce(langs, acc, fn {lang, %{"bytes" => bytes}}, acc_repo ->
-          acc_lang = Map.get(acc, lang, 0)
-          Map.put(acc_repo, lang, acc_lang + bytes)
-        end)
+      Enum.reduce(repos, %{}, fn %{"languages" => langs} = repo, acc ->
+        if not repo["fork"] do
+          Enum.reduce(langs, acc, fn {lang, %{"bytes" => bytes}}, acc_repo ->
+            acc_lang = Map.get(acc, lang, 0)
+            Map.put(acc_repo, lang, acc_lang + bytes)
+          end)
+        else
+          acc
+        end
       end)
 
     get_percentages_by_language(languages)
@@ -310,16 +314,25 @@ defmodule Coophub.Repos do
     sort_and_take(orgs, &sort_field_last_activity/1, dir, limit)
   end
 
-  defp repos_sort_by(repos, %{"field" => "popular", "dir" => dir}, limit) do
-    sort_and_take(repos, &sort_field_popularity/1, dir, limit)
+  defp repos_sort_by(repos, params, limit, exclude_forks \\ false)
+
+  defp repos_sort_by(repos, %{"field" => "popular", "dir" => dir}, limit, exclude_forks) do
+    sort_and_take(repos, &sort_field_popularity/1, dir, limit, exclude_forks)
   end
 
-  defp repos_sort_by(repos, %{"dir" => dir}, limit) do
-    sort_and_take(repos, &sort_pushed_at/1, dir, limit)
+  defp repos_sort_by(repos, %{"dir" => dir}, limit, exclude_forks) do
+    sort_and_take(repos, &sort_pushed_at/1, dir, limit, exclude_forks)
   end
 
-  defp sort_and_take(enum, sort_fn, dir, limit) do
+  defp sort_and_take(enum, sort_fn, dir, limit, exclude_forks \\ false) do
     sorted = enum |> sort(sort_fn, dir)
+
+    sorted =
+      if exclude_forks do
+        Enum.filter(sorted, &(!&1["fork"]))
+      else
+        sorted
+      end
 
     case limit do
       num when is_integer(num) and num > 0 -> Enum.take(sorted, num)
