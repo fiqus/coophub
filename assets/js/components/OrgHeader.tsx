@@ -1,5 +1,4 @@
 import React from 'react';
-import GitHubButton from 'react-github-btn';
 import {Container, ButtonGroup, Button, CardLink, Row} from "reactstrap";
 import {GoLocation, GoLink, GoMail, IoMdCalendar} from "react-icons/all";
 import {Org} from "../types";
@@ -78,7 +77,7 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
                         Created in {createdDate}
                     </span>
                 </ButtonGroup>
-                <br/>
+                {/* <br/>
                 <p className="mt-2">
                     <GitHubButton
                         href={`https://github.com/${org.login}`}
@@ -88,7 +87,7 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
                     >
                         Follow @{org.login}
                     </GitHubButton>
-                </p>
+                </p> */}
             </div>
         </Container>
 
