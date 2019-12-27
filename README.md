@@ -20,6 +20,9 @@ github_org_name:
 ```
 3. Add-commit-push and send us a Pull Request!
 
+## Changelog
+See [changelog file](CHANGELOG.md)
+
 ## Development
 It uses the Elixir [Phoenix Framework](https://phoenixframework.org/) for the back-end and ReactJS for the front-end.
 Then, to run this app you will need:
