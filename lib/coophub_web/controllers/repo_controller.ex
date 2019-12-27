@@ -45,8 +45,9 @@ defmodule CoophubWeb.RepoController do
   def repos(conn, params) do
     sort = get_sort(params)
     limit = get_limit(params)
+    exclude_forks = get_exclude_forks(params)
 
-    fallback_mfa = {Repos, :get_repos, [sort, limit]}
+    fallback_mfa = {Repos, :get_repos, [sort, limit, exclude_forks]}
 
     case maybe_get_response_from_cache(conn, fallback_mfa) do
       {status, repos} when status in @uris_cache_success ->
@@ -124,6 +125,9 @@ defmodule CoophubWeb.RepoController do
       _ -> nil
     end
   end
+
+  defp get_exclude_forks(%{"exclude_forks" => "true"}), do: true
+  defp get_exclude_forks(_), do: false
 
   defp get_search_query(params) do
     %{
