@@ -175,11 +175,15 @@ defmodule Coophub.Repos do
   @spec get_org_languages_stats(map) :: map
   def get_org_languages_stats(%{"repos" => repos}) do
     languages =
-      Enum.reduce(repos, %{}, fn %{"languages" => langs}, acc ->
-        Enum.reduce(langs, acc, fn {lang, %{"bytes" => bytes}}, acc_repo ->
-          acc_lang = Map.get(acc, lang, 0)
-          Map.put(acc_repo, lang, acc_lang + bytes)
-        end)
+      Enum.reduce(repos, %{}, fn %{"languages" => langs} = repo, acc ->
+        if not repo["fork"] do
+          Enum.reduce(langs, acc, fn {lang, %{"bytes" => bytes}}, acc_repo ->
+            acc_lang = Map.get(acc, lang, 0)
+            Map.put(acc_repo, lang, acc_lang + bytes)
+          end)
+        else
+          acc
+        end
       end)
 
     get_percentages_by_language(languages)
