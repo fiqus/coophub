@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container, ButtonGroup, Button, CardLink, Row} from "reactstrap";
-import {GoLocation, GoLink, GoMail, IoMdCalendar} from "react-icons/all";
+import {GoLocation, GoLink, GoMail, IoMdCalendar, GoMarkGithub} from "react-icons/all";
 import {Org} from "../types";
 import LanguagesProgressBar from './LanguagesProgressBar';
 import CountUp from 'react-countup';
@@ -67,8 +67,15 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
                     }
                     {org.blog &&
                         <Button color="link" className="ml-4 pt-0">
-                            <CardLink href={org.blog}> 
+                            <CardLink href={org.blog} target='_blank'> 
                                 <GoLink/> { org.blog }
+                            </CardLink>
+                        </Button>
+                    }
+                    {org.login &&
+                        <Button color="link" className="ml-4 pt-0">
+                            <CardLink href={`https://github.com/${org.login}`} target='_blank'> 
+                                <GoMarkGithub/> { org.login }
                             </CardLink>
                         </Button>
                     }
