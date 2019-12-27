@@ -51,3 +51,9 @@ hyphacoop:
   url: https://hypha.coop
   description: "We cultivate collective growth and meaningful livelihoods through learning and building technologies together."
   location: Toronto, Canada
+
+agaric:
+  name: Agaric Technology Collective
+  url: https://agaric.coop
+  description: "We build websites and online tools that respect your freedom, and we provide training and consultation to meet your goals."
+  location: Boston, USA; Minneapolis, USA; Denver, USA; Managua, Nicaragua; Puebla, Mexico
