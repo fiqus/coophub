@@ -7,6 +7,7 @@
     "delete-cache": "rm -rf ./repos-cache.dump"
   },
   "dependencies": {
+    "@ctrl/tinycolor": "^2.6.0",
     "@types/react-icons": "^3.0.0",
     "@types/reactstrap": "^8.0.6",
     "bootstrap": "^4.3.1",
@@ -44,7 +45,7 @@
     "mini-css-extract-plugin": "^0.4.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "typescript": "^3.6.4",
-    "uglifyjs-webpack-plugin": "1.0.0-rc.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "4.28.4",
     "webpack-cli": "^3.3.10"
   }

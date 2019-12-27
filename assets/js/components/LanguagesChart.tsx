@@ -13,20 +13,23 @@ const LanguagesChart: React.FC<urlProp> = ({languages}) => {
     }
     const firstsLanguages = Object.keys(languages.data).sort(
         (lA, lB) => languages.data[lB].percentage - languages.data[lA].percentage
-    ).slice(0, 8);
-    const langs = firstsLanguages.map(function(key) {
+    ).slice(0, 7);
+    let langs = firstsLanguages.map(function(key) {
          return key;
     });
-    const percentages = firstsLanguages.map(function(key) {
+    langs.push('other')
+
+    let percentages = firstsLanguages.map(function(key) {
         const lang = languages.data[key];
         return lang.percentage;
     });
+    percentages.push(Math.round((100.0 - percentages.reduce((a,b)=>a+b, 0)) * 100)/100)
 
     const data = {
         labels: langs,
         datasets: [{
             data: percentages,
-            backgroundColor: langs.map(getLangColor)
+            backgroundColor: langs.map(l => getLangColor(l))
         }],
     };
 

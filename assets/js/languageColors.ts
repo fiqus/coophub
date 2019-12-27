@@ -1,3 +1,5 @@
+import { TinyColor } from '@ctrl/tinycolor';
+
 const colors:{ [key: string]: string; } = {
     "1C Enterprise": "#814CCC",
     "ABAP": "#E8274B",
@@ -242,9 +244,18 @@ const colors:{ [key: string]: string; } = {
     "ZIL": "#dc75e5",
 }
 
-function getLangColor(lang:string) {
+function getLangColor(lang:string, dark:boolean=false) {
     let color = colors[lang];
-    return color?color:"#CCCCCC"
+    color = color?color:"#CCCCCC";
+    if(dark){
+        let col = new TinyColor(color).desaturate(30);
+        if(col.isLight()){
+            col = col.darken(30)
+        }
+        const colstr = col.toString();
+        color = colstr?colstr:"#AAAAAA"
+    }
+    return color;
 }
 
 export default getLangColor;

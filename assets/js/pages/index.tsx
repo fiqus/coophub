@@ -76,7 +76,7 @@ const HomePage: React.FC<RouteComponentProps> = ({history}) => {
             </div>
             <div className="language-button-container">
                     {Object.keys(languagesResponse.data).map(lang => {
-                        const color = getLangColor(lang);
+                        const color = getLangColor(lang, true);
                         return (
                             <Button key={lang} tag={Link} style={{backgroundColor: color}} to={'/languages/' + lang.toLowerCase()}>
                                  {lang} 
