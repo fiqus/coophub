@@ -12,14 +12,15 @@ import {Suspense} from "react";
 import FullWidthSpinner from "./components/FullWidthSpinner";
 import { Container } from 'reactstrap';
 import OrgsPage from './pages/orgs';
+import ScrollToTop from './components/ScrollToTop';
 
 export default class Root extends React.Component {
     public render(): JSX.Element {
         return (
             <>
                 <BrowserRouter>
-                    <Header />
-                    
+                    <ScrollToTop />
+                    <Header />                   
                     <Suspense fallback={<FullWidthSpinner />}>
                         <Switch>
                             <Route exact path="/" component={HomePage}/>
