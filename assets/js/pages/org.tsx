@@ -26,7 +26,7 @@ const OrgPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
     const maxLanguages = 5;
 
     return <>
-        <OrgHeader org={org} maxLanguages={maxLanguages} reposQuantity={repos.data.length} starsSum={starsSum}/>
+        <OrgHeader org={org} maxLanguages={maxLanguages} starsSum={starsSum}/>
         <Container className="org-repos-cards">
             {_.chunk(repos.data, 3).map((row, i)=>
             <CardDeck key={i}>

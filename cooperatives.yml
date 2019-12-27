@@ -1,59 +1,59 @@
 fiqus:
-  name: Cooperativa de Trabajo Fiqus Ltda.
+  name: Fiqus
   url: https://www.fiqus.coop
   description: ""
   location: CABA/Villa La Angostura
 
 gcoop-libre:
-  name: Cooperativa de Trabajo gcoop Ltda.
+  name: gcoop
   url: https://www.gcoop.coop
   description: ""
   location: CABA
 
 cambalab:
-  name: Cooperativa de Trabajo Cambá Ltda.
+  name: Cambá
   url: https://www.camba.coop
   description: ""
   location: CABA
 
 devecoop:
-  name: Cooperativa de Trabajo Devecoop Ltda.
+  name: Devecoop
   url: http://www.devecoop.com
   description: ""
   location: CABA
 
 Unixono:
-  name: Cooperativa de Trabajo Uníxono Ltda.
+  name: Uníxono
   url: http://www.unixono.com
   description: ""
   location: Bahía Blanca
 
 geneos:
-  name: Geneos Cooperativa Software Libre Ltda.
+  name: Geneos
   url: http://www.geneos.com.ar
   description: ""
   location: Tandil
 
 bitson:
-  name: Cooperativa de Trabajo Bitson Ltda.
+  name: Bitson
   url: https://bitson.group/
   description: ""
   location: CABA
 
 nayracoop:
-  name: Cooperativa de Trabajo Nayra Ltda.
+  name: Nayra
   url: https://nayra.coop/
   description: ""
   location: Provincia de Buenos Aires
 
 hyphacoop:
-  name: Hypha Worker Co-op
+  name: Hypha
   url: https://hypha.coop
   description: "We cultivate collective growth and meaningful livelihoods through learning and building technologies together."
   location: Toronto, Canada
 
 agaric:
-  name: Agaric Technology Collective
+  name: Agaric
   url: https://agaric.coop
   description: "We build websites and online tools that respect your freedom, and we provide training and consultation to meet your goals."
   location: Boston, USA; Minneapolis, USA; Denver, USA; Managua, Nicaragua; Puebla, Mexico

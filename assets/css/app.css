@@ -107,3 +107,25 @@ a.card-fork {
     font-size: small;
     margin-bottom: 6px;
 }
+
+.coop-list-item>a>div {
+    justify-items: center;
+}
+
+.coop-list-item img {
+    width: 60px;
+    height: 60px;
+}
+
+.coop-list-item .row>div {
+    align-self: center;
+}
+
+.coop-list-item .org-name span {
+    font-size: 1.4em;
+    padding-left: 1em;
+}
+
+.coop-list-item .org-location span {
+    font-size: .9em;
+}

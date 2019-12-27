@@ -41,10 +41,10 @@ defmodule Coophub.Repos.Warmer do
 
     repos =
       read_yml()
-      |> Enum.reduce([], fn {name, _}, acc ->
+      |> Enum.reduce([], fn {name, yml_data}, acc ->
         case get_org(name) do
           :error -> acc
-          org_data -> [get_repos(name, org_data) | acc]
+          org_data -> [get_repos(name, org_data, yml_data) | acc]
         end
       end)
 
@@ -101,7 +101,7 @@ defmodule Coophub.Repos.Warmer do
   ## Github API calls and handling functions
   ##
 
-  defp get_repos(org, org_info) do
+  defp get_repos(org, org_info, yml_data) do
     org_repos =
       case call_api_get(
              "orgs/#{org}/repos?per_page=#{@repos_max_fetch}&type=public&sort=pushed&direction=desc"
@@ -125,7 +125,9 @@ defmodule Coophub.Repos.Warmer do
 
     org_info =
       org_info
+      |> Map.put("yml_data", yml_data)
       |> Map.put("repos", org_repos)
+      |> Map.put("repo_count", Enum.count(org_repos))
       |> put_org_languages_stats()
       |> put_org_popularity()
       |> put_org_last_activity()

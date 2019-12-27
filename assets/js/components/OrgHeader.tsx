@@ -7,7 +7,7 @@ import LanguagesProgressBar from './LanguagesProgressBar';
 import CountUp from 'react-countup';
 import {GoCode, GoStar} from "react-icons/all";
 
-const OrgHeader:React.FC<{org: Org, maxLanguages: number, reposQuantity: number, starsSum: number}> = ({org, maxLanguages, reposQuantity, starsSum}) => {
+const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = ({org, maxLanguages, reposQuantity, starsSum}) => {
     const orgDate = new Date(org.created_at);
     const createdDate = `${orgDate.toLocaleString('en', { month: 'long' })} ${orgDate.getFullYear()}`
     
@@ -30,7 +30,7 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, reposQuantity: number,
                     <Container className="col-10">
                         <img src={org.avatar_url} alt="" className="center-block rounded-circle b-shadow-a avatar_coop"/>
                         <h3 className="title-a mt-4">
-                        {org.name}
+                        {org.yml_data.name}
                         </h3>
                         <p className="subtitle-a">
                         {org.description}
@@ -42,7 +42,7 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, reposQuantity: number,
                                 <span className="ico-circle"><GoCode/></span>
                             </div>
                             <div className="counter-num" >
-                                <p className="counter"><CountUp end={reposQuantity}/></p>
+                                <p className="counter"><CountUp end={org.repo_count}/></p>
                                 <span className="counter-text">REPOS</span>
                             </div>
                         </div>

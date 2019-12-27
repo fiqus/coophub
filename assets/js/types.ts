@@ -36,6 +36,7 @@ export type Repo  = {
 export type Repos = Array<Repo>
 
 export type Org = {
+    yml_data: {name: string}
     key: string;
     name: string;
     description: string;
@@ -46,6 +47,7 @@ export type Org = {
     login: string;
     languages: Array<Language>;
     created_at: string;
+    repo_count: number;
 }
 
 export type Topic = {
