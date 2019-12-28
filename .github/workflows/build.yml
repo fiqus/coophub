@@ -12,11 +12,17 @@ jobs:
       matrix:
         os: [ubuntu-18.04]
         otp: [22.0.7]
-        elixir: [1.9.1]
+        elixir: [1.9.4]
         node: [12.8.0]
 
     steps:
       - uses: actions/checkout@v1
+
+      - name: Set RELEASE_VERSION env
+        run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+      - name: Update VERSION file with '${{ env.RELEASE_VERSION }}'
+        run: echo -n "${RELEASE_VERSION:1}" > VERSION
+
       - uses: actions/setup-elixir@v1.1.0
         with:
           otp-version: ${{ matrix.otp }}
@@ -93,3 +99,15 @@ jobs:
           repository: ${{ secrets.REPO_DISPATCH_PATH }}
           event-type: coophub-release
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+
+      - name: Commit VERSION file
+        run: |
+          git add VERSION
+          git config --local user.name "coophub-ci"
+          git config --local user.email "ci@fiqus.coop"
+          git commit -m "Bump to $RELEASE_VERSION"
+      - name: Push VERSION file
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: master
