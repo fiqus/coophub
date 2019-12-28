@@ -102,8 +102,8 @@ jobs:
           git config --local user.email "ci@fiqus.coop"
           git commit -m "Bump to $RELEASE_VERSION"
           git log -2
-      # - name: Push VERSION file
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     branch: ci-bump-version
+      - name: Push VERSION file
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ci-bump-version
