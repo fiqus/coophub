@@ -19,12 +19,21 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
+      - name: Debug env vars
+        run: |
+          echo "$GITHUB_REF"
+          echo "${GITHUB_REF:10}"
       - name: Debug VERSION file contents
         run: echo "`cat VERSION`"
       - name: Set RELEASE_VERSION env
         run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
       - name: Update VERSION file with '${{ env.RELEASE_VERSION }}'
         run: echo "${RELEASE_VERSION:1}" > VERSION
+      - name: Debug VERSION file contents
+        run: echo "`cat VERSION`"
+      
+      - name: Overwrite VERSION
+        run: echo "0.1.3-ci-bump-version" > VERSION
       - name: Debug VERSION file contents
         run: echo "`cat VERSION`"
 
