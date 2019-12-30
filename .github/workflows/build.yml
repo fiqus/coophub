@@ -110,6 +110,6 @@ jobs:
       - name: Push VERSION file
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.REPO_DISPATCH_TOKEN }}
           branch: master
           force: true
