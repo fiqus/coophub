@@ -26,7 +26,7 @@ config :coophub, CoophubWeb.Endpoint,
 
 # Configures app options
 config :coophub,
-  fetch_max_repos: 50,
+  fetch_max_repos: 100,
   # Configures Cachex
   cache_interval: 30
 
