@@ -12,11 +12,17 @@ jobs:
       matrix:
         os: [ubuntu-18.04]
         otp: [22.0.7]
-        elixir: [1.9.1]
+        elixir: [1.9.4]
         node: [12.8.0]
 
     steps:
       - uses: actions/checkout@v1
+
+      - name: Set RELEASE_TAG env
+        run: echo ::set-env name=RELEASE_TAG::$(echo ${GITHUB_REF:10})
+      - name: Update VERSION file with '${{ env.RELEASE_TAG }}'
+        run: echo -n "${RELEASE_TAG:1}" > VERSION
+
       - uses: actions/setup-elixir@v1.1.0
         with:
           otp-version: ${{ matrix.otp }}
@@ -56,6 +62,7 @@ jobs:
           apppath="$RELEASE_PATH/$APPLICATION"
           archive="$APPLICATION-$version.tar.gz"
           cp cooperatives.yml $apppath/
+          echo "$RELEASE_TAG" > $apppath/TAG
           echo "$REVISION @ $REF" > $apppath/REVISION
           echo "$version @ $REF" > $apppath/VERSION
           tar -zcf $archive -C $RELEASE_PATH $APPLICATION
@@ -92,4 +99,16 @@ jobs:
           token: ${{ secrets.REPO_DISPATCH_TOKEN }}
           repository: ${{ secrets.REPO_DISPATCH_PATH }}
           event-type: coophub-release
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+          client-payload: '{"tag": "${{ env.RELEASE_TAG }}", "ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+
+      - name: Commit VERSION file
+        run: |
+          git add VERSION
+          git config --local user.name "coophub-ci"
+          git config --local user.email "ci@fiqus.coop"
+          git commit -m "Bump to $RELEASE_TAG"
+      - name: Push VERSION file
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: master
