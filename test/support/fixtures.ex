@@ -15,6 +15,7 @@ defmodule CoophubWeb.Fixtures do
       {"fiqus",
        %{
          "repos" => generate_repos(:fiqus),
+         "repo_count" => 2,
          "languages" => generate_languages(:surgex),
          "login" => "fiqus",
          "id" => 1_891_317,
@@ -52,6 +53,7 @@ defmodule CoophubWeb.Fixtures do
       {"test",
        %{
          "repos" => generate_repos(:test),
+         "repo_count" => 3,
          "languages" => generate_languages(:testone),
          "login" => "test",
          "id" => 123,

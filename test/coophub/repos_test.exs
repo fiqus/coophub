@@ -40,6 +40,12 @@ defmodule Coophub.ReposTest do
     end
   end
 
+  describe "get_counters/0" do
+    test "returns the counters for orgs and repos" do
+      assert Repos.get_counters() == %{"orgs" => 2, "repos" => 5}
+    end
+  end
+
   describe "search/2" do
     test "returns an empty list when no repos match a single term" do
       repos = Repos.search("will-not-match")
