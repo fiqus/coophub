@@ -129,6 +129,23 @@ defmodule Coophub.Repos do
     end
   end
 
+  @spec get_counters() :: map | :error
+  def get_counters() do
+    case get_all_orgs() do
+      orgs when is_map(orgs) ->
+        orgs
+        |> Map.values()
+        |> Enum.reduce(%{"orgs" => 0, "repos" => 0}, fn org, acc ->
+          acc
+          |> Map.put("orgs", acc["orgs"] + 1)
+          |> Map.put("repos", acc["repos"] + org["repo_count"])
+        end)
+
+      err ->
+        err
+    end
+  end
+
   @spec get_topics() :: [map] | :error
   def get_topics() do
     case get_all_repos() do

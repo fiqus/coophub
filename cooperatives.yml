@@ -57,3 +57,9 @@ agaric:
   url: https://agaric.coop
   description: "We build websites and online tools that respect your freedom, and we provide training and consultation to meet your goals."
   location: Boston, USA; Minneapolis, USA; Denver, USA; Managua, Nicaragua; Puebla, Mexico
+
+seattledeveloperscoop:
+  name: Seattle Developer's Cooperative
+  url: https://www.seattledevelopers.coop
+  description: "A worker-owned web developer cooperative based in Seattle"
+  location: Seattle, USA

@@ -72,6 +72,18 @@ defmodule CoophubWeb.RepoController do
     end
   end
 
+  def counters(conn, _params) do
+    fallback_mfa = {Repos, :get_counters, []}
+
+    case maybe_get_response_from_cache(conn, fallback_mfa) do
+      {status, counters} when status in @uris_cache_success ->
+        render(conn, "counters.json", counters: counters)
+
+      _ ->
+        render_status(conn, 500)
+    end
+  end
+
   def topics(conn, _params) do
     fallback_mfa = {Repos, :get_topics, []}
 

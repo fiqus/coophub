@@ -50,6 +50,11 @@ export type Org = {
     repo_count: number;
 }
 
+export type Counters = {
+    orgs: number;
+    repos: number;
+};
+
 export type Topic = {
     topic: string;
     count: number;
