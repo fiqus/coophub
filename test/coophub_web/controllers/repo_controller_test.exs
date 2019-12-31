@@ -195,6 +195,12 @@ defmodule CoophubWeb.RepoControllerTest do
     end
   end
 
+  describe "GET /api/counters" do
+    test "get the counters for orgs and repos", %{conn: conn} do
+      assert get_data(conn, :counters) == %{"orgs" => 2, "repos" => 5}
+    end
+  end
+
   describe "GET /api/topics" do
     test "lists all topics", %{conn: conn} do
       data = get_data(conn, :topics)

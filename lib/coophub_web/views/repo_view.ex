@@ -13,6 +13,10 @@ defmodule CoophubWeb.RepoView do
     %{data: repos}
   end
 
+  def render("counters.json", %{counters: counters}) do
+    %{data: counters}
+  end
+
   def render("topics.json", %{topics: topics}) do
     %{data: topics}
   end

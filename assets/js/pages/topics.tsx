@@ -22,7 +22,7 @@ const TopicsPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
     const repos = searchRepos(topic);
 
     return <>
-        <Container className="pt-xl-5">
+        <Container className="pt-md-5 result-repos-cards">
             <div className="title-box text-center">
                 <h3 className="title-a">
                     {topic} Repos

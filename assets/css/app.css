@@ -1,14 +1,5 @@
 /* This file is for your main application css. */
 
-.container-org-header .org-avatar {
-    width: 200px;
-    border: solid 1px white;
-}
-
-.container-org-header .org-description {
-    color: #777777;
-}
-
 body {
     padding-top: 85px;
     background-color: white;
@@ -128,4 +119,20 @@ a.card-fork {
 
 .coop-list-item .org-location span {
     font-size: .9em;
+}
+
+@media (min-width: 300px) {
+    .counter-box {
+        transform: scale(0.7);
+    }
+}
+@media (min-width: 600px) {
+    .counter-box {
+        transform: scale(0.9);
+    }
+}
+@media (min-width: 800px) {
+    .counter-box {
+        transform: scale(1);
+    }
 }

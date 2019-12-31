@@ -41,7 +41,7 @@ const SearchResultsPage: React.FC<RouteComponentProps> = () => {
   const repos = searchRepos(search);
 
   return <>
-    <Container className="pt-xl-5 result-repos-cards">
+    <Container className="pt-md-5 result-repos-cards">
         <div className="title-box text-center">
             <h3 className="title-a">
                 Search results
