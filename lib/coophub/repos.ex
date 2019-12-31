@@ -78,6 +78,14 @@ defmodule Coophub.Repos do
     end
   end
 
+  @spec org_exists?(String.t()) :: bool()
+  def org_exists?(org_name) do
+    case Cachex.exists?(@repos_cache_name, org_name) do
+      {:ok, true} -> true
+      _ -> false
+    end
+  end
+
   @spec get_org(String.t()) :: org() | nil | :error
   def get_org(org_name) do
     case Cachex.get(@repos_cache_name, org_name) do
