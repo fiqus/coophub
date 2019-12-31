@@ -1,5 +1,12 @@
 # CoopHub Changelog
 
+## v0.1.5
+
+* Adding org: Seattle Developer's Cooperative.
+* Displaying total indexed orgs and repos number at home.
+* Support for site subdomains as matching keys for orgs and langs.
+* Some UI adjustments.
+
 ## v0.1.4
 
 * Adding [CHANGELOG](CHANGELOG.md).
