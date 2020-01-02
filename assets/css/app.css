@@ -29,14 +29,6 @@ div.line-mf {
     background-color: #00aad4;
 }
 
-.skill-mf .progress .progress-bar {
-    background-color: #00aad4;
-}
-
-.skill-mf .progress {
-    background-color: #b0f4ff;
-}
-
 .btn-link,
 a:hover {
     color: #00aad4;
@@ -149,4 +141,14 @@ a.card-fork {
     .counter-box {
         transform: scale(1);
     }
+}
+
+.lang-progress-bar {
+    display: flex;
+    width: 100%;
+}
+
+.lang-progress-bar>div {
+    display: inline-block;
+    height: 10px;
 }

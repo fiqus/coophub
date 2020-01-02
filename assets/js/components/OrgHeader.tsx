@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, ButtonGroup, Button, CardLink, Row} from "reactstrap";
+import {Container, ButtonGroup, Button, CardLink, Row, Col} from "reactstrap";
 import {GoLocation, GoLink, GoMail, IoMdCalendar, GoMarkGithub} from "react-icons/all";
 import {Org} from "../types";
 import LanguagesProgressBar from './LanguagesProgressBar';
@@ -53,36 +53,40 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
             </Row>
 
             <Container className="text-center mb-4">
-                <ButtonGroup>
+                <Row className="justify-content-center">
                     {org.location &&
-                        <span>
+                        <Col xs="12"  sm="6" md="4" className="py-1">
                             <GoLocation/> { org.location }
-                        </span>
+                        </Col>
                     }
                     {org.email &&
-                        <span className="ml-4">
+                        <Col xs="12" sm="6" md="4" className="py-1">
                             <GoMail/> { org.email }
-                        </span>
+                        </Col>
                     }
                     {org.blog &&
-                        <Button color="link" className="ml-4 pt-0">
-                            <CardLink href={org.blog} target="_blank"> 
-                                <GoLink/> { org.blog }
-                            </CardLink>
-                        </Button>
+                        <Col xs="12" sm="6" md="4" className="py-1">
+                            <Button color="link" className="py-0">
+                                <CardLink href={org.blog} target="_blank"> 
+                                    <GoLink/> { org.blog }
+                                </CardLink>
+                            </Button>
+                        </Col>
                     }
                     {org.login &&
-                        <Button color="link" className="ml-4 pt-0">
-                            <CardLink href={`https://github.com/${org.login}`} target="_blank"> 
-                                <GoMarkGithub/> { org.login }
-                            </CardLink>
-                        </Button>
+                        <Col xs="12" sm="6" md="4" className="py-1">
+                            <Button color="link" className="py-0">
+                                <CardLink href={`https://github.com/${org.login}`} target="_blank"> 
+                                    <GoMarkGithub/> { org.login }
+                                </CardLink>
+                            </Button>
+                        </Col>
                     }
-                    <span className="ml-4">
+                    <Col xs="12" sm="6"  md="4" className="py-1">
                         <IoMdCalendar />
                         Created in {createdDate}
-                    </span>
-                </ButtonGroup>
+                    </Col>
+                </Row>
             </Container>
         </Container>
 
