@@ -47,46 +47,41 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
                 </Container>
             </Row>
             
-            <div className="line-mf mb-3"/>
-            <Row className="skill-mf">
+            <Row className="skill-mf mt-4">
                 <LanguagesProgressBar languages={org.languages} maxLanguages={maxLanguages}></LanguagesProgressBar>
             </Row>
 
             <Container className="text-center mb-4">
-                <Row className="justify-content-center">
+                <div className="org-details-container">
                     {org.location &&
-                        <Col xs="12"  sm="6" md="4" className="py-1">
+                        <div>
                             <GoLocation/> { org.location }
-                        </Col>
+                        </div>
                     }
                     {org.email &&
-                        <Col xs="12" sm="6" md="4" className="py-1">
+                        <div>
                             <GoMail/> { org.email }
-                        </Col>
+                        </div>
                     }
                     {org.blog &&
-                        <Col xs="12" sm="6" md="4" className="py-1">
-                            <Button color="link" className="py-0">
-                                <CardLink href={org.blog} target="_blank"> 
-                                    <GoLink/> { org.blog }
-                                </CardLink>
-                            </Button>
-                        </Col>
+                        <div>
+                            <a className="btn btn-link" href={org.blog} target="_blank"> 
+                                <GoLink/> { org.blog }
+                            </a>
+                        </div>
                     }
                     {org.login &&
-                        <Col xs="12" sm="6" md="4" className="py-1">
-                            <Button color="link" className="py-0">
-                                <CardLink href={`https://github.com/${org.login}`} target="_blank"> 
-                                    <GoMarkGithub/> { org.login }
-                                </CardLink>
-                            </Button>
-                        </Col>
+                        <div>
+                            <a className="btn btn-link" href={`https://github.com/${org.login}`} target="_blank"> 
+                                <GoMarkGithub/> { org.login }
+                            </a>
+                        </div>
                     }
-                    <Col xs="12" sm="6"  md="4" className="py-1">
+                    <div>
                         <IoMdCalendar />
                         Created in {createdDate}
-                    </Col>
-                </Row>
+                    </div>
+                </div>
             </Container>
         </Container>
 

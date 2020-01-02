@@ -152,3 +152,60 @@ a.card-fork {
     display: inline-block;
     height: 10px;
 }
+
+.lang-progress-bar-names {
+    display: flex;
+    justify-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.lang-progress-bar-names>div {
+    display: flex;
+    padding: 10px;
+    align-items: center;
+}
+
+.lang-progress-bar-names span {
+    font-size: small;
+}
+
+.lang-color-circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: .5px solid #4e4e4e;
+    margin-right: 10px;
+}
+
+.org-details-container {
+    display: flex;
+    justify-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.org-details-container>div {
+    display: flex;
+    padding: 10px;
+    align-items: center;
+}
+
+.org-details-container svg {
+    margin-right: 5px;
+}
+
+.org-details-container a {
+    color: #4e4e4e;
+}
+
+.org-details-container a:hover {
+    color: #00aad4;
+    text-decoration: none;
+}
+
+.org-details-container a>svg {
+    margin-bottom: 3px;
+}
