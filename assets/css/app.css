@@ -104,12 +104,18 @@ a.card-fork {
 }
 
 .coop-list-item img {
-    width: 60px;
     height: 60px;
+    min-width: 60px;
 }
 
 .coop-list-item .row>div {
     align-self: center;
+}
+
+.coop-list-item .org-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .coop-list-item .org-name span {
@@ -121,16 +127,24 @@ a.card-fork {
     font-size: .9em;
 }
 
+@media (max-width: 767px) {
+    .coop-list-item .org-details {
+        margin-top: 15px;
+    }
+}
+
 @media (min-width: 300px) {
     .counter-box {
         transform: scale(0.7);
     }
 }
+
 @media (min-width: 600px) {
     .counter-box {
         transform: scale(0.9);
     }
 }
+
 @media (min-width: 800px) {
     .counter-box {
         transform: scale(1);
