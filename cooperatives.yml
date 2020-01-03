@@ -4,14 +4,62 @@ fiqus:
   description: ""
   location: CABA/Villa La Angostura
 
+gcoop-libre:
+  name: gcoop
+  url: https://www.gcoop.coop
+  description: ""
+  location: CABA
+
 cambalab:
   name: Cambá
   url: https://www.camba.coop
   description: ""
   location: CABA
 
+devecoop:
+  name: Devecoop
+  url: http://www.devecoop.com
+  description: ""
+  location: CABA
+
+Unixono:
+  name: Uníxono
+  url: http://www.unixono.com
+  description: ""
+  location: Bahía Blanca
+
+geneos:
+  name: Geneos
+  url: http://www.geneos.com.ar
+  description: ""
+  location: Tandil
+
+bitson:
+  name: Bitson
+  url: https://bitson.group/
+  description: ""
+  location: CABA
+
+nayracoop:
+  name: Nayra
+  url: https://nayra.coop/
+  description: ""
+  location: Provincia de Buenos Aires
+
+hyphacoop:
+  name: Hypha
+  url: https://hypha.coop
+  description: "We cultivate collective growth and meaningful livelihoods through learning and building technologies together."
+  location: Toronto, Canada
+
 agaric:
   name: Agaric
   url: https://agaric.coop
   description: "We build websites and online tools that respect your freedom, and we provide training and consultation to meet your goals."
   location: Boston, USA; Minneapolis, USA; Denver, USA; Managua, Nicaragua; Puebla, Mexico
+
+seattledeveloperscoop:
+  name: Seattle Developer's Cooperative
+  url: https://www.seattledevelopers.coop
+  description: "A worker-owned web developer cooperative based in Seattle"
+  location: Seattle, USA
