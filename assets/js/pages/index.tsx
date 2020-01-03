@@ -11,6 +11,8 @@ import _ from "lodash";
 import getLangColor from '../languageColors';
 import CountUp from 'react-countup';
 import {GoGlobe, GoCode} from "react-icons/all";
+import { mostReadable, TinyColor} from '@ctrl/tinycolor';
+
 
 type CountersResponse = ApiResponse<Counters>;
 type LanguagesResponse = ApiResponse<[TotalLanguage]>;
@@ -101,9 +103,10 @@ const HomePage: React.FC<RouteComponentProps> = () => {
             </div>
             <div className="language-button-container">
                     {Object.keys(languagesResponse.data).map(lang => {
-                        const color = getLangColor(lang, true);
+                        const color = getLangColor(lang);
+                        const readable = (mostReadable(color, ["#111", "#555", "#CCC", "#eee"]) || new TinyColor("#000")).toHexString();
                         return (
-                            <Button key={lang} tag={Link} style={{backgroundColor: color}} to={'/languages/' + lang.toLowerCase()}>
+                            <Button key={lang} tag={Link} style={{backgroundColor: color, color: readable}} to={'/languages/' + lang.toLowerCase()}>
                                  {lang} 
                             </Button>
                         )
