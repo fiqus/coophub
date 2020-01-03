@@ -72,6 +72,23 @@ defmodule CoophubWeb.RepoController do
     end
   end
 
+  def counters(conn, _params) do
+    fallback_mfa = {Repos, :get_counters, []}
+
+    ignore = fn
+      %{"orgs" => 0} -> true
+      _ -> false
+    end
+
+    case maybe_get_response_from_cache(conn, fallback_mfa, ignore) do
+      {status, counters} when status in @uris_cache_success ->
+        render(conn, "counters.json", counters: counters)
+
+      _ ->
+        render_status(conn, 500)
+    end
+  end
+
   def topics(conn, _params) do
     fallback_mfa = {Repos, :get_topics, []}
 
@@ -138,7 +155,9 @@ defmodule CoophubWeb.RepoController do
 
   defp split_values(string), do: String.split(string, [" ", ","], trim: true)
 
-  defp maybe_get_response_from_cache(%Plug.Conn{method: "GET"} = conn, {mod, fun, args}) do
+  defp maybe_get_response_from_cache(conn, mfa, ignore \\ [[], %{}])
+
+  defp maybe_get_response_from_cache(%Plug.Conn{method: "GET"} = conn, {mod, fun, args}, ignore) do
     key = "#{conn.request_path}?#{conn.query_string}"
     Logger.debug("Using key #{key} for memoization")
 
@@ -147,16 +166,26 @@ defmodule CoophubWeb.RepoController do
 
       case apply(mod, fun, args) do
         :error -> {:ignore, :error}
-        empty when empty in [[], %{}] -> {:ignore, empty}
-        results -> {:commit, results}
+        results -> maybe_commit_to_cache(results, ignore)
       end
     end)
   end
 
-  defp maybe_get_response_from_cache(_, {mod, fun, args}) do
+  defp maybe_get_response_from_cache(_, {mod, fun, args}, _) do
     case apply(mod, fun, args) do
       :error -> :error
       results -> {:ok, results}
     end
   end
+
+  def maybe_commit_to_cache(results, false), do: {:commit, results}
+  def maybe_commit_to_cache(results, true), do: {:ignore, results}
+
+  def maybe_commit_to_cache(results, ignore) when is_list(ignore),
+    do: maybe_commit_to_cache(results, Enum.member?(ignore, results))
+
+  def maybe_commit_to_cache(results, ignore) when is_function(ignore),
+    do: maybe_commit_to_cache(results, ignore.(results))
+
+  def maybe_commit_to_cache(results, _), do: maybe_commit_to_cache(results, false)
 end

@@ -80,6 +80,14 @@ defmodule Coophub.Repos do
     end
   end
 
+  @spec org_exists?(String.t()) :: bool()
+  def org_exists?(org_name) do
+    case Cachex.exists?(@repos_cache_name, org_name) do
+      {:ok, true} -> true
+      _ -> false
+    end
+  end
+
   @spec get_org(String.t()) :: org() | nil | :error
   def get_org(org_name) do
     case Cachex.get(@repos_cache_name, org_name) do
@@ -117,6 +125,23 @@ defmodule Coophub.Repos do
     case get_all_repos() do
       repos when is_list(repos) ->
         repos_sort_by(repos, sort, limit, exclude_forks)
+
+      err ->
+        err
+    end
+  end
+
+  @spec get_counters() :: map | :error
+  def get_counters() do
+    case get_all_orgs() do
+      orgs when is_map(orgs) ->
+        orgs
+        |> Map.values()
+        |> Enum.reduce(%{"orgs" => 0, "repos" => 0}, fn org, acc ->
+          acc
+          |> Map.put("orgs", acc["orgs"] + 1)
+          |> Map.put("repos", acc["repos"] + org["repo_count"])
+        end)
 
       err ->
         err

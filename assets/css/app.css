@@ -1,14 +1,5 @@
 /* This file is for your main application css. */
 
-.container-org-header .org-avatar {
-    width: 200px;
-    border: solid 1px white;
-}
-
-.container-org-header .org-description {
-    color: #777777;
-}
-
 body {
     padding-top: 85px;
     background-color: white;
@@ -36,14 +27,6 @@ div.line-mf {
 
 .navbar-b.navbar-reduce .nav-link:before {
     background-color: #00aad4;
-}
-
-.skill-mf .progress .progress-bar {
-    background-color: #00aad4;
-}
-
-.skill-mf .progress {
-    background-color: #b0f4ff;
 }
 
 .btn-link,
@@ -113,12 +96,18 @@ a.card-fork {
 }
 
 .coop-list-item img {
-    width: 60px;
     height: 60px;
+    min-width: 60px;
 }
 
 .coop-list-item .row>div {
     align-self: center;
+}
+
+.coop-list-item .org-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .coop-list-item .org-name span {
@@ -128,4 +117,95 @@ a.card-fork {
 
 .coop-list-item .org-location span {
     font-size: .9em;
+}
+
+@media (max-width: 767px) {
+    .coop-list-item .org-details {
+        margin-top: 15px;
+    }
+}
+
+@media (min-width: 300px) {
+    .counter-box {
+        transform: scale(0.7);
+    }
+}
+
+@media (min-width: 600px) {
+    .counter-box {
+        transform: scale(0.9);
+    }
+}
+
+@media (min-width: 800px) {
+    .counter-box {
+        transform: scale(1);
+    }
+}
+
+.lang-progress-bar {
+    display: flex;
+    width: 100%;
+}
+
+.lang-progress-bar>div {
+    display: inline-block;
+    height: 10px;
+}
+
+.lang-progress-bar-names {
+    display: flex;
+    justify-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.lang-progress-bar-names>div {
+    display: flex;
+    padding: 10px;
+    align-items: center;
+}
+
+.lang-progress-bar-names span {
+    font-size: small;
+}
+
+.lang-color-circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: .5px solid #4e4e4e;
+    margin-right: 10px;
+}
+
+.org-details-container {
+    display: flex;
+    justify-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.org-details-container>div {
+    display: flex;
+    padding: 10px;
+    align-items: center;
+}
+
+.org-details-container svg {
+    margin-right: 5px;
+}
+
+.org-details-container a {
+    color: #4e4e4e;
+}
+
+.org-details-container a:hover {
+    color: #00aad4;
+    text-decoration: none;
+}
+
+.org-details-container a>svg {
+    margin-bottom: 3px;
 }

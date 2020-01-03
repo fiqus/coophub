@@ -11,7 +11,7 @@ use Mix.Config
 # before starting your production server.
 config :coophub, CoophubWeb.Endpoint,
   server: true,
-  force_ssl: [hsts: true],
+  force_ssl: [hsts: true, subdomains: true, host: nil],
   url: [host: "coophub.io", port: 443],
   http: [:inet6, port: System.get_env("PORT", "4000")],
   https: [
@@ -19,14 +19,14 @@ config :coophub, CoophubWeb.Endpoint,
     port: 4443,
     cipher_suite: :strong,
     keyfile: "priv/ssl/privkey.pem",
-    certfile: "priv/ssl/cert.pem"
+    certfile: "priv/ssl/fullchain.pem"
   ],
   secret_key_base: System.fetch_env!("SECRET_KEY_BASE"),
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Configures app options
 config :coophub,
-  fetch_max_repos: 50,
+  fetch_max_repos: 100,
   # Configures Cachex
   cache_interval: 30
 

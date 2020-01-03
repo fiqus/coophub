@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, ButtonGroup, Button, CardLink, Row} from "reactstrap";
+import {Container, ButtonGroup, Button, CardLink, Row, Col} from "reactstrap";
 import {GoLocation, GoLink, GoMail, IoMdCalendar, GoMarkGithub} from "react-icons/all";
 import {Org} from "../types";
 import LanguagesProgressBar from './LanguagesProgressBar';
@@ -12,90 +12,77 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
     
     return (
         
-        <Container>
-            <div className="title-box text-center mt-5 org-header">
-                <Row>
-                    <Container className="col-1">
-                        <div className="counter-box counter-box mt-5">
-                            <div className="counter-ico">
-                                <span className="ico-circle"><GoStar/></span>
-                            </div>
-                            <div className="counter-num" >
-                                <p className="counter"><CountUp end={starsSum}/></p>
-                                <span className="counter-text">STARS</span>
-                            </div>
+        <Container className="mt-5">
+            <Row>
+                <Container className="col-2">
+                    <div className="counter-box mt-5">
+                        <div className="counter-ico">
+                            <span className="ico-circle"><GoStar/></span>
                         </div>
-                    </Container>
-                    <Container className="col-10">
-                        <img src={org.avatar_url} alt="" className="center-block rounded-circle b-shadow-a avatar_coop"/>
-                        <h3 className="title-a mt-4">
-                        {org.yml_data.name}
-                        </h3>
-                        <p className="subtitle-a">
-                        {org.description}
-                        </p>
-                    </Container>
-                    <Container className="col-1">
-                        <div className="counter-box counter-box mt-5">
-                            <div className="counter-ico">
-                                <span className="ico-circle"><GoCode/></span>
-                            </div>
-                            <div className="counter-num" >
-                                <p className="counter"><CountUp end={org.repo_count}/></p>
-                                <span className="counter-text">REPOS</span>
-                            </div>
+                        <div className="counter-num" >
+                            <p className="counter"><CountUp end={starsSum}/></p>
+                            <span className="counter-text">STARS</span>
                         </div>
-                    </Container>
-                </Row>
-                
-                <div className="line-mf mb-3"/>
-                <div className="skill-mf">
-                    <Row>
-                        <LanguagesProgressBar languages={org.languages} maxLanguages={maxLanguages}></LanguagesProgressBar>
-                    </Row>
-                </div>
-                <ButtonGroup>
+                    </div>
+                </Container>
+                <Container className="col-8 text-center mb-0">
+                    <img src={org.avatar_url} alt="" className="center-block rounded-circle b-shadow-a avatar_coop"/>
+                    <h3 className="title-a mt-4">
+                    {org.yml_data.name}
+                    </h3>
+                    <p className="subtitle-a">
+                    {org.description}
+                    </p>
+                </Container>
+                <Container className="col-2">
+                    <div className="counter-box mt-5">
+                        <div className="counter-ico">
+                            <span className="ico-circle"><GoCode/></span>
+                        </div>
+                        <div className="counter-num" >
+                            <p className="counter"><CountUp end={org.repo_count}/></p>
+                            <span className="counter-text">REPOS</span>
+                        </div>
+                    </div>
+                </Container>
+            </Row>
+            
+            <Row className="skill-mf mt-4">
+                <LanguagesProgressBar languages={org.languages} maxLanguages={maxLanguages}></LanguagesProgressBar>
+            </Row>
+
+            <Container className="text-center mb-4">
+                <div className="org-details-container">
                     {org.location &&
-                        <span>
+                        <div>
                             <GoLocation/> { org.location }
-                        </span>
+                        </div>
                     }
                     {org.email &&
-                        <span className="ml-4">
+                        <div>
                             <GoMail/> { org.email }
-                        </span>
+                        </div>
                     }
                     {org.blog &&
-                        <Button color="link" className="ml-4 pt-0">
-                            <CardLink href={org.blog} target='_blank'> 
+                        <div>
+                            <a className="btn btn-link" href={org.blog} target="_blank"> 
                                 <GoLink/> { org.blog }
-                            </CardLink>
-                        </Button>
+                            </a>
+                        </div>
                     }
                     {org.login &&
-                        <Button color="link" className="ml-4 pt-0">
-                            <CardLink href={`https://github.com/${org.login}`} target='_blank'> 
+                        <div>
+                            <a className="btn btn-link" href={`https://github.com/${org.login}`} target="_blank"> 
                                 <GoMarkGithub/> { org.login }
-                            </CardLink>
-                        </Button>
+                            </a>
+                        </div>
                     }
-                    <span className="ml-4">
+                    <div>
                         <IoMdCalendar />
                         Created in {createdDate}
-                    </span>
-                </ButtonGroup>
-                {/* <br/>
-                <p className="mt-2">
-                    <GitHubButton
-                        href={`https://github.com/${org.login}`}
-                        data-size="large"
-                        data-show-count
-                        aria-label={`Follow @${org.login} on GitHub`}
-                    >
-                        Follow @{org.login}
-                    </GitHubButton>
-                </p> */}
-            </div>
+                    </div>
+                </div>
+            </Container>
         </Container>
 
     );

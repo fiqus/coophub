@@ -21,7 +21,7 @@ function resultsMessage(resultsLength: number, query: string | null) {
   if (resultsLength) {
     return (
       <p className="subtitle-a">
-        Found <b>{resultsLength}</b> repositories for <b>{query}</b>
+        Found <b>{resultsLength}</b> repositories for <b>{query}</b> language
       </p>
     )
   }
@@ -37,10 +37,10 @@ const LanguageReposPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) 
   const repos = languageRepos(lang);
 
   return <>
-    <Container className="pt-xl-5 result-repos-cards">
+    <Container className="pt-md-5 result-repos-cards">
         <div className="title-box text-center">
             <h3 className="title-a">
-                Language repos
+                {lang} repos
             </h3>
             {resultsMessage(repos.data.length, lang)}
             <div className="line-mf"></div>

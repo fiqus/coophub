@@ -7,6 +7,7 @@ defmodule CoophubWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug CoophubWeb.Plug.SubdomainMatcher
   end
 
   pipeline :api do
@@ -20,6 +21,7 @@ defmodule CoophubWeb.Router do
     get "/orgs/:name", RepoController, :org
     get "/orgs/:name/repos", RepoController, :org_repos
     get "/repos", RepoController, :repos
+    get "/counters", RepoController, :counters
     get "/topics", RepoController, :topics
     get "/search", RepoController, :search
     get "/languages", RepoController, :languages

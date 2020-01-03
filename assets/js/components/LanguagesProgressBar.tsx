@@ -1,31 +1,28 @@
 import React from 'react';
-import {Language} from "../types";
-import { Container } from 'reactstrap';
-import { HorizontalBar } from 'react-chartjs-2';
+import { Language } from "../types";
 import getLangColor from '../languageColors';
 
-const LanguagesProgressBar:React.FC<{languages: Array<Language>, maxLanguages: number}> = ({languages, maxLanguages}) => {
+const LanguagesProgressBar: React.FC<{ languages: Array<Language>, maxLanguages: number }> = ({ languages, maxLanguages }) => {
     let mainLanguages = languages.slice(0, maxLanguages);
-    const options = {
-        scales: {
-             xAxes: [{stacked: true, display: false}],
-             yAxes: [{stacked: true, display: false}]
-         },
-         tooltips: {enabled: false},
-         height: 10
-     }
-     mainLanguages.push({bytes: 0,lang: "other", percentage: 100.0 - (mainLanguages.reduce((acc, lang) => acc + lang.percentage, 0))})
-     const data ={ 
-       datasets: mainLanguages.map(i => {return {label: `${i.lang} (${Number(i.percentage).toFixed(2)}%)`, 
-                                                 barThickness: 10,
-                                                 backgroundColor: getLangColor(i.lang),
-                                                 data: [i.percentage]}}),
-       labels:['languages']
-     } 
+    mainLanguages.push({ bytes: 0, lang: "other", percentage: Math.round((100.0 - (mainLanguages.reduce((acc, lang) => acc + lang.percentage, 0))) * 100) / 100})
+    mainLanguages = mainLanguages.filter(l=>l.percentage > 0);
 
-    return (
-        <HorizontalBar height={20} data={data} options={options}></HorizontalBar>
-    );
+    return <>
+        <div className="lang-progress-bar">
+            {mainLanguages.map((l, key) => {
+                return <div key={key} style={{ width: `${l.percentage}%`, backgroundColor: getLangColor(l.lang) }}>
+                </div>
+            })}
+        </div>
+        <div className="lang-progress-bar-names">
+            {mainLanguages.map((l, key) => {
+                return <div key={key}>
+                    <div className="lang-color-circle" style={{backgroundColor: getLangColor(l.lang) }}></div>
+                    <span>{l.lang} - {l.percentage}%</span>
+                </div>
+            })}
+        </div>
+    </>;
 };
 
 export default LanguagesProgressBar;

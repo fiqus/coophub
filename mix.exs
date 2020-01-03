@@ -4,7 +4,7 @@ defmodule Coophub.MixProject do
   def project do
     [
       app: :coophub,
-      version: "0.1.3",
+      version: File.read!("VERSION"),
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),

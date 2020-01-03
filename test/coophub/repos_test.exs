@@ -20,6 +20,16 @@ defmodule Coophub.ReposTest do
     end
   end
 
+  describe "org_exists?/1" do
+    test "returns true if the org exists" do
+      assert Repos.org_exists?("fiqus") == true
+    end
+
+    test "returns false if the org doesn't exist" do
+      assert Repos.org_exists?("none") == false
+    end
+  end
+
   describe "get_org/1" do
     test "WIP!" do
     end
@@ -37,6 +47,12 @@ defmodule Coophub.ReposTest do
 
   describe "get_repos/2" do
     test "WIP!" do
+    end
+  end
+
+  describe "get_counters/0" do
+    test "returns the counters for orgs and repos" do
+      assert Repos.get_counters() == %{"orgs" => 2, "repos" => 5}
     end
   end
 

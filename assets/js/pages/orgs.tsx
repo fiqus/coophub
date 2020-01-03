@@ -14,14 +14,14 @@ const OrgList: React.FC = () => {
     return <ListGroup className="coop-list-item mb-5">
         {_.sortBy(response.data, o=>o.yml_data.name.toUpperCase()).map((org, i) => <ListGroupItem key={i} tag={Link} to={`/orgs/${org.key}`}>
             <Row>
-                <Col md="4" className="org-name">
+                <Col md="6" className="org-name">
                     <img src={org.avatar_url} alt="" className="avatar rounded-circle"/>
                     <span>{org.yml_data.name}</span>
                 </Col>
-                <Col className="org-details">
+                <Col md="2" className="org-details">
                     <span>{org.repo_count} Repos</span>
                 </Col>
-                <Col md="4" className="org-location">
+                <Col className="org-location">
                 {org.location &&
                     <span>
                         <GoLocation/> { org.location }
