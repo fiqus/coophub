@@ -1,6 +1,8 @@
 defmodule Coophub.Repos do
   require Logger
 
+  alias Coophub.Schemas.{Organization, Repository}
+
   @repos_cache_name Application.get_env(:coophub, :main_cache_name)
   @forks_factor 1.7
   @stargazers_factor 1.5
@@ -12,12 +14,12 @@ defmodule Coophub.Repos do
   @typedoc """
   Org is a map representing an organisation
   """
-  @type org :: Map.t()
+  @type org :: Organization.t()
 
   @typedoc """
   Repo is a map representing a repository
   """
-  @type repo :: Map.t()
+  @type repo :: Repository.t()
 
   @typedoc """
   Repos is a list of repo maps
@@ -52,7 +54,7 @@ defmodule Coophub.Repos do
       {:ok, keys} ->
         Enum.map(keys, fn key ->
           case get_org(key) do
-            %{"repos" => repos} -> repos
+            %{repos: repos} -> repos
             _ -> []
           end
         end)
@@ -70,7 +72,7 @@ defmodule Coophub.Repos do
       orgs when is_map(orgs) ->
         orgs
         |> Map.values()
-        |> Enum.map(&Map.delete(&1, "repos"))
+        |> Enum.map(&Map.delete(&1, :repos))
         |> orgs_sort_by(sort, limit)
 
       err ->
@@ -95,14 +97,14 @@ defmodule Coophub.Repos do
     case get_org(org_name) do
       nil -> nil
       :error -> :error
-      org -> org |> Map.delete("repos")
+      org -> org
     end
   end
 
   @spec get_org_repos(String.t(), map, integer | nil) :: repos() | nil | :error
   def get_org_repos(org_name, sort, limit \\ nil) do
     case get_org(org_name) do
-      %{"repos" => repos} ->
+      %{repos: repos} ->
         repos_sort_by(repos, sort, limit)
 
       err ->
@@ -131,7 +133,7 @@ defmodule Coophub.Repos do
         repos
         |> Enum.reduce(%{}, &process_topics/2)
         |> Map.values()
-        |> Enum.sort(&(&1["topic"] < &2["topic"]))
+        |> Enum.sort(&(&1.topic < &2.topic))
     end
   end
 
@@ -194,11 +196,11 @@ defmodule Coophub.Repos do
     case get_all_orgs() do
       orgs when is_map(orgs) ->
         orgs
-        |> Enum.map(fn {_org_name, %{"languages" => languages}} ->
+        |> Enum.map(fn {_org_name, %{languages: languages}} ->
           languages
         end)
         |> List.flatten()
-        |> Enum.map(fn %{"lang" => lang, "bytes" => bytes} ->
+        |> Enum.map(fn %{lang: lang, bytes: bytes} ->
           %{lang => bytes}
         end)
         |> Enum.reduce(%{}, fn lang_orgs_stats, acc ->
@@ -226,7 +228,7 @@ defmodule Coophub.Repos do
 
   @spec repo_has_lang?(repo(), String.t()) :: Boolean.t()
   defp repo_has_lang?(repo, lang) do
-    Enum.find(repo["languages"], fn %{"lang" => repo_lang} ->
+    Enum.find(repo.languages, fn %{lang: repo_lang} ->
       String.downcase(repo_lang) == String.downcase(lang)
     end) !== nil
   end
@@ -280,15 +282,15 @@ defmodule Coophub.Repos do
   defp repo_matches_term?(repo, term) do
     re = Regex.compile!(term, "iu")
 
-    Regex.match?(re, repo["key"]) ||
-      Regex.match?(re, repo["name"]) ||
-      Regex.match?(re, repo["description"] || "") ||
-      Enum.find(repo["topics"], &Regex.match?(re, &1)) != nil ||
-      Enum.find(repo["languages"], &Regex.match?(re, &1["lang"])) != nil
+    Regex.match?(re, repo.key) ||
+      Regex.match?(re, repo.name) ||
+      Regex.match?(re, repo.description || "") ||
+      Enum.find(repo.topics, &Regex.match?(re, &1)) != nil ||
+      Enum.find(repo.languages, &Regex.match?(re, &1.lang)) != nil
   end
 
   defp repo_matches_topic?(repo, topic) do
-    Enum.find(repo["topics"], &(&1 == topic)) != nil
+    Enum.find(repo.topics, &(&1 == topic)) != nil
   end
 
   defp process_topics(repo, topics) do
@@ -329,7 +331,7 @@ defmodule Coophub.Repos do
 
     sorted =
       if exclude_forks do
-        Enum.filter(sorted, &(!&1["fork"]))
+        Enum.filter(sorted, &(!&1.fork))
       else
         sorted
       end
@@ -343,11 +345,11 @@ defmodule Coophub.Repos do
   defp sort(enum, sort_fn, "asc"), do: Enum.sort(enum, &(sort_fn.(&1) < sort_fn.(&2)))
   defp sort(enum, sort_fn, _), do: Enum.sort(enum, &(sort_fn.(&1) >= sort_fn.(&2)))
 
-  defp sort_field_last_activity(%{"last_activity" => last_activity}) do
+  defp sort_field_last_activity(%{last_activity: last_activity}) do
     sort_field_date(last_activity)
   end
 
-  defp sort_pushed_at(%{"pushed_at" => pushed_at}) do
+  defp sort_pushed_at(%{pushed_at: pushed_at}) do
     sort_field_date(pushed_at)
   end
 
@@ -359,6 +361,6 @@ defmodule Coophub.Repos do
   end
 
   defp sort_field_popularity(data) do
-    data["popularity"] || 0
+    data.popularity || 0
   end
 end

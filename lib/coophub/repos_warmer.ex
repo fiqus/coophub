@@ -2,6 +2,7 @@ defmodule Coophub.Repos.Warmer do
   use Cachex.Warmer
 
   alias Coophub.Repos
+  alias Coophub.Schemas.{Organization, Repository}
 
   require Logger
 
@@ -93,7 +94,7 @@ defmodule Coophub.Repos.Warmer do
 
   defp read_yml() do
     path = Path.join(File.cwd!(), "cooperatives.yml")
-    {:ok, coops} = YamlElixir.read_from_file(path)
+    {:ok, coops} = YamlElixir.read_from_file(path, maps_as_keywords: false)
     coops
   end
 
@@ -123,6 +124,8 @@ defmodule Coophub.Repos.Warmer do
           []
       end
 
+    org_repos = for repo <- org_repos, do: struct(Repository, map_string_to_atom_keys(repo))
+
     org_info =
       org_info
       |> Map.put("yml_data", yml_data)
@@ -132,8 +135,14 @@ defmodule Coophub.Repos.Warmer do
       |> put_org_popularity()
       |> put_org_last_activity()
 
+    org_info = struct(Organization, map_string_to_atom_keys(org_info))
     {org, org_info}
   end
+
+  defp map_string_to_atom_keys(map) when is_map(map) do
+    for {k, v} <- map, into: %{}, do: {String.to_atom(k), map_string_to_atom_keys(v)}
+  end
+  defp map_string_to_atom_keys(value), do: value
 
   defp get_members(%{"key" => key} = org) do
     members =

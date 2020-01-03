@@ -4,53 +4,11 @@ fiqus:
   description: ""
   location: CABA/Villa La Angostura
 
-gcoop-libre:
-  name: gcoop
-  url: https://www.gcoop.coop
-  description: ""
-  location: CABA
-
 cambalab:
   name: Cambá
   url: https://www.camba.coop
   description: ""
   location: CABA
-
-devecoop:
-  name: Devecoop
-  url: http://www.devecoop.com
-  description: ""
-  location: CABA
-
-Unixono:
-  name: Uníxono
-  url: http://www.unixono.com
-  description: ""
-  location: Bahía Blanca
-
-geneos:
-  name: Geneos
-  url: http://www.geneos.com.ar
-  description: ""
-  location: Tandil
-
-bitson:
-  name: Bitson
-  url: https://bitson.group/
-  description: ""
-  location: CABA
-
-nayracoop:
-  name: Nayra
-  url: https://nayra.coop/
-  description: ""
-  location: Provincia de Buenos Aires
-
-hyphacoop:
-  name: Hypha
-  url: https://hypha.coop
-  description: "We cultivate collective growth and meaningful livelihoods through learning and building technologies together."
-  location: Toronto, Canada
 
 agaric:
   name: Agaric
