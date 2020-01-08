@@ -242,19 +242,12 @@ const colors:{ [key: string]: string; } = {
     "Zephir": "#118f9e",
     "Zig": "#ec915c",
     "ZIL": "#dc75e5",
+    "other": "#444444"
 }
 
-function getLangColor(lang:string, dark:boolean=false) {
+function getLangColor(lang:string) {
     let color = colors[lang];
     color = color?color:"#CCCCCC";
-    if(dark){
-        let col = new TinyColor(color).desaturate(30);
-        if(col.isLight()){
-            col = col.darken(30)
-        }
-        const colstr = col.toString();
-        color = colstr?colstr:"#AAAAAA"
-    }
     return color;
 }
 
