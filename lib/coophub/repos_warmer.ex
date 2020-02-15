@@ -123,8 +123,7 @@ defmodule Coophub.Repos.Warmer do
            ) do
         {:ok, body} ->
           repos =
-            body
-            |> to_struct(Repository)
+            Repos.to_struct(Repository, body)
             |> put_key(org_name)
             |> put_popularities()
             |> put_topics(org_name)
@@ -175,8 +174,7 @@ defmodule Coophub.Repos.Warmer do
 
         Logger.info(msg, ansi_color: :yellow)
 
-        org
-        |> to_struct(Organization)
+        Repos.to_struct(Organization, org)
         |> Map.put(:key, name)
         |> Map.put(:yml_data, yml_data)
         |> get_members()
@@ -330,6 +328,7 @@ defmodule Coophub.Repos.Warmer do
     end
   end
 
+  @spec call_api_get(String.t()) :: {:ok, map | [map]} | {:error, any}
   defp call_api_get(path) do
     url = "https://api.github.com/#{path}"
 
@@ -344,8 +343,4 @@ defmodule Coophub.Repos.Warmer do
         {:error, reason}
     end
   end
-
-  defp to_struct([], _), do: []
-  defp to_struct([data | tail], str), do: [to_struct(data, str) | to_struct(tail, str)]
-  defp to_struct(data, str), do: struct(str, Coophub.map_string_to_atom_keys(data))
 end

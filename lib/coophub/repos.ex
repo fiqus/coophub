@@ -247,6 +247,15 @@ defmodule Coophub.Repos do
     end
   end
 
+  @spec to_struct(module, map | [map]) :: struct | [struct]
+  def to_struct(_, []), do: []
+  def to_struct(str, [data | tail]), do: [to_struct(str, data) | to_struct(str, tail)]
+
+  def to_struct(str, map) when is_map(map) do
+    map_with_atom_keys = for {k, v} <- map, into: %{}, do: {String.to_atom(k), v}
+    struct(str, map_with_atom_keys)
+  end
+
   @spec repo_has_lang?(repo(), String.t()) :: Boolean.t()
   defp repo_has_lang?(repo, lang) do
     Enum.find(repo.languages, fn %{"lang" => repo_lang} ->
