@@ -6,9 +6,9 @@ defmodule CoophubWeb.RepoControllerTest do
       data = get_data(conn, :index)
       assert length(data) == 2
       assert Enum.at(data, 0)["email"] == "info@test.coop"
-      assert Enum.at(data, 0)["repos"] == nil
+      assert Enum.at(data, 0)["repos"] == []
       assert Enum.at(data, 1)["email"] == "info@fiqus.coop"
-      assert Enum.at(data, 1)["repos"] == nil
+      assert Enum.at(data, 1)["repos"] == []
     end
 
     test "lists all orgs sorted by: popular (direction default: desc)", %{conn: conn} do

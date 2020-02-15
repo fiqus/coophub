@@ -1,6 +1,9 @@
 defmodule CoophubWeb.Fixtures do
   @repos_cache_name Application.get_env(:coophub, :main_cache_name)
 
+  alias Coophub.Repos
+  alias Coophub.Schemas.{Organization, Repository}
+
   def generate() do
     data = generate_orgs()
     {:ok, true} = clear()
@@ -13,7 +16,7 @@ defmodule CoophubWeb.Fixtures do
   def generate_orgs() do
     [
       {"fiqus",
-       %{
+       Repos.to_struct(Organization, %{
          "repos" => generate_repos(:fiqus),
          "repo_count" => 2,
          "languages" => generate_languages(:surgex),
@@ -49,9 +52,9 @@ defmodule CoophubWeb.Fixtures do
          "members" => [
            %{"id" => 111, "login" => "fiqusmember", "type" => "User"}
          ]
-       }},
+       })},
       {"test",
-       %{
+       Repos.to_struct(Organization, %{
          "repos" => generate_repos(:test),
          "repo_count" => 3,
          "languages" => generate_languages(:testone),
@@ -78,12 +81,12 @@ defmodule CoophubWeb.Fixtures do
          "members" => [
            %{"id" => 222, "login" => "testmember", "type" => "User"}
          ]
-       }}
+       })}
     ]
   end
 
   def generate_repos(:fiqus) do
-    [
+    Repos.to_struct(Repository, [
       %{
         "key" => "fiqus",
         "languages" => generate_languages(:surgex),
@@ -312,11 +315,11 @@ defmodule CoophubWeb.Fixtures do
           "pull" => true
         }
       }
-    ]
+    ])
   end
 
   def generate_repos(:test) do
-    [
+    Repos.to_struct(Repository, [
       %{
         "key" => "test",
         "languages" => generate_languages(:testone),
@@ -429,7 +432,7 @@ defmodule CoophubWeb.Fixtures do
         "archived" => false,
         "disabled" => false
       }
-    ]
+    ])
   end
 
   def generate_languages(:surgex) do

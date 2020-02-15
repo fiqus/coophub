@@ -5,8 +5,8 @@ defmodule Coophub.ReposTest do
     test "returns a list with all orgs" do
       orgs = Repos.get_all_orgs()
       assert Map.keys(orgs) == ["fiqus", "test"]
-      assert orgs["fiqus"]["email"] == "info@fiqus.coop"
-      assert orgs["test"]["email"] == "info@test.coop"
+      assert orgs["fiqus"].email == "info@fiqus.coop"
+      assert orgs["test"].email == "info@test.coop"
     end
   end
 
@@ -90,7 +90,7 @@ defmodule Coophub.ReposTest do
     test "returns a list with matching repos for multiple terms" do
       repos = Repos.search(["test", "fiqus"])
       assert length(repos) == 1
-      assert Enum.at(repos, 0)["name"] == "surgex"
+      assert repo_in(repos, "surgex")
 
       repos = Repos.search(["test", "elixir-lang", "talks"], :or)
       assert length(repos) == 5
@@ -104,9 +104,9 @@ defmodule Coophub.ReposTest do
     test "returns a list with matching repos for a multiple topics" do
       repos = Repos.search(%{"topics" => ["test", "elixir-lang"]})
       assert length(repos) == 1
-      assert Enum.at(repos, 0)["name"] == "surgex"
+      assert repo_in(repos, "surgex")
     end
   end
 
-  defp repo_in(repos, name), do: Enum.find(repos, &(&1["name"] == name)) !== nil
+  defp repo_in(repos, name), do: Enum.find(repos, &(&1.name == name)) !== nil
 end
