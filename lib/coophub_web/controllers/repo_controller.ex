@@ -178,14 +178,12 @@ defmodule CoophubWeb.RepoController do
     end
   end
 
-  def maybe_commit_to_cache(results, false), do: {:commit, results}
-  def maybe_commit_to_cache(results, true), do: {:ignore, results}
+  defp maybe_commit_to_cache(results, false), do: {:commit, results}
+  defp maybe_commit_to_cache(results, true), do: {:ignore, results}
 
-  def maybe_commit_to_cache(results, ignore) when is_list(ignore),
+  defp maybe_commit_to_cache(results, ignore) when is_list(ignore),
     do: maybe_commit_to_cache(results, Enum.member?(ignore, results))
 
-  def maybe_commit_to_cache(results, ignore) when is_function(ignore),
+  defp maybe_commit_to_cache(results, ignore) when is_function(ignore),
     do: maybe_commit_to_cache(results, ignore.(results))
-
-  def maybe_commit_to_cache(results, _), do: maybe_commit_to_cache(results, false)
 end
