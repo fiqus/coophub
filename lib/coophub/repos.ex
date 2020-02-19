@@ -1,6 +1,8 @@
 defmodule Coophub.Repos do
   require Logger
 
+  alias Coophub.Schemas.{Organization, Repository}
+
   @repos_cache_name Application.get_env(:coophub, :main_cache_name)
   @forks_factor 1.7
   @stargazers_factor 1.5
@@ -12,12 +14,12 @@ defmodule Coophub.Repos do
   @typedoc """
   Org is a map representing an organisation
   """
-  @type org :: Map.t()
+  @type org :: Organization.t()
 
   @typedoc """
   Repo is a map representing a repository
   """
-  @type repo :: Map.t()
+  @type repo :: Repository.t()
 
   @typedoc """
   Repos is a list of repo maps
@@ -28,8 +30,9 @@ defmodule Coophub.Repos do
   Orgs is a list of org maps
   """
   @type orgs :: List.t(org()) | []
+  @type orgs_map :: %{required(String.t()) => org()}
 
-  @spec get_all_orgs :: org() | :error
+  @spec get_all_orgs :: orgs_map() | :error
   def get_all_orgs() do
     case Cachex.keys(@repos_cache_name) do
       {:ok, keys} ->
@@ -52,7 +55,7 @@ defmodule Coophub.Repos do
       {:ok, keys} ->
         Enum.map(keys, fn key ->
           case get_org(key) do
-            %{"repos" => repos} -> repos
+            %{repos: repos} -> repos
             _ -> []
           end
         end)
@@ -70,7 +73,8 @@ defmodule Coophub.Repos do
       orgs when is_map(orgs) ->
         orgs
         |> Map.values()
-        |> Enum.map(&Map.delete(&1, "repos"))
+        # Clear repos!
+        |> Enum.map(&Map.put(&1, :repos, []))
         |> orgs_sort_by(sort, limit)
 
       err ->
@@ -101,31 +105,25 @@ defmodule Coophub.Repos do
   @spec get_org_info(String.t()) :: org() | nil | :error
   def get_org_info(org_name) do
     case get_org(org_name) do
-      nil -> nil
-      :error -> :error
-      org -> org |> Map.delete("repos")
+      # Clear repos!
+      %Organization{} = org -> org |> Map.put(:repos, [])
+      err -> err
     end
   end
 
   @spec get_org_repos(String.t(), map, integer | nil) :: repos() | nil | :error
   def get_org_repos(org_name, sort, limit \\ nil) do
     case get_org(org_name) do
-      %{"repos" => repos} ->
-        repos_sort_by(repos, sort, limit)
-
-      err ->
-        err
+      %Organization{repos: repos} -> repos_sort_by(repos, sort, limit)
+      err -> err
     end
   end
 
-  @spec get_repos(map, integer | nil, boolean()) :: repos() | nil | :error
+  @spec get_repos(map, integer | nil, boolean()) :: repos() | :error
   def get_repos(sort, limit, exclude_forks \\ false) do
     case get_all_repos() do
-      repos when is_list(repos) ->
-        repos_sort_by(repos, sort, limit, exclude_forks)
-
-      err ->
-        err
+      repos when is_list(repos) -> repos_sort_by(repos, sort, limit, exclude_forks)
+      err -> err
     end
   end
 
@@ -138,7 +136,7 @@ defmodule Coophub.Repos do
         |> Enum.reduce(%{"orgs" => 0, "repos" => 0}, fn org, acc ->
           acc
           |> Map.put("orgs", acc["orgs"] + 1)
-          |> Map.put("repos", acc["repos"] + org["repo_count"])
+          |> Map.put("repos", acc["repos"] + org.repo_count)
         end)
 
       err ->
@@ -161,18 +159,18 @@ defmodule Coophub.Repos do
   end
 
   # based on https://gist.github.com/soulim/d69e5dabc511c325f089
-  @spec get_repo_popularity(map) :: float
+  @spec get_repo_popularity(repo()) :: float
   def get_repo_popularity(repo) do
     rating =
-      repo["stargazers_count"] * @stargazers_factor + repo["forks_count"] * @forks_factor +
-        repo["open_issues_count"] * @open_issues_factor
+      repo.stargazers_count * @stargazers_factor + repo.forks_count * @forks_factor +
+        repo.open_issues_count * @open_issues_factor
 
     rating =
-      if repo["fork"],
+      if repo.fork,
         do: rating * @fork_coeficient,
         else: rating
 
-    {:ok, pushed_at_datetime, _} = DateTime.from_iso8601(repo["pushed_at"])
+    {:ok, pushed_at_datetime, _} = DateTime.from_iso8601(repo.pushed_at)
 
     divisor =
       (((DateTime.utc_now() |> DateTime.to_unix()) - (pushed_at_datetime |> DateTime.to_unix())) /
@@ -182,9 +180,9 @@ defmodule Coophub.Repos do
     rating + rating * @percentage_for_updated_time / divisor
   end
 
-  @spec get_org_popularity(map) :: float
-  def get_org_popularity(%{"repos" => repos}) do
-    Enum.reduce(repos, 0, fn %{"popularity" => pop}, acc -> acc + pop end)
+  @spec get_org_popularity(org()) :: float
+  def get_org_popularity(%Organization{:repos => repos}) do
+    Enum.reduce(repos, 0, fn %Repository{:popularity => pop}, acc -> acc + pop end)
   end
 
   @spec get_percentages_by_language(map) :: map
@@ -197,11 +195,11 @@ defmodule Coophub.Repos do
     end)
   end
 
-  @spec get_org_languages_stats(map) :: map
-  def get_org_languages_stats(%{"repos" => repos}) do
+  @spec get_org_languages_stats(org()) :: map
+  def get_org_languages_stats(%Organization{:repos => repos}) do
     languages =
-      Enum.reduce(repos, %{}, fn %{"languages" => langs} = repo, acc ->
-        if not repo["fork"] do
+      Enum.reduce(repos, %{}, fn %Repository{:languages => langs} = repo, acc ->
+        if not repo.fork do
           Enum.reduce(langs, acc, fn {lang, %{"bytes" => bytes}}, acc_repo ->
             acc_lang = Map.get(acc, lang, 0)
             Map.put(acc_repo, lang, acc_lang + bytes)
@@ -219,7 +217,7 @@ defmodule Coophub.Repos do
     case get_all_orgs() do
       orgs when is_map(orgs) ->
         orgs
-        |> Enum.map(fn {_org_name, %{"languages" => languages}} ->
+        |> Enum.map(fn {_org_name, %Organization{languages: languages}} ->
           languages
         end)
         |> List.flatten()
@@ -249,19 +247,28 @@ defmodule Coophub.Repos do
     end
   end
 
+  @spec to_struct(module, map | [map]) :: struct | [struct]
+  def to_struct(_, []), do: []
+  def to_struct(str, [data | tail]), do: [to_struct(str, data) | to_struct(str, tail)]
+
+  def to_struct(str, map) when is_map(map) do
+    map_with_atom_keys = for {k, v} <- map, into: %{}, do: {String.to_atom(k), v}
+    struct(str, map_with_atom_keys)
+  end
+
   @spec repo_has_lang?(repo(), String.t()) :: Boolean.t()
   defp repo_has_lang?(repo, lang) do
-    Enum.find(repo["languages"], fn %{"lang" => repo_lang} ->
+    Enum.find(repo.languages, fn %{"lang" => repo_lang} ->
       String.downcase(repo_lang) == String.downcase(lang)
     end) !== nil
   end
 
   @spec get_org_last_activity(org()) :: float
   def get_org_last_activity(org) do
-    init = org["updated_at"] || org["created_at"]
+    init = org.updated_at || org.created_at
 
-    Enum.reduce(org["repos"], init, fn repo, org_date ->
-      repo_date = repo["pushed_at"] || repo["updated_at"] || repo["created_at"]
+    Enum.reduce(org.repos, init, fn repo, org_date ->
+      repo_date = repo.pushed_at || repo.updated_at || repo.created_at
       if repo_date > org_date, do: repo_date, else: org_date
     end)
   end
@@ -305,26 +312,25 @@ defmodule Coophub.Repos do
   defp repo_matches_term?(repo, term) do
     re = Regex.compile!(term, "iu")
 
-    Regex.match?(re, repo["key"]) ||
-      Regex.match?(re, repo["name"]) ||
-      Regex.match?(re, repo["description"] || "") ||
-      Enum.find(repo["topics"], &Regex.match?(re, &1)) != nil ||
-      Enum.find(repo["languages"], &Regex.match?(re, &1["lang"])) != nil
+    Regex.match?(re, repo.key) ||
+      Regex.match?(re, repo.name) ||
+      Regex.match?(re, repo.description || "") ||
+      Enum.find(repo.topics, &Regex.match?(re, &1)) != nil ||
+      Enum.find(repo.languages, &Regex.match?(re, &1["lang"])) != nil
   end
 
   defp repo_matches_topic?(repo, topic) do
-    Enum.find(repo["topics"], &(&1 == topic)) != nil
+    Enum.find(repo.topics, &(&1 == topic)) != nil
   end
 
   defp process_topics(repo, topics) do
     repo
-    |> Map.get("topics", [])
+    |> Map.get(:topics, [])
     |> Enum.reduce(topics, fn topic, acc ->
       stats = %{
         "topic" => topic,
         "count" => (Map.get(acc, topic, %{}) |> Map.get("count", 0)) + 1,
-        "orgs" =>
-          [Map.get(repo, "key") | Map.get(acc, topic, %{}) |> Map.get("orgs", [])] |> Enum.uniq()
+        "orgs" => [repo.key | Map.get(acc, topic, %{}) |> Map.get("orgs", [])] |> Enum.uniq()
       }
 
       Map.put(acc, topic, stats)
@@ -354,7 +360,7 @@ defmodule Coophub.Repos do
 
     sorted =
       if exclude_forks do
-        Enum.filter(sorted, &(!&1["fork"]))
+        Enum.reject(sorted, & &1.fork)
       else
         sorted
       end
@@ -368,11 +374,11 @@ defmodule Coophub.Repos do
   defp sort(enum, sort_fn, "asc"), do: Enum.sort(enum, &(sort_fn.(&1) < sort_fn.(&2)))
   defp sort(enum, sort_fn, _), do: Enum.sort(enum, &(sort_fn.(&1) >= sort_fn.(&2)))
 
-  defp sort_field_last_activity(%{"last_activity" => last_activity}) do
+  defp sort_field_last_activity(%Organization{last_activity: last_activity}) do
     sort_field_date(last_activity)
   end
 
-  defp sort_pushed_at(%{"pushed_at" => pushed_at}) do
+  defp sort_pushed_at(%Repository{pushed_at: pushed_at}) do
     sort_field_date(pushed_at)
   end
 
@@ -383,7 +389,7 @@ defmodule Coophub.Repos do
     end
   end
 
-  defp sort_field_popularity(data) do
-    data["popularity"] || 0
+  defp sort_field_popularity(%{popularity: popularity}) do
+    popularity || 0
   end
 end

@@ -1,5 +1,14 @@
 # CoopHub Changelog
 
+## v0.1.7
+
+* Schemaization of the data into Organization and Repository structs (#4 + #47)
+
+## v0.1.6
+
+* Some UI adjustments.
+* Updating node deps.
+
 ## v0.1.5
 
 * Adding org: Seattle Developer's Cooperative.

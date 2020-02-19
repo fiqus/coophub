@@ -2,6 +2,7 @@ defmodule Coophub.Repos.Warmer do
   use Cachex.Warmer
 
   alias Coophub.Repos
+  alias Coophub.Schemas.{Organization, Repository}
 
   require Logger
 
@@ -42,9 +43,9 @@ defmodule Coophub.Repos.Warmer do
     repos =
       read_yml()
       |> Enum.reduce([], fn {name, yml_data}, acc ->
-        case get_org(name) do
+        case get_org(name, yml_data) do
           :error -> acc
-          org_data -> [get_repos(name, org_data, yml_data) | acc]
+          org -> [get_repos(name, org) | acc]
         end
       end)
 
@@ -79,21 +80,35 @@ defmodule Coophub.Repos.Warmer do
   defp load_cache_dump() do
     Logger.info("Warming repos into cache from dump..", ansi_color: :yellow)
 
-    case Cachex.load(@repos_cache_name, @repos_cache_dump_file) do
-      {:ok, true} ->
-        size = Cachex.size(@repos_cache_name) |> elem(1)
-        Logger.info("The dump was loaded with #{size} orgs!", ansi_color: :yellow)
-        size
-
+    with {:ok, dump} <- read_cache_dump(@repos_cache_dump_file),
+         {:ok, true} <- Cachex.import(@repos_cache_name, dump),
+         {:ok, size} <- Cachex.size(@repos_cache_name) do
+      Logger.info("The dump was loaded with #{size} orgs!", ansi_color: :yellow)
+      size
+    else
       _ ->
         Logger.info("Dump not found '#{@repos_cache_dump_file}'", ansi_color: :yellow)
         0
     end
   end
 
+  defp read_cache_dump(path) do
+    dump =
+      path
+      |> File.read!()
+      # Since our dump has atoms (because of the structs) we can't use Cachex.load()
+      # because it does :erlang.binary_to_term([:safe]) at Cachex.Disk.read()
+      |> :erlang.binary_to_term()
+
+    {:ok, dump}
+  rescue
+    _ ->
+      {:error, :unreachable_file}
+  end
+
   defp read_yml() do
     path = Path.join(File.cwd!(), "cooperatives.yml")
-    {:ok, coops} = YamlElixir.read_from_file(path)
+    {:ok, coops} = YamlElixir.read_from_file(path, maps_as_keywords: false)
     coops
   end
 
@@ -101,41 +116,43 @@ defmodule Coophub.Repos.Warmer do
   ## Github API calls and handling functions
   ##
 
-  defp get_repos(org, org_info, yml_data) do
+  defp get_repos(org_name, org) do
     org_repos =
       case call_api_get(
-             "orgs/#{org}/repos?per_page=#{@repos_max_fetch}&type=public&sort=pushed&direction=desc"
+             "orgs/#{org_name}/repos?per_page=#{@repos_max_fetch}&type=public&sort=pushed&direction=desc"
            ) do
         {:ok, body} ->
           repos =
-            body
-            |> put_key(org)
+            Repos.to_struct(Repository, body)
+            |> put_key(org_name)
             |> put_popularities()
-            |> put_topics(org)
-            |> put_languages(org)
-            |> put_repo_data(org)
+            |> put_topics(org_name)
+            |> put_languages(org_name)
+            |> put_repo_data(org_name)
 
-          Logger.info("Fetched #{length(repos)} repos for #{org}", ansi_color: :yellow)
+          Logger.info("Fetched #{length(repos)} repos for #{org_name}", ansi_color: :yellow)
           repos
 
         {:error, reason} ->
-          Logger.error("Error getting the repos for '#{org}' from github: #{inspect(reason)}")
+          Logger.error(
+            "Error getting the repos for '#{org_name}' from github: #{inspect(reason)}"
+          )
+
           []
       end
 
-    org_info =
-      org_info
-      |> Map.put("yml_data", yml_data)
-      |> Map.put("repos", org_repos)
-      |> Map.put("repo_count", Enum.count(org_repos))
+    org =
+      org
+      |> Map.put(:repos, org_repos)
+      |> Map.put(:repo_count, Enum.count(org_repos))
       |> put_org_languages_stats()
       |> put_org_popularity()
       |> put_org_last_activity()
 
-    {org, org_info}
+    {org_name, org}
   end
 
-  defp get_members(%{"key" => key} = org) do
+  defp get_members(%Organization{:key => key} = org) do
     members =
       case call_api_get("orgs/#{key}/members") do
         {:ok, body} ->
@@ -146,17 +163,21 @@ defmodule Coophub.Repos.Warmer do
           []
       end
 
-    Map.put(org, "members", members)
+    Map.put(org, :members, members)
   end
 
-  defp get_org(name) do
+  defp get_org(name, yml_data) do
     case call_api_get("orgs/#{name}") do
       {:ok, org} ->
         msg =
           "Fetched '#{name}' organization! Getting members and repos (max=#{@repos_max_fetch}).."
 
         Logger.info(msg, ansi_color: :yellow)
-        org |> Map.put("key", name) |> get_members()
+
+        Repos.to_struct(Organization, org)
+        |> Map.put(:key, name)
+        |> Map.put(:yml_data, yml_data)
+        |> get_members()
 
       {:error, reason} ->
         Logger.error("Error getting the organization '#{name}' from github: #{inspect(reason)}")
@@ -165,46 +186,48 @@ defmodule Coophub.Repos.Warmer do
   end
 
   defp put_key(repos, key) do
-    Enum.map(repos, &Map.put(&1, "key", key))
+    Enum.map(repos, &Map.put(&1, :key, key))
   end
 
   defp put_popularities(repos) do
-    Enum.map(repos, &Map.put(&1, "popularity", Repos.get_repo_popularity(&1)))
+    Enum.map(repos, &Map.put(&1, :popularity, Repos.get_repo_popularity(&1)))
   end
 
-  defp put_topics(repos, org) do
+  defp put_topics(repos, org_name) do
     Enum.map(repos, fn repo ->
-      repo_name = repo["name"]
+      repo_name = repo.name
 
       topics =
-        case call_api_get("repos/#{org}/#{repo_name}/topics") do
+        case call_api_get("repos/#{org_name}/#{repo_name}/topics") do
           {:ok, body} ->
             body
 
           {:error, reason} ->
             Logger.error(
-              "Error getting the topics for '#{org}/#{repo_name}' from github: #{inspect(reason)}"
+              "Error getting the topics for '#{org_name}/#{repo_name}' from github: #{
+                inspect(reason)
+              }"
             )
 
             %{}
         end
 
-      Map.put(repo, "topics", Map.get(topics, "names", []))
+      Map.put(repo, :topics, Map.get(topics, "names", []))
     end)
   end
 
-  defp put_languages(repos, org) do
+  defp put_languages(repos, org_name) do
     Enum.map(repos, fn repo ->
-      repo_name = repo["name"]
+      repo_name = repo.name
 
       languages =
-        case call_api_get("repos/#{org}/#{repo_name}/languages") do
+        case call_api_get("repos/#{org_name}/#{repo_name}/languages") do
           {:ok, body} ->
             body
 
           {:error, reason} ->
             Logger.error(
-              "Error getting the languages for '#{org}/#{repo_name}' from github: #{
+              "Error getting the languages for '#{org_name}/#{repo_name}' from github: #{
                 inspect(reason)
               }"
             )
@@ -216,18 +239,20 @@ defmodule Coophub.Repos.Warmer do
     end)
   end
 
-  defp put_repo_data(repos, org) do
+  defp put_repo_data(repos, org_name) do
     Enum.map(repos, fn repo ->
-      repo_name = repo["name"]
+      repo_name = repo.name
 
       repo_data =
-        case call_api_get("repos/#{org}/#{repo_name}") do
+        case call_api_get("repos/#{org_name}/#{repo_name}") do
           {:ok, body} ->
             body
 
           {:error, reason} ->
             Logger.error(
-              "Error getting repo data for '#{org}/#{repo_name}' from github: #{inspect(reason)}"
+              "Error getting repo data for '#{org_name}/#{repo_name}' from github: #{
+                inspect(reason)
+              }"
             )
 
             %{}
@@ -237,7 +262,7 @@ defmodule Coophub.Repos.Warmer do
 
       case parent do
         %{"full_name" => name, "html_url" => url} ->
-          Map.put(repo, "parent", %{"name" => name, "url" => url})
+          Map.put(repo, :parent, %{"name" => name, "url" => url})
 
         _ ->
           repo
@@ -247,46 +272,46 @@ defmodule Coophub.Repos.Warmer do
 
   defp put_repo_languages_stats(repo, languages) do
     stats = Repos.get_percentages_by_language(languages)
-    Map.put(repo, "languages", stats)
+    Map.put(repo, :languages, stats)
   end
 
   defp put_org_languages_stats(org) do
     stats = Repos.get_org_languages_stats(org)
 
     org
-    |> Map.put("languages", stats)
+    |> Map.put(:languages, stats)
     |> convert_languages_to_list_and_sort()
   end
 
   defp put_org_popularity(org) do
     popularity = Repos.get_org_popularity(org)
-    Map.put(org, "popularity", popularity)
+    Map.put(org, :popularity, popularity)
   end
 
   defp put_org_last_activity(org) do
     last_activity = Repos.get_org_last_activity(org)
-    Map.put(org, "last_activity", last_activity)
+    Map.put(org, :last_activity, last_activity)
   end
 
   defp convert_languages_to_list_and_sort(org) do
     repos =
       org
-      |> Map.get("repos", [])
+      |> Map.get(:repos, [])
       |> Enum.map(&languages_map_to_list_and_sort/1)
 
     org
-    |> Map.put("repos", repos)
+    |> Map.put(:repos, repos)
     |> languages_map_to_list_and_sort()
   end
 
   defp languages_map_to_list_and_sort(datamap) do
     languages =
       datamap
-      |> Map.get("languages", [])
+      |> Map.get(:languages, [])
       |> Enum.map(fn {lang, stats} -> Map.put(stats, "lang", lang) end)
       |> Enum.sort(&(&1["bytes"] > &2["bytes"]))
 
-    Map.put(datamap, "languages", languages)
+    Map.put(datamap, :languages, languages)
   end
 
   defp headers() do
@@ -303,6 +328,7 @@ defmodule Coophub.Repos.Warmer do
     end
   end
 
+  @spec call_api_get(String.t()) :: {:ok, map | [map]} | {:error, any}
   defp call_api_get(path) do
     url = "https://api.github.com/#{path}"
 

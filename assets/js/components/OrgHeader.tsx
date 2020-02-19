@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, ButtonGroup, Button, CardLink, Row} from "reactstrap";
+import {Container, ButtonGroup, Button, CardLink, Row, Col} from "reactstrap";
 import {GoLocation, GoLink, GoMail, IoMdCalendar, GoMarkGithub} from "react-icons/all";
 import {Org} from "../types";
 import LanguagesProgressBar from './LanguagesProgressBar';
@@ -47,42 +47,41 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
                 </Container>
             </Row>
             
-            <div className="line-mf mb-3"/>
-            <Row className="skill-mf">
+            <Row className="skill-mf mt-4">
                 <LanguagesProgressBar languages={org.languages} maxLanguages={maxLanguages}></LanguagesProgressBar>
             </Row>
 
             <Container className="text-center mb-4">
-                <ButtonGroup>
+                <div className="org-details-container">
                     {org.location &&
-                        <span>
+                        <div>
                             <GoLocation/> { org.location }
-                        </span>
+                        </div>
                     }
                     {org.email &&
-                        <span className="ml-4">
+                        <div>
                             <GoMail/> { org.email }
-                        </span>
+                        </div>
                     }
                     {org.blog &&
-                        <Button color="link" className="ml-4 pt-0">
-                            <CardLink href={org.blog} target="_blank"> 
+                        <div>
+                            <a className="btn btn-link" href={org.blog} target="_blank"> 
                                 <GoLink/> { org.blog }
-                            </CardLink>
-                        </Button>
+                            </a>
+                        </div>
                     }
                     {org.login &&
-                        <Button color="link" className="ml-4 pt-0">
-                            <CardLink href={`https://github.com/${org.login}`} target="_blank"> 
+                        <div>
+                            <a className="btn btn-link" href={`https://github.com/${org.login}`} target="_blank"> 
                                 <GoMarkGithub/> { org.login }
-                            </CardLink>
-                        </Button>
+                            </a>
+                        </div>
                     }
-                    <span className="ml-4">
+                    <div>
                         <IoMdCalendar />
                         Created in {createdDate}
-                    </span>
-                </ButtonGroup>
+                    </div>
+                </div>
             </Container>
         </Container>
 
