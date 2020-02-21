@@ -63,3 +63,9 @@ seattledeveloperscoop:
   url: https://www.seattledevelopers.coop
   description: "A worker-owned web developer cooperative based in Seattle"
   location: Seattle, USA
+  
+camplight:
+  name: Camplight
+  url: https://camplight.net
+  description: "A digital cooperative that creates experiences for the web, mobile and beyond."
+  location: Remote, mainly europe, Bulgaria
