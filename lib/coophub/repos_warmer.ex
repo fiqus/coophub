@@ -258,11 +258,9 @@ defmodule Coophub.Repos.Warmer do
             %{}
         end
 
-      parent = Map.get(repo_data, "parent")
-
-      case parent do
+      case Map.get(repo_data, "parent", :none) do
         %{"full_name" => name, "html_url" => url} ->
-          Map.put(repo, :parent, %{"name" => name, "url" => url})
+          Map.put(repo, :parent, %{name: name, url: url})
 
         _ ->
           repo

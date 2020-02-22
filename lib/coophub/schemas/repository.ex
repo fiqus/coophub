@@ -20,12 +20,12 @@ defmodule Coophub.Schemas.Repository do
           topics: List.t(String.t()),
           languages: Map.t(),
           open_issues_count: Integer.t(),
-          url: String.t(),
+          html_url: String.t(),
           language: String.t(),
           popularity: Float.t(),
           full_name: String.t(),
           fork: Boolean.t(),
-          parent: Map.t()
+          parent: %{name: String.t(), url: String.t()}
         }
 
   @derive Jason.Encoder
@@ -46,7 +46,7 @@ defmodule Coophub.Schemas.Repository do
     :topics,
     :languages,
     :open_issues_count,
-    :url,
+    :html_url,
     :language,
     :popularity,
     :full_name,

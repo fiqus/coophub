@@ -41,6 +41,7 @@ export type Org = {
     name: string;
     description: string;
     location: string;
+    html_url: string;
     avatar_url: string;
     blog: string;
     email: string;

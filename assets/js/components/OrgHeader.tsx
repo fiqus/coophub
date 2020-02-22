@@ -72,7 +72,7 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
                     }
                     {org.login &&
                         <div>
-                            <a className="btn btn-link" href={`https://github.com/${org.login}`} target="_blank"> 
+                            <a className="btn btn-link" href={org.html_url} target="_blank"> 
                                 <GoMarkGithub/> { org.login }
                             </a>
                         </div>
