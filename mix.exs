@@ -46,7 +46,8 @@ defmodule Coophub.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:httpoison, "~> 1.4"},
       {:yaml_elixir, "~> 2.4"},
-      {:cachex, "~> 3.1"}
+      {:cachex, "~> 3.1"},
+      {:dialyzex, "~> 1.2"}
     ]
   end
 
