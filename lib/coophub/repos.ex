@@ -12,12 +12,12 @@ defmodule Coophub.Repos do
   @percentage_for_updated_time 0.8
 
   @typedoc """
-  Org is a map representing an organisation
+  org is a struct representing an organization
   """
   @type org :: Organization.t()
 
   @typedoc """
-  Repo is a map representing a repository
+  repo is a struct representing a repository
   """
   @type repo :: Repository.t()
 
@@ -249,11 +249,11 @@ defmodule Coophub.Repos do
 
   @spec to_struct(module, map | [map]) :: struct | [struct]
   def to_struct(_, []), do: []
-  def to_struct(str, [data | tail]), do: [to_struct(str, data) | to_struct(str, tail)]
+  def to_struct(module, [data | tail]), do: [to_struct(module, data) | to_struct(module, tail)]
 
-  def to_struct(str, map) when is_map(map) do
+  def to_struct(module, map) when is_map(map) do
     map_with_atom_keys = for {k, v} <- map, into: %{}, do: {String.to_atom(k), v}
-    struct(str, map_with_atom_keys)
+    struct(module, map_with_atom_keys)
   end
 
   @spec repo_has_lang?(repo(), String.t()) :: Boolean.t()

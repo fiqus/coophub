@@ -1,12 +1,12 @@
-defmodule Coophub.Repos.Warmer do
+defmodule Coophub.CacheWarmer do
   use Cachex.Warmer
 
   alias Coophub.Repos
+  alias Coophub.Backends
   alias Coophub.Schemas.{Organization, Repository}
 
   require Logger
 
-  @repos_max_fetch Application.get_env(:coophub, :fetch_max_repos)
   @repos_cache_name Application.get_env(:coophub, :main_cache_name)
   @repos_cache_interval Application.get_env(:coophub, :cache_interval)
   @repos_cache_dump_file Application.get_env(:coophub, :main_cache_dump_file)
@@ -42,10 +42,10 @@ defmodule Coophub.Repos.Warmer do
 
     repos =
       read_yml()
-      |> Enum.reduce([], fn {name, yml_data}, acc ->
-        case get_org(name, yml_data) do
+      |> Enum.reduce([], fn {key, yml_data}, acc ->
+        case get_org(key, yml_data) do
           :error -> acc
-          org -> [get_repos(name, org) | acc]
+          org -> [get_repos(org) | acc]
         end
       end)
 
@@ -116,74 +116,53 @@ defmodule Coophub.Repos.Warmer do
   ## Github API calls and handling functions
   ##
 
-  defp get_repos(org_name, org) do
-    org_repos =
-      case call_api_get(
-             "orgs/#{org_name}/repos?per_page=#{@repos_max_fetch}&type=public&sort=pushed&direction=desc"
-           ) do
-        {:ok, body} ->
-          repos =
-            Repos.to_struct(Repository, body)
-            |> put_key(org_name)
-            |> put_popularities()
-            |> put_topics(org_name)
-            |> put_languages(org_name)
-            |> put_repo_data(org_name)
+  defp get_org(key, %{"source" => source} = yml_data) do
+    case call_backend(source, :get_org, [key, yml_data]) do
+      %Organization{} = org ->
+        org
+        |> Map.put(:key, key)
+        |> Map.put(:yml_data, yml_data)
+        |> get_members()
 
-          Logger.info("Fetched #{length(repos)} repos for #{org_name}", ansi_color: :yellow)
-          repos
+      _ ->
+        :error
+    end
+  end
 
-        {:error, reason} ->
-          Logger.error(
-            "Error getting the repos for '#{org_name}' from github: #{inspect(reason)}"
-          )
+  defp get_members(%Organization{yml_data: %{"source" => source}} = org) do
+    members = call_backend(source, :get_members, [org])
+    Map.put(org, :members, members)
+  end
 
-          []
-      end
+  defp get_repos(%Organization{key: key, yml_data: %{"source" => source}} = org) do
+    repos =
+      call_backend(source, :get_repos, [org])
+      |> put_key(key)
+      |> put_popularities()
+      |> put_topics(org)
+      |> put_languages(key)
+      |> put_repo_data(key)
 
     org =
       org
-      |> Map.put(:repos, org_repos)
-      |> Map.put(:repo_count, Enum.count(org_repos))
+      |> Map.put(:repos, repos)
+      |> Map.put(:repo_count, Enum.count(repos))
       |> put_org_languages_stats()
       |> put_org_popularity()
       |> put_org_last_activity()
 
-    {org_name, org}
+    {key, org}
   end
 
-  defp get_members(%Organization{:key => key} = org) do
-    members =
-      case call_api_get("orgs/#{key}/members") do
-        {:ok, body} ->
-          body
-
-        {:error, reason} ->
-          Logger.error("Error getting members for '#{key}' from github: #{inspect(reason)}")
-          []
-      end
-
-    Map.put(org, :members, members)
-  end
-
-  defp get_org(name, yml_data) do
-    case call_api_get("orgs/#{name}") do
-      {:ok, org} ->
-        msg =
-          "Fetched '#{name}' organization! Getting members and repos (max=#{@repos_max_fetch}).."
-
-        Logger.info(msg, ansi_color: :yellow)
-
-        Repos.to_struct(Organization, org)
-        |> Map.put(:key, name)
-        |> Map.put(:yml_data, yml_data)
-        |> get_members()
-
-      {:error, reason} ->
-        Logger.error("Error getting the organization '#{name}' from github: #{inspect(reason)}")
-        :error
+  defp call_backend(source, func, params) do
+    case get_backend(source) do
+      :unknown -> {:error, "Unknown backend source: #{source}"}
+      module -> apply(module, func, params)
     end
   end
+
+  defp get_backend("github"), do: Backends.Github
+  defp get_backend(_), do: :unknown
 
   defp put_key(repos, key) do
     Enum.map(repos, &Map.put(&1, :key, key))
@@ -193,26 +172,10 @@ defmodule Coophub.Repos.Warmer do
     Enum.map(repos, &Map.put(&1, :popularity, Repos.get_repo_popularity(&1)))
   end
 
-  defp put_topics(repos, org_name) do
+  defp put_topics(repos, %Organization{yml_data: %{"source" => source}} = org) do
     Enum.map(repos, fn repo ->
-      repo_name = repo.name
-
-      topics =
-        case call_api_get("repos/#{org_name}/#{repo_name}/topics") do
-          {:ok, body} ->
-            body
-
-          {:error, reason} ->
-            Logger.error(
-              "Error getting the topics for '#{org_name}/#{repo_name}' from github: #{
-                inspect(reason)
-              }"
-            )
-
-            %{}
-        end
-
-      Map.put(repo, :topics, Map.get(topics, "names", []))
+      topics = call_backend(source, :get_topics, [org, repo])
+      Map.put(repo, :topics, topics)
     end)
   end
 
