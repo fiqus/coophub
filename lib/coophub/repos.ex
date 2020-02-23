@@ -24,12 +24,12 @@ defmodule Coophub.Repos do
   @typedoc """
   Repos is a list of repo maps
   """
-  @type repos :: List.t(repo()) | []
+  @type repos :: list(repo()) | []
 
   @typedoc """
   Orgs is a list of org maps
   """
-  @type orgs :: List.t(org()) | []
+  @type orgs :: list(org()) | []
   @type orgs_map :: %{required(String.t()) => org()}
 
   @spec get_all_orgs :: orgs_map() | :error
@@ -256,7 +256,7 @@ defmodule Coophub.Repos do
     struct(module, map_with_atom_keys)
   end
 
-  @spec repo_has_lang?(repo(), String.t()) :: Boolean.t()
+  @spec repo_has_lang?(repo(), String.t()) :: boolean()
   defp repo_has_lang?(repo, lang) do
     Enum.find(repo.languages, fn %{"lang" => repo_lang} ->
       String.downcase(repo_lang) == String.downcase(lang)

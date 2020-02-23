@@ -1,6 +1,6 @@
 defmodule Coophub.Backends do
   @type headers :: [{String.t(), String.t()}]
-  @type languages :: [%{String.t() => Integer.t()}]
+  @type languages :: [%{String.t() => integer()}]
 
   @spec call_api_get(String.t(), headers()) :: {:ok, map | [map], integer} | {:error, any}
   def call_api_get(url, headers) do

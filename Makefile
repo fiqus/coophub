@@ -1,4 +1,4 @@
-.PHONY: server release compile test dialyzer clean
+.PHONY: server release compile test dialyzer plt clean
 
 export MIX_ENV ?= dev
 export SECRET_KEY_BASE ?= $(shell mix phx.gen.secret)
@@ -21,7 +21,11 @@ test: dialyzer
 
 dialyzer: MIX_ENV=dev
 dialyzer:
-	@mix dialyzer
+	@mix dialyzer --check=false
+
+plt: MIX_ENV=dev
+plt:
+	@mix dialyzer --check=true --compile=true
 
 clean:
 	@mix deps.clean --all --unlock

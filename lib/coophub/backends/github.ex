@@ -12,7 +12,7 @@ defmodule Coophub.Backends.Github do
   ########
 
   @impl Backends.Behaviour
-  @spec get_org(String.t(), Map.t()) :: Organization.t() | :error
+  @spec get_org(String.t(), map()) :: Organization.t() | :error
   def get_org(key, _yml_data) do
     Logger.info("Fetching '#{key}' organization from github..", ansi_color: :yellow)
 
