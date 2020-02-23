@@ -7,8 +7,6 @@ defmodule Coophub.Backends.Github do
 
   @behaviour Backends.Behaviour
 
-  @repos_max_fetch Application.get_env(:coophub, :fetch_max_repos)
-
   ########
   ## BEHAVIOUR IMPLEMENTATION
   ########
@@ -19,8 +17,8 @@ defmodule Coophub.Backends.Github do
     Logger.info("Fetching '#{key}' organization from github..", ansi_color: :yellow)
 
     case call_api_get("orgs/#{key}") do
-      {:ok, org} ->
-        Logger.info("Fetched '#{key}' organization!", ansi_color: :yellow)
+      {:ok, org, ms} ->
+        Logger.info("Fetched '#{key}' organization! (#{ms}ms)", ansi_color: :green)
         Repos.to_struct(Organization, org)
 
       {:error, reason} ->
@@ -36,8 +34,8 @@ defmodule Coophub.Backends.Github do
     Logger.info("Fetching '#{key}' members from github..", ansi_color: :yellow)
 
     case call_api_get("orgs/#{key}/members") do
-      {:ok, members} ->
-        Logger.info("Fetched #{length(members)} '#{key}' members!", ansi_color: :yellow)
+      {:ok, members, ms} ->
+        Logger.info("Fetched #{length(members)} '#{key}' members! (#{ms}ms)", ansi_color: :green)
         members
 
       {:error, reason} ->
@@ -49,12 +47,13 @@ defmodule Coophub.Backends.Github do
   @impl Backends.Behaviour
   @spec get_repos(Organization.t()) :: [Repository.t()]
   def get_repos(%Organization{key: key} = org) do
-    Logger.info("Fetching '#{key}' repos from github..", ansi_color: :yellow)
-    path = "orgs/#{key}/repos?per_page=#{@repos_max_fetch}&type=public&sort=pushed&direction=desc"
+    limit = Application.get_env(:coophub, :fetch_max_repos)
+    Logger.info("Fetching '#{key}' repos from github (max=#{limit})..", ansi_color: :yellow)
+    path = "orgs/#{key}/repos?per_page=#{limit}&type=public&sort=pushed&direction=desc"
 
     case call_api_get(path) do
-      {:ok, repos} ->
-        Logger.info("Fetched #{length(repos)} '#{key}' repos!", ansi_color: :yellow)
+      {:ok, repos, ms} ->
+        Logger.info("Fetched #{length(repos)} '#{key}' repos! (#{ms}ms)", ansi_color: :green)
 
         Enum.map(repos, fn repo_data ->
           get_repo(org, repo_data)
@@ -69,12 +68,16 @@ defmodule Coophub.Backends.Github do
   @impl Backends.Behaviour
   @spec get_topics(Organization.t(), Repository.t()) :: [String.t()]
   def get_topics(%Organization{key: key}, %Repository{name: name}) do
-    Logger.info("Fetching '#{key}/#{name}' topics from github..", ansi_color: :yellow)
+    Logger.info("Fetching '#{key}/#{name}' topics from github..", ansi_color: :cyan)
 
     case call_api_get("repos/#{key}/#{name}/topics") do
-      {:ok, data} ->
+      {:ok, data, ms} ->
         topics = Map.get(data, "names", [])
-        Logger.info("Fetched #{length(topics)} '#{key}/#{name}' topics!", ansi_color: :yellow)
+
+        Logger.info("Fetched #{length(topics)} '#{key}/#{name}' topics! (#{ms}ms)",
+          ansi_color: :green
+        )
+
         topics
 
       {:error, reason} ->
@@ -84,14 +87,15 @@ defmodule Coophub.Backends.Github do
   end
 
   @impl Backends.Behaviour
-  @spec get_languages(Organization.t(), Repository.t()) :: Backends.Behaviour.languages()
+  @spec get_languages(Organization.t(), Repository.t()) :: Backends.languages()
   def get_languages(%Organization{key: key}, %Repository{name: name}) do
-    Logger.info("Fetching '#{key}/#{name}' languages from github..", ansi_color: :yellow)
+    Logger.info("Fetching '#{key}/#{name}' languages from github..", ansi_color: :cyan)
 
     case call_api_get("repos/#{key}/#{name}/languages") do
-      {:ok, languages} ->
-        Logger.info("Fetched #{length(Map.keys(languages))} '#{key}/#{name}' languages!",
-          ansi_color: :yellow
+      {:ok, languages, ms} ->
+        Logger.info(
+          "Fetched #{length(Map.keys(languages))} '#{key}/#{name}' languages! (#{ms}ms)",
+          ansi_color: :green
         )
 
         languages
@@ -102,32 +106,16 @@ defmodule Coophub.Backends.Github do
     end
   end
 
-  @impl Backends.Behaviour
-  @spec headers() :: Backends.Behaviour.headers()
-  def headers() do
-    headers = [
-      {"Accept", "application/vnd.github.mercy-preview+json"}
-    ]
-
-    token = System.get_env("GITHUB_OAUTH_TOKEN")
-
-    if is_binary(token) do
-      [{"Authorization", "token #{token}"} | headers]
-    else
-      headers
-    end
-  end
-
   ########
   ## INTERNALS
   ########
 
   defp get_repo(%Organization{key: key}, %{"name" => name} = repo_data) do
-    Logger.info("Fetching '#{key}/#{name}' repo data from github..", ansi_color: :yellow)
+    Logger.info("Fetching '#{key}/#{name}' repo data from github..", ansi_color: :cyan)
 
     case call_api_get("repos/#{key}/#{name}") do
-      {:ok, data} ->
-        Logger.info("Fetched '#{key}/#{name}' repo data!", ansi_color: :yellow)
+      {:ok, data, ms} ->
+        Logger.info("Fetched '#{key}/#{name}' repo data! (#{ms}ms)", ansi_color: :green)
 
         repo = Repos.to_struct(Repository, data)
 
@@ -146,8 +134,17 @@ defmodule Coophub.Backends.Github do
     end
   end
 
+  defp headers() do
+    headers = [{"Accept", "application/vnd.github.mercy-preview+json"}]
+    token = System.get_env("GITHUB_OAUTH_TOKEN")
+
+    if is_binary(token),
+      do: [{"Authorization", "token #{token}"} | headers],
+      else: headers
+  end
+
   defp call_api_get(path) do
     url = "https://api.github.com/#{path}"
-    Backends.Behaviour.call_api_get(url, headers())
+    Backends.call_api_get(url, headers())
   end
 end

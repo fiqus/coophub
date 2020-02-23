@@ -68,7 +68,7 @@ defmodule Coophub.CacheWarmer do
             "Saved repos cache dump with #{length(repos)} orgs to local file '#{
               @repos_cache_dump_file
             }'",
-            ansi_color: :green
+            ansi_color: :magenta
           )
 
         err ->
@@ -83,7 +83,7 @@ defmodule Coophub.CacheWarmer do
     with {:ok, dump} <- read_cache_dump(@repos_cache_dump_file),
          {:ok, true} <- Cachex.import(@repos_cache_name, dump),
          {:ok, size} <- Cachex.size(@repos_cache_name) do
-      Logger.info("The dump was loaded with #{size} orgs!", ansi_color: :yellow)
+      Logger.info("The dump was loaded with #{size} orgs!", ansi_color: :magenta)
       size
     else
       _ ->
