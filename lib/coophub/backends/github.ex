@@ -48,14 +48,17 @@ defmodule Coophub.Backends.Github do
 
   @impl Backends.Behaviour
   @spec get_repos(Organization.t()) :: [Repository.t()]
-  def get_repos(%Organization{key: key}) do
+  def get_repos(%Organization{key: key} = org) do
     Logger.info("Fetching '#{key}' repos from github..", ansi_color: :yellow)
     path = "orgs/#{key}/repos?per_page=#{@repos_max_fetch}&type=public&sort=pushed&direction=desc"
 
     case call_api_get(path) do
       {:ok, repos} ->
         Logger.info("Fetched #{length(repos)} '#{key}' repos!", ansi_color: :yellow)
-        Repos.to_struct(Repository, repos)
+
+        Enum.map(repos, fn repo_data ->
+          get_repo(org, repo_data)
+        end)
 
       {:error, reason} ->
         Logger.error("Error getting '#{key}' repos from github: #{inspect(reason)}")
@@ -81,6 +84,25 @@ defmodule Coophub.Backends.Github do
   end
 
   @impl Backends.Behaviour
+  @spec get_languages(Organization.t(), Repository.t()) :: Backends.Behaviour.languages()
+  def get_languages(%Organization{key: key}, %Repository{name: name}) do
+    Logger.info("Fetching '#{key}/#{name}' languages from github..", ansi_color: :yellow)
+
+    case call_api_get("repos/#{key}/#{name}/languages") do
+      {:ok, languages} ->
+        Logger.info("Fetched #{length(Map.keys(languages))} '#{key}/#{name}' languages!",
+          ansi_color: :yellow
+        )
+
+        languages
+
+      {:error, reason} ->
+        Logger.error("Error getting '#{key}/#{name}' languages from github: #{inspect(reason)}")
+        []
+    end
+  end
+
+  @impl Backends.Behaviour
   @spec headers() :: Backends.Behaviour.headers()
   def headers() do
     headers = [
@@ -99,6 +121,30 @@ defmodule Coophub.Backends.Github do
   ########
   ## INTERNALS
   ########
+
+  defp get_repo(%Organization{key: key}, %{"name" => name} = repo_data) do
+    Logger.info("Fetching '#{key}/#{name}' repo data from github..", ansi_color: :yellow)
+
+    case call_api_get("repos/#{key}/#{name}") do
+      {:ok, data} ->
+        Logger.info("Fetched '#{key}/#{name}' repo data!", ansi_color: :yellow)
+
+        repo = Repos.to_struct(Repository, data)
+
+        case repo.parent do
+          %{"full_name" => name, "html_url" => url} ->
+            Map.put(repo, :parent, %{name: name, url: url})
+
+          _ ->
+            repo
+        end
+
+      {:error, reason} ->
+        Logger.error("Error getting '#{key}/#{name}' repo data from github: #{inspect(reason)}")
+        # Fallback to repo_data we've fetched before
+        Repos.to_struct(Repository, repo_data)
+    end
+  end
 
   defp call_api_get(path) do
     url = "https://api.github.com/#{path}"

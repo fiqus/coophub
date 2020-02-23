@@ -3,7 +3,7 @@ defmodule Coophub.CacheWarmer do
 
   alias Coophub.Repos
   alias Coophub.Backends
-  alias Coophub.Schemas.{Organization, Repository}
+  alias Coophub.Schemas.Organization
 
   require Logger
 
@@ -38,7 +38,7 @@ defmodule Coophub.CacheWarmer do
   defp maybe_warm_cache(_, _, _), do: warm_cache()
 
   defp warm_cache() do
-    Logger.info("Warming repos into cache from github..", ansi_color: :yellow)
+    Logger.info("Warming repos into cache from remote backends..", ansi_color: :yellow)
 
     repos =
       read_yml()
@@ -113,7 +113,7 @@ defmodule Coophub.CacheWarmer do
   end
 
   ##
-  ## Github API calls and handling functions
+  ## Remote backends calls and handling functions
   ##
 
   defp get_org(key, %{"source" => source} = yml_data) do
@@ -140,9 +140,9 @@ defmodule Coophub.CacheWarmer do
       |> put_key(key)
       |> put_popularities()
       |> put_topics(org)
-      |> put_languages(key)
-      |> put_repo_data(key)
+      |> put_languages(org)
 
+    # Set org repos and calculate some org-level stats
     org =
       org
       |> Map.put(:repos, repos)
@@ -179,61 +179,12 @@ defmodule Coophub.CacheWarmer do
     end)
   end
 
-  defp put_languages(repos, org_name) do
+  defp put_languages(repos, %Organization{yml_data: %{"source" => source}} = org) do
     Enum.map(repos, fn repo ->
-      repo_name = repo.name
-
-      languages =
-        case call_api_get("repos/#{org_name}/#{repo_name}/languages") do
-          {:ok, body} ->
-            body
-
-          {:error, reason} ->
-            Logger.error(
-              "Error getting the languages for '#{org_name}/#{repo_name}' from github: #{
-                inspect(reason)
-              }"
-            )
-
-            %{}
-        end
-
-      put_repo_languages_stats(repo, languages)
+      languages = call_backend(source, :get_languages, [org, repo])
+      stats = Repos.get_percentages_by_language(languages)
+      Map.put(repo, :languages, stats)
     end)
-  end
-
-  defp put_repo_data(repos, org_name) do
-    Enum.map(repos, fn repo ->
-      repo_name = repo.name
-
-      repo_data =
-        case call_api_get("repos/#{org_name}/#{repo_name}") do
-          {:ok, body} ->
-            body
-
-          {:error, reason} ->
-            Logger.error(
-              "Error getting repo data for '#{org_name}/#{repo_name}' from github: #{
-                inspect(reason)
-              }"
-            )
-
-            %{}
-        end
-
-      case Map.get(repo_data, "parent", :none) do
-        %{"full_name" => name, "html_url" => url} ->
-          Map.put(repo, :parent, %{name: name, url: url})
-
-        _ ->
-          repo
-      end
-    end)
-  end
-
-  defp put_repo_languages_stats(repo, languages) do
-    stats = Repos.get_percentages_by_language(languages)
-    Map.put(repo, :languages, stats)
   end
 
   defp put_org_languages_stats(org) do
@@ -273,35 +224,5 @@ defmodule Coophub.CacheWarmer do
       |> Enum.sort(&(&1["bytes"] > &2["bytes"]))
 
     Map.put(datamap, :languages, languages)
-  end
-
-  defp headers() do
-    headers = [
-      {"Accept", "application/vnd.github.mercy-preview+json"}
-    ]
-
-    token = System.get_env("GITHUB_OAUTH_TOKEN")
-
-    if is_binary(token) do
-      [{"Authorization", "token #{token}"} | headers]
-    else
-      headers
-    end
-  end
-
-  @spec call_api_get(String.t()) :: {:ok, map | [map]} | {:error, any}
-  defp call_api_get(path) do
-    url = "https://api.github.com/#{path}"
-
-    case HTTPoison.get(url, headers()) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, Jason.decode!(body)}
-
-      {:ok, %HTTPoison.Response{status_code: 404}} ->
-        {:error, "Not found: #{url}"}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
   end
 end
