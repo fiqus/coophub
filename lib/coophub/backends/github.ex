@@ -1,18 +1,22 @@
 defmodule Coophub.Backends.Github do
   alias Coophub.Repos
-  alias Coophub.Backends
+  alias Coophub.Backends.Behaviour, as: BackendBehaviour
   alias Coophub.Schemas.{Organization, Repository}
 
   require Logger
 
-  @behaviour Backends.Behaviour
+  @type org :: BackendBehaviour.org()
+  @type repo :: BackendBehaviour.repo()
+  @type langs :: BackendBehaviour.langs()
+
+  @behaviour BackendBehaviour
 
   ########
   ## BEHAVIOUR IMPLEMENTATION
   ########
 
-  @impl Backends.Behaviour
-  @spec get_org(String.t(), map()) :: Organization.t() | :error
+  @impl BackendBehaviour
+  @spec get_org(String.t(), map) :: org | :error
   def get_org(key, _yml_data) do
     Logger.info("Fetching '#{key}' organization from github..", ansi_color: :yellow)
 
@@ -27,8 +31,8 @@ defmodule Coophub.Backends.Github do
     end
   end
 
-  @impl Backends.Behaviour
-  @spec get_members(Organization.t()) :: [map]
+  @impl BackendBehaviour
+  @spec get_members(org) :: [map]
   # @TODO Isn't fetching all the org members (ie: just 5 for fiqus)
   def get_members(%Organization{key: key}) do
     Logger.info("Fetching '#{key}' members from github..", ansi_color: :yellow)
@@ -44,8 +48,8 @@ defmodule Coophub.Backends.Github do
     end
   end
 
-  @impl Backends.Behaviour
-  @spec get_repos(Organization.t()) :: [Repository.t()]
+  @impl BackendBehaviour
+  @spec get_repos(org) :: [repo]
   def get_repos(%Organization{key: key} = org) do
     limit = Application.get_env(:coophub, :fetch_max_repos)
     Logger.info("Fetching '#{key}' repos from github (max=#{limit})..", ansi_color: :yellow)
@@ -65,8 +69,8 @@ defmodule Coophub.Backends.Github do
     end
   end
 
-  @impl Backends.Behaviour
-  @spec get_topics(Organization.t(), Repository.t()) :: [String.t()]
+  @impl BackendBehaviour
+  @spec get_topics(org, repo) :: [String.t()]
   def get_topics(%Organization{key: key}, %Repository{name: name}) do
     Logger.info("Fetching '#{key}/#{name}' topics from github..", ansi_color: :cyan)
 
@@ -86,8 +90,8 @@ defmodule Coophub.Backends.Github do
     end
   end
 
-  @impl Backends.Behaviour
-  @spec get_languages(Organization.t(), Repository.t()) :: Backends.languages()
+  @impl BackendBehaviour
+  @spec get_languages(org, repo) :: langs
   def get_languages(%Organization{key: key}, %Repository{name: name}) do
     Logger.info("Fetching '#{key}/#{name}' languages from github..", ansi_color: :cyan)
 
@@ -129,7 +133,7 @@ defmodule Coophub.Backends.Github do
 
       {:error, reason} ->
         Logger.error("Error getting '#{key}/#{name}' repo data from github: #{inspect(reason)}")
-        # Fallback to repo_data we've fetched before
+        ## Fallback to repo_data we've fetched before
         Repos.to_struct(Repository, repo_data)
     end
   end
@@ -145,6 +149,6 @@ defmodule Coophub.Backends.Github do
 
   defp call_api_get(path) do
     url = "https://api.github.com/#{path}"
-    Backends.call_api_get(url, headers())
+    Coophub.Backends.call_api_get(url, headers())
   end
 end

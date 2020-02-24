@@ -96,8 +96,8 @@ defmodule Coophub.CacheWarmer do
     dump =
       path
       |> File.read!()
-      # Since our dump has atoms (because of the structs) we can't use Cachex.load()
-      # because it does :erlang.binary_to_term([:safe]) at Cachex.Disk.read()
+      ## Since our dump has atoms (because of the structs) we can't use Cachex.load()
+      ## because it does :erlang.binary_to_term([:safe]) at Cachex.Disk.read()
       |> :erlang.binary_to_term()
 
     {:ok, dump}
@@ -117,7 +117,7 @@ defmodule Coophub.CacheWarmer do
   ##
 
   defp get_org(key, %{"source" => source} = yml_data) do
-    case call_backend(source, :get_org, [key, yml_data]) do
+    case Backends.call_backend!(source, :get_org, [key, yml_data]) do
       %Organization{} = org ->
         org
         |> Map.put(:key, key)
@@ -130,19 +130,19 @@ defmodule Coophub.CacheWarmer do
   end
 
   defp get_members(%Organization{yml_data: %{"source" => source}} = org) do
-    members = call_backend(source, :get_members, [org])
+    members = Backends.call_backend!(source, :get_members, [org])
     Map.put(org, :members, members)
   end
 
   defp get_repos(%Organization{key: key, yml_data: %{"source" => source}} = org) do
     repos =
-      call_backend(source, :get_repos, [org])
+      Backends.call_backend!(source, :get_repos, [org])
       |> put_key(key)
       |> put_popularities()
       |> put_topics(org)
       |> put_languages(org)
 
-    # Set org repos and calculate some org-level stats
+    ## Set org repos and calculate some org-level stats
     org =
       org
       |> Map.put(:repos, repos)
@@ -154,16 +154,6 @@ defmodule Coophub.CacheWarmer do
     {key, org}
   end
 
-  defp call_backend(source, func, params) do
-    case get_backend(source) do
-      :unknown -> {:error, "Unknown backend source: #{source}"}
-      module -> apply(module, func, params)
-    end
-  end
-
-  defp get_backend("github"), do: Backends.Github
-  defp get_backend(_), do: :unknown
-
   defp put_key(repos, key) do
     Enum.map(repos, &Map.put(&1, :key, key))
   end
@@ -174,14 +164,14 @@ defmodule Coophub.CacheWarmer do
 
   defp put_topics(repos, %Organization{yml_data: %{"source" => source}} = org) do
     Enum.map(repos, fn repo ->
-      topics = call_backend(source, :get_topics, [org, repo])
+      topics = Backends.call_backend!(source, :get_topics, [org, repo])
       Map.put(repo, :topics, topics)
     end)
   end
 
   defp put_languages(repos, %Organization{yml_data: %{"source" => source}} = org) do
     Enum.map(repos, fn repo ->
-      languages = call_backend(source, :get_languages, [org, repo])
+      languages = Backends.call_backend!(source, :get_languages, [org, repo])
       stats = Repos.get_percentages_by_language(languages)
       Map.put(repo, :languages, stats)
     end)

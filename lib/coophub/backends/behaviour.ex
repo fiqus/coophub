@@ -2,9 +2,21 @@ defmodule Coophub.Backends.Behaviour do
   alias Coophub.Backends
   alias Coophub.Schemas.{Organization, Repository}
 
-  @callback get_org(String.t(), map()) :: Organization.t() | :error
-  @callback get_members(Organization.t()) :: [map]
-  @callback get_repos(Organization.t()) :: [Repository.t()]
-  @callback get_topics(Organization.t(), Repository.t()) :: [String.t()]
-  @callback get_languages(Organization.t(), Repository.t()) :: Backends.languages()
+  @type org :: Organization.t()
+  @type repo :: Repository.t()
+  @type langs :: Backends.languages()
+  @type results ::
+          :error
+          | org
+          | repo
+          | [repo]
+          | [map]
+          | [String.t()]
+          | langs
+
+  @callback get_org(String.t(), map) :: org | :error
+  @callback get_members(org) :: [map]
+  @callback get_repos(org) :: [repo]
+  @callback get_topics(org, repo) :: [String.t()]
+  @callback get_languages(org, repo) :: langs
 end
