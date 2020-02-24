@@ -6,7 +6,7 @@ defmodule Coophub.Backends do
 
   ## Backends definitions
   defp get_backend("github"), do: Backends.Github
-  defp get_backend(source), do: raise "Unknown backend source: #{source}"
+  defp get_backend(source), do: raise("Unknown backend source: #{source}")
 
   @spec call_backend!(String.t(), atom, list) :: Backends.Behaviour.results()
   def call_backend!(source, func, params) do
