@@ -31,7 +31,10 @@ defmodule Coophub.Backends do
     case call_api_get(url, headers) do
       {:ok, data, ms} ->
         Logger.info("Fetched '#{name}' organization! (#{ms}ms)", ansi_color: :green)
+
         backend.parse_org(data)
+        |> Map.put(:key, key)
+        |> Map.put(:yml_data, yml_data)
 
       {:error, reason} ->
         Logger.error("Error getting '#{name}' organization from #{bname}: #{inspect(reason)}")
@@ -79,8 +82,8 @@ defmodule Coophub.Backends do
     end
   end
 
-  @spec get_repo(module, org, map) :: [repo]
-  def get_repo(backend, org, repo_data) do
+  @spec get_repo(module, org, map) :: repo
+  def get_repo(backend, %Organization{key: key} = org, repo_data) do
     bname = backend.name()
     {name, url, headers} = backend.request_repo(org, repo_data)
     Logger.info("Fetching '#{name}' repo data from #{bname}..", ansi_color: :cyan)
@@ -88,7 +91,9 @@ defmodule Coophub.Backends do
     case call_api_get(url, headers) do
       {:ok, data, ms} ->
         Logger.info("Fetched '#{name}' repo data! (#{ms}ms)", ansi_color: :green)
+
         backend.parse_repo(data)
+        |> Map.put(:key, key)
 
       {:error, reason} ->
         Logger.error("Error getting '#{name}' repo data from #{bname}: #{inspect(reason)}")

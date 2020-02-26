@@ -118,14 +118,8 @@ defmodule Coophub.CacheWarmer do
 
   defp get_org(key, %{"source" => source} = yml_data) do
     case Backends.get_org(source, key, yml_data) do
-      %Organization{} = org ->
-        org
-        |> Map.put(:key, key)
-        |> Map.put(:yml_data, yml_data)
-        |> get_members()
-
-      _ ->
-        :error
+      %Organization{} = org -> get_members(org)
+      _ -> :error
     end
   end
 
@@ -137,7 +131,6 @@ defmodule Coophub.CacheWarmer do
   defp get_repos(%Organization{key: key, yml_data: %{"source" => source}} = org) do
     repos =
       Backends.get_repos(source, org)
-      |> put_key(key)
       |> put_popularities()
       |> put_topics(org)
       |> put_languages(org)
@@ -152,10 +145,6 @@ defmodule Coophub.CacheWarmer do
       |> put_org_last_activity()
 
     {key, org}
-  end
-
-  defp put_key(repos, key) do
-    Enum.map(repos, &Map.put(&1, :key, key))
   end
 
   defp put_popularities(repos) do
