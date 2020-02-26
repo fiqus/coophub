@@ -24,7 +24,7 @@ defmodule Coophub.Backends.Github do
   @impl Backends.Behaviour
   @spec request_org(String.t(), map) :: request
   def request_org(key, _yml_data) do
-    {key, full_url("orgs/#{key}"), headers()}
+    request(key, "orgs/#{key}")
   end
 
   @impl Backends.Behaviour
@@ -37,7 +37,7 @@ defmodule Coophub.Backends.Github do
   @spec request_members(org) :: request
   # @TODO Isn't fetching all the org members (ie: just 5 for fiqus)
   def request_members(%Organization{key: key}) do
-    {key, full_url("orgs/#{key}/members"), headers()}
+    request(key, "orgs/#{key}/members")
   end
 
   @impl Backends.Behaviour
@@ -49,14 +49,13 @@ defmodule Coophub.Backends.Github do
   @impl Backends.Behaviour
   @spec request_repos(org, integer) :: request
   def request_repos(%Organization{key: key}, limit) do
-    path = "orgs/#{key}/repos?per_page=#{limit}&type=public&sort=pushed&direction=desc"
-    {key, full_url(path), headers()}
+    request(key, "orgs/#{key}/repos?per_page=#{limit}&type=public&sort=pushed&direction=desc")
   end
 
   @impl Backends.Behaviour
   @spec request_repo(org, map) :: request
   def request_repo(%Organization{key: key}, %{"name" => name}) do
-    {"#{key}/#{name}", full_url("repos/#{key}/#{name}"), headers()}
+    request("#{key}/#{name}", "repos/#{key}/#{name}")
   end
 
   @impl Backends.Behaviour
@@ -76,7 +75,7 @@ defmodule Coophub.Backends.Github do
   @impl Backends.Behaviour
   @spec request_topics(org, repo) :: request
   def request_topics(%Organization{key: key}, %Repository{name: name}) do
-    {"#{key}/#{name}", full_url("repos/#{key}/#{name}/topics"), headers()}
+    request("#{key}/#{name}", "repos/#{key}/#{name}/topics")
   end
 
   @impl Backends.Behaviour
@@ -88,7 +87,7 @@ defmodule Coophub.Backends.Github do
   @impl Backends.Behaviour
   @spec request_languages(org, repo) :: request
   def request_languages(%Organization{key: key}, %Repository{name: name}) do
-    {"#{key}/#{name}", full_url("repos/#{key}/#{name}/languages"), headers()}
+    request("#{key}/#{name}", "repos/#{key}/#{name}/languages")
   end
 
   @impl Backends.Behaviour
@@ -100,6 +99,10 @@ defmodule Coophub.Backends.Github do
   ########
   ## INTERNALS
   ########
+
+  defp request(name, path) do
+    {name, full_url(path), headers()}
+  end
 
   defp headers() do
     headers = [{"Accept", "application/vnd.github.mercy-preview+json"}]
