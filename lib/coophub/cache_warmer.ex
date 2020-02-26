@@ -117,7 +117,7 @@ defmodule Coophub.CacheWarmer do
   ##
 
   defp get_org(key, %{"source" => source} = yml_data) do
-    case Backends.call_backend!(source, :get_org, [key, yml_data]) do
+    case Backends.get_org(source, key, yml_data) do
       %Organization{} = org ->
         org
         |> Map.put(:key, key)
@@ -130,13 +130,13 @@ defmodule Coophub.CacheWarmer do
   end
 
   defp get_members(%Organization{yml_data: %{"source" => source}} = org) do
-    members = Backends.call_backend!(source, :get_members, [org])
+    members = Backends.get_members(source, org)
     Map.put(org, :members, members)
   end
 
   defp get_repos(%Organization{key: key, yml_data: %{"source" => source}} = org) do
     repos =
-      Backends.call_backend!(source, :get_repos, [org])
+      Backends.get_repos(source, org)
       |> put_key(key)
       |> put_popularities()
       |> put_topics(org)
@@ -164,14 +164,14 @@ defmodule Coophub.CacheWarmer do
 
   defp put_topics(repos, %Organization{yml_data: %{"source" => source}} = org) do
     Enum.map(repos, fn repo ->
-      topics = Backends.call_backend!(source, :get_topics, [org, repo])
+      topics = Backends.get_topics(source, org, repo)
       Map.put(repo, :topics, topics)
     end)
   end
 
   defp put_languages(repos, %Organization{yml_data: %{"source" => source}} = org) do
     Enum.map(repos, fn repo ->
-      languages = Backends.call_backend!(source, :get_languages, [org, repo])
+      languages = Backends.get_languages(source, org, repo)
       stats = Repos.get_percentages_by_language(languages)
       Map.put(repo, :languages, stats)
     end)

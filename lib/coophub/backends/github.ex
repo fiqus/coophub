@@ -1,142 +1,105 @@
 defmodule Coophub.Backends.Github do
   alias Coophub.Repos
-  alias Coophub.Backends.Behaviour, as: BackendBehaviour
+  alias Coophub.Backends
   alias Coophub.Schemas.{Organization, Repository}
 
   require Logger
 
-  @type org :: BackendBehaviour.org()
-  @type repo :: BackendBehaviour.repo()
-  @type langs :: BackendBehaviour.langs()
+  @type request :: Backends.request()
+  @type org :: Backends.org()
+  @type repo :: Backends.repo()
+  @type langs :: Backends.langs()
+  @type topics :: Backends.topics()
 
-  @behaviour BackendBehaviour
+  @behaviour Backends.Behaviour
 
   ########
   ## BEHAVIOUR IMPLEMENTATION
   ########
 
-  @impl BackendBehaviour
-  @spec get_org(String.t(), map) :: org | :error
-  def get_org(key, _yml_data) do
-    Logger.info("Fetching '#{key}' organization from github..", ansi_color: :yellow)
+  @impl Backends.Behaviour
+  @spec name() :: String.t()
+  def name(), do: "github"
 
-    case call_api_get("orgs/#{key}") do
-      {:ok, org, ms} ->
-        Logger.info("Fetched '#{key}' organization! (#{ms}ms)", ansi_color: :green)
-        Repos.to_struct(Organization, org)
-
-      {:error, reason} ->
-        Logger.error("Error getting '#{key}' organization from github: #{inspect(reason)}")
-        :error
-    end
+  @impl Backends.Behaviour
+  @spec request_org(String.t(), map) :: request
+  def request_org(key, _yml_data) do
+    {key, full_url("orgs/#{key}"), headers()}
   end
 
-  @impl BackendBehaviour
-  @spec get_members(org) :: [map]
+  @impl Backends.Behaviour
+  @spec parse_org(map) :: org
+  def parse_org(data) do
+    Repos.to_struct(Organization, data)
+  end
+
+  @impl Backends.Behaviour
+  @spec request_members(org) :: request
   # @TODO Isn't fetching all the org members (ie: just 5 for fiqus)
-  def get_members(%Organization{key: key}) do
-    Logger.info("Fetching '#{key}' members from github..", ansi_color: :yellow)
-
-    case call_api_get("orgs/#{key}/members") do
-      {:ok, members, ms} ->
-        Logger.info("Fetched #{length(members)} '#{key}' members! (#{ms}ms)", ansi_color: :green)
-        members
-
-      {:error, reason} ->
-        Logger.error("Error getting '#{key}' members from github: #{inspect(reason)}")
-        []
-    end
+  def request_members(%Organization{key: key}) do
+    {key, full_url("orgs/#{key}/members"), headers()}
   end
 
-  @impl BackendBehaviour
-  @spec get_repos(org) :: [repo]
-  def get_repos(%Organization{key: key} = org) do
-    limit = Application.get_env(:coophub, :fetch_max_repos)
-    Logger.info("Fetching '#{key}' repos from github (max=#{limit})..", ansi_color: :yellow)
+  @impl Backends.Behaviour
+  @spec parse_members([map]) :: [map]
+  def parse_members(members) do
+    members
+  end
+
+  @impl Backends.Behaviour
+  @spec request_repos(org, integer) :: request
+  def request_repos(%Organization{key: key}, limit) do
     path = "orgs/#{key}/repos?per_page=#{limit}&type=public&sort=pushed&direction=desc"
+    {key, full_url(path), headers()}
+  end
 
-    case call_api_get(path) do
-      {:ok, repos, ms} ->
-        Logger.info("Fetched #{length(repos)} '#{key}' repos! (#{ms}ms)", ansi_color: :green)
+  @impl Backends.Behaviour
+  @spec request_repo(org, map) :: request
+  def request_repo(%Organization{key: key}, %{"name" => name}) do
+    {"#{key}/#{name}", full_url("repos/#{key}/#{name}"), headers()}
+  end
 
-        Enum.map(repos, fn repo_data ->
-          get_repo(org, repo_data)
-        end)
+  @impl Backends.Behaviour
+  @spec parse_repo(map) :: repo
+  def parse_repo(data) do
+    repo = Repos.to_struct(Repository, data)
 
-      {:error, reason} ->
-        Logger.error("Error getting '#{key}' repos from github: #{inspect(reason)}")
-        []
+    case repo.parent do
+      %{"full_name" => name, "html_url" => url} ->
+        Map.put(repo, :parent, %{name: name, url: url})
+
+      _ ->
+        repo
     end
   end
 
-  @impl BackendBehaviour
-  @spec get_topics(org, repo) :: [String.t()]
-  def get_topics(%Organization{key: key}, %Repository{name: name}) do
-    Logger.info("Fetching '#{key}/#{name}' topics from github..", ansi_color: :cyan)
-
-    case call_api_get("repos/#{key}/#{name}/topics") do
-      {:ok, data, ms} ->
-        topics = Map.get(data, "names", [])
-
-        Logger.info("Fetched #{length(topics)} '#{key}/#{name}' topics! (#{ms}ms)",
-          ansi_color: :green
-        )
-
-        topics
-
-      {:error, reason} ->
-        Logger.error("Error getting '#{key}/#{name}' topics from github: #{inspect(reason)}")
-        []
-    end
+  @impl Backends.Behaviour
+  @spec request_topics(org, repo) :: request
+  def request_topics(%Organization{key: key}, %Repository{name: name}) do
+    {"#{key}/#{name}", full_url("repos/#{key}/#{name}/topics"), headers()}
   end
 
-  @impl BackendBehaviour
-  @spec get_languages(org, repo) :: langs
-  def get_languages(%Organization{key: key}, %Repository{name: name}) do
-    Logger.info("Fetching '#{key}/#{name}' languages from github..", ansi_color: :cyan)
+  @impl Backends.Behaviour
+  @spec parse_topics(map) :: topics
+  def parse_topics(data) do
+    Map.get(data, "names", [])
+  end
 
-    case call_api_get("repos/#{key}/#{name}/languages") do
-      {:ok, languages, ms} ->
-        Logger.info(
-          "Fetched #{length(Map.keys(languages))} '#{key}/#{name}' languages! (#{ms}ms)",
-          ansi_color: :green
-        )
+  @impl Backends.Behaviour
+  @spec request_languages(org, repo) :: request
+  def request_languages(%Organization{key: key}, %Repository{name: name}) do
+    {"#{key}/#{name}", full_url("repos/#{key}/#{name}/languages"), headers()}
+  end
 
-        languages
-
-      {:error, reason} ->
-        Logger.error("Error getting '#{key}/#{name}' languages from github: #{inspect(reason)}")
-        []
-    end
+  @impl Backends.Behaviour
+  @spec parse_languages(langs) :: langs
+  def parse_languages(languages) do
+    languages
   end
 
   ########
   ## INTERNALS
   ########
-
-  defp get_repo(%Organization{key: key}, %{"name" => name} = repo_data) do
-    Logger.info("Fetching '#{key}/#{name}' repo data from github..", ansi_color: :cyan)
-
-    case call_api_get("repos/#{key}/#{name}") do
-      {:ok, data, ms} ->
-        Logger.info("Fetched '#{key}/#{name}' repo data! (#{ms}ms)", ansi_color: :green)
-
-        repo = Repos.to_struct(Repository, data)
-
-        case repo.parent do
-          %{"full_name" => name, "html_url" => url} ->
-            Map.put(repo, :parent, %{name: name, url: url})
-
-          _ ->
-            repo
-        end
-
-      {:error, reason} ->
-        Logger.error("Error getting '#{key}/#{name}' repo data from github: #{inspect(reason)}")
-        ## Fallback to repo_data we've fetched before
-        Repos.to_struct(Repository, repo_data)
-    end
-  end
 
   defp headers() do
     headers = [{"Accept", "application/vnd.github.mercy-preview+json"}]
@@ -147,8 +110,5 @@ defmodule Coophub.Backends.Github do
       else: headers
   end
 
-  defp call_api_get(path) do
-    url = "https://api.github.com/#{path}"
-    Coophub.Backends.call_api_get(url, headers())
-  end
+  defp full_url(path), do: "https://api.github.com/#{path}"
 end
