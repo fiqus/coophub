@@ -49,7 +49,10 @@ defmodule Coophub.Backends.Github do
   @impl Backends.Behaviour
   @spec prepare_request_repos(org, integer) :: data_for_request
   def prepare_request_repos(%Organization{key: key}, limit) do
-    prepare_request(key, "orgs/#{key}/repos?per_page=#{limit}&type=public&sort=pushed&direction=desc")
+    prepare_request(
+      key,
+      "orgs/#{key}/repos?per_page=#{limit}&type=public&sort=pushed&direction=desc"
+    )
   end
 
   @impl Backends.Behaviour
