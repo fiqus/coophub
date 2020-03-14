@@ -6,7 +6,7 @@ defmodule Coophub.Backends do
 
   @type url :: String.t()
   @type headers :: [{String.t(), String.t()}]
-  @type request :: {String.t(), url, headers}
+  @type data_for_request :: {String.t(), url, headers}
 
   @type org :: Organization.t()
   @type repo :: Repository.t()
@@ -14,8 +14,8 @@ defmodule Coophub.Backends do
   @type topics :: [String.t()]
 
   ## Backends implementations
-  defp get_backend!("github"), do: Backends.Github
-  defp get_backend!(source), do: raise("Unknown backend source: #{source}")
+  defp get_backend_module!("github"), do: Backends.Github
+  defp get_backend_module!(source), do: raise("Unknown backend source: #{source}")
 
   ########
   ## CALLS TO BACKENDS RESOURCES
@@ -23,12 +23,12 @@ defmodule Coophub.Backends do
 
   @spec get_org(String.t(), String.t(), map) :: org | :error
   def get_org(source, key, yml_data) do
-    backend = get_backend!(source)
+    backend = get_backend_module!(source)
     bname = backend.name()
-    {name, url, headers} = backend.request_org(key, yml_data)
+    {name, url, headers} = backend.prepare_request_org(key, yml_data)
     Logger.info("Fetching '#{name}' organization from #{bname}..", ansi_color: :yellow)
 
-    case call_api_get(url, headers) do
+    case request(url, headers) do
       {:ok, data, ms} ->
         Logger.info("Fetched '#{name}' organization! (#{ms}ms)", ansi_color: :green)
 
@@ -44,12 +44,12 @@ defmodule Coophub.Backends do
 
   @spec get_members(String.t(), org) :: [map]
   def get_members(source, org) do
-    backend = get_backend!(source)
+    backend = get_backend_module!(source)
     bname = backend.name()
-    {name, url, headers} = backend.request_members(org)
+    {name, url, headers} = backend.prepare_request_members(org)
     Logger.info("Fetching '#{name}' members from #{bname}..", ansi_color: :yellow)
 
-    case call_api_get(url, headers) do
+    case request(url, headers) do
       {:ok, members, ms} ->
         Logger.info("Fetched #{length(members)} '#{name}' members! (#{ms}ms)", ansi_color: :green)
         backend.parse_members(members)
@@ -62,13 +62,13 @@ defmodule Coophub.Backends do
 
   @spec get_repos(String.t(), org) :: [repo]
   def get_repos(source, org) do
-    backend = get_backend!(source)
+    backend = get_backend_module!(source)
     bname = backend.name()
     limit = Application.get_env(:coophub, :fetch_max_repos)
-    {name, url, headers} = backend.request_repos(org, limit)
+    {name, url, headers} = backend.prepare_request_repos(org, limit)
     Logger.info("Fetching '#{name}' repos from #{bname} (max=#{limit})..", ansi_color: :yellow)
 
-    case call_api_get(url, headers) do
+    case request(url, headers) do
       {:ok, repos, ms} ->
         Logger.info("Fetched #{length(repos)} '#{name}' repos! (#{ms}ms)", ansi_color: :green)
 
@@ -85,10 +85,10 @@ defmodule Coophub.Backends do
   @spec get_repo(module, org, map) :: repo
   def get_repo(backend, %Organization{key: key} = org, repo_data) do
     bname = backend.name()
-    {name, url, headers} = backend.request_repo(org, repo_data)
+    {name, url, headers} = backend.prepare_request_repo(org, repo_data)
     Logger.info("Fetching '#{name}' repo data from #{bname}..", ansi_color: :cyan)
 
-    case call_api_get(url, headers) do
+    case request(url, headers) do
       {:ok, data, ms} ->
         Logger.info("Fetched '#{name}' repo data! (#{ms}ms)", ansi_color: :green)
 
@@ -104,12 +104,12 @@ defmodule Coophub.Backends do
 
   @spec get_topics(String.t(), org, repo) :: topics
   def get_topics(source, org, repo) do
-    backend = get_backend!(source)
+    backend = get_backend_module!(source)
     bname = backend.name()
-    {name, url, headers} = backend.request_topics(org, repo)
+    {name, url, headers} = backend.prepare_request_topics(org, repo)
     Logger.info("Fetching '#{name}' topics from #{bname}..", ansi_color: :cyan)
 
-    case call_api_get(url, headers) do
+    case request(url, headers) do
       {:ok, data, ms} ->
         topics = backend.parse_topics(data)
 
@@ -127,12 +127,12 @@ defmodule Coophub.Backends do
 
   @spec get_languages(String.t(), org, repo) :: langs
   def get_languages(source, org, repo) do
-    backend = get_backend!(source)
+    backend = get_backend_module!(source)
     bname = backend.name()
-    {name, url, headers} = backend.request_languages(org, repo)
+    {name, url, headers} = backend.prepare_request_languages(org, repo)
     Logger.info("Fetching '#{name}' languages from #{bname}..", ansi_color: :cyan)
 
-    case call_api_get(url, headers) do
+    case request(url, headers) do
       {:ok, data, ms} ->
         langs = backend.parse_languages(data)
         count = langs |> Map.keys() |> length()
@@ -145,8 +145,8 @@ defmodule Coophub.Backends do
     end
   end
 
-  @spec call_api_get(String.t(), headers) :: {:ok, map | [map], integer} | {:error, any}
-  defp call_api_get(url, headers) do
+  @spec request(String.t(), headers) :: {:ok, map | [map], integer} | {:error, any}
+  defp request(url, headers) do
     start_ms = take_time()
 
     case HTTPoison.get(url, headers) do

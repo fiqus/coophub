@@ -1,7 +1,7 @@
 defmodule Coophub.Backends.Behaviour do
-  alias Coophub.Backends
+  alias Coophub.Backends.Backends
 
-  @type request :: Backends.request()
+  @type data_for_request :: Backends.data_for_request()
   @type org :: Backends.org()
   @type repo :: Backends.repo()
   @type langs :: Backends.langs()
@@ -9,19 +9,19 @@ defmodule Coophub.Backends.Behaviour do
 
   @callback name() :: String.t()
 
-  @callback request_org(String.t(), map) :: request
+  @callback prepare_request_org(String.t(), map) :: data_for_request
   @callback parse_org(map) :: org
 
-  @callback request_members(org) :: request
+  @callback prepare_request_members(org) :: data_for_request
   @callback parse_members([map]) :: [map]
 
-  @callback request_repos(org, integer) :: request
-  @callback request_repo(org, map) :: request
+  @callback prepare_request_repos(org, integer) :: data_for_request
+  @callback prepare_request_repo(org, map) :: data_for_request
   @callback parse_repo(map) :: repo
 
-  @callback request_topics(org, repo) :: request
+  @callback prepare_request_topics(org, repo) :: data_for_request
   @callback parse_topics(any) :: topics
 
-  @callback request_languages(org, repo) :: request
+  @callback prepare_request_languages(org, repo) :: data_for_request
   @callback parse_languages(any) :: langs
 end

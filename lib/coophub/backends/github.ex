@@ -5,7 +5,7 @@ defmodule Coophub.Backends.Github do
 
   require Logger
 
-  @type request :: Backends.request()
+  @type data_for_request :: Backends.data_for_request()
   @type org :: Backends.org()
   @type repo :: Backends.repo()
   @type langs :: Backends.langs()
@@ -22,9 +22,9 @@ defmodule Coophub.Backends.Github do
   def name(), do: "github"
 
   @impl Backends.Behaviour
-  @spec request_org(String.t(), map) :: request
-  def request_org(key, _yml_data) do
-    request(key, "orgs/#{key}")
+  @spec prepare_request_org(String.t(), map) :: data_for_request
+  def prepare_request_org(key, _yml_data) do
+    prepare_request(key, "orgs/#{key}")
   end
 
   @impl Backends.Behaviour
@@ -34,10 +34,10 @@ defmodule Coophub.Backends.Github do
   end
 
   @impl Backends.Behaviour
-  @spec request_members(org) :: request
+  @spec prepare_request_members(org) :: data_for_request
   # @TODO Isn't fetching all the org members (ie: just 5 for fiqus)
-  def request_members(%Organization{key: key}) do
-    request(key, "orgs/#{key}/members")
+  def prepare_request_members(%Organization{key: key}) do
+    prepare_request(key, "orgs/#{key}/members")
   end
 
   @impl Backends.Behaviour
@@ -47,15 +47,15 @@ defmodule Coophub.Backends.Github do
   end
 
   @impl Backends.Behaviour
-  @spec request_repos(org, integer) :: request
-  def request_repos(%Organization{key: key}, limit) do
-    request(key, "orgs/#{key}/repos?per_page=#{limit}&type=public&sort=pushed&direction=desc")
+  @spec prepare_request_repos(org, integer) :: data_for_request
+  def prepare_request_repos(%Organization{key: key}, limit) do
+    prepare_request(key, "orgs/#{key}/repos?per_page=#{limit}&type=public&sort=pushed&direction=desc")
   end
 
   @impl Backends.Behaviour
-  @spec request_repo(org, map) :: request
-  def request_repo(%Organization{key: key}, %{"name" => name}) do
-    request("#{key}/#{name}", "repos/#{key}/#{name}")
+  @spec prepare_request_repo(org, map) :: data_for_request
+  def prepare_request_repo(%Organization{key: key}, %{"name" => name}) do
+    prepare_request("#{key}/#{name}", "repos/#{key}/#{name}")
   end
 
   @impl Backends.Behaviour
@@ -73,9 +73,9 @@ defmodule Coophub.Backends.Github do
   end
 
   @impl Backends.Behaviour
-  @spec request_topics(org, repo) :: request
-  def request_topics(%Organization{key: key}, %Repository{name: name}) do
-    request("#{key}/#{name}", "repos/#{key}/#{name}/topics")
+  @spec prepare_request_topics(org, repo) :: data_for_request
+  def prepare_request_topics(%Organization{key: key}, %Repository{name: name}) do
+    prepare_request("#{key}/#{name}", "repos/#{key}/#{name}/topics")
   end
 
   @impl Backends.Behaviour
@@ -85,9 +85,9 @@ defmodule Coophub.Backends.Github do
   end
 
   @impl Backends.Behaviour
-  @spec request_languages(org, repo) :: request
-  def request_languages(%Organization{key: key}, %Repository{name: name}) do
-    request("#{key}/#{name}", "repos/#{key}/#{name}/languages")
+  @spec prepare_request_languages(org, repo) :: data_for_request
+  def prepare_request_languages(%Organization{key: key}, %Repository{name: name}) do
+    prepare_request("#{key}/#{name}", "repos/#{key}/#{name}/languages")
   end
 
   @impl Backends.Behaviour
@@ -100,7 +100,7 @@ defmodule Coophub.Backends.Github do
   ## INTERNALS
   ########
 
-  defp request(name, path) do
+  defp prepare_request(name, path) do
     {name, full_url(path), headers()}
   end
 
