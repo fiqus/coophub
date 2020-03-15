@@ -6,7 +6,7 @@ defmodule Coophub.Backends do
 
   @type url :: String.t()
   @type headers :: [{String.t(), String.t()}]
-  @type data_for_request :: {String.t(), url, headers}
+  @type request_data :: {String.t(), url, headers}
 
   @type org :: Organization.t()
   @type repo :: Repository.t()
