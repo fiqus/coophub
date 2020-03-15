@@ -14,6 +14,11 @@ defmodule Coophub.MixProject do
       aliases: aliases(),
       preferred_cli_env: [
         coverage: :test
+      ],
+      dialyzer_warnings: [:error_handling, :race_conditions, :underspecs, :unknown],
+      dialyzer_ignored_warnings: [
+        # {tag, {file, line}, {warning_type, arguments}}
+        {:warn_matching, {'lib/cachex/warmer.ex', :_}, {:pattern_match, :_}}
       ]
     ]
   end
@@ -46,7 +51,8 @@ defmodule Coophub.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:httpoison, "~> 1.4"},
       {:yaml_elixir, "~> 2.4"},
-      {:cachex, "~> 3.1"}
+      {:cachex, "~> 3.1"},
+      {:dialyzex, "~> 1.2", only: :dev}
     ]
   end
 
