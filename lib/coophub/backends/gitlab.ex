@@ -34,7 +34,7 @@ defmodule Coophub.Backends.Gitlab do
       %{
         "key" => data["path"],
         "login" => data["name"],
-        "url"=> data["web_url"],
+        "url" => data["web_url"],
         "public_repos" => length(data["projects"])
       }
       |> Enum.into(data)
@@ -66,7 +66,10 @@ defmodule Coophub.Backends.Gitlab do
   @impl Backends.Behaviour
   @spec prepare_request_repo(org, map) :: request_data
   def prepare_request_repo(_organization, %{"path_with_namespace" => path_with_namespace}) do
-    prepare_request("projects/#{path_with_namespace}", "projects/#{URI.encode_www_form(path_with_namespace)}")
+    prepare_request(
+      "projects/#{path_with_namespace}",
+      "projects/#{URI.encode_www_form(path_with_namespace)}"
+    )
   end
 
   @impl Backends.Behaviour
@@ -76,16 +79,18 @@ defmodule Coophub.Backends.Gitlab do
       %{
         "stargazers_count" => data["star_count"],
         "key" => data["name"],
-        "html_url"=> data["web_url"],
+        "html_url" => data["web_url"],
         "topics" => data["tag_list"],
         "pushed_at" => data["last_activity_at"],
-        "fork" => data["mirror"], # TODO: to review, "forks_count" exist but not "fork"
+        # TODO: to review, "forks_count" exist but not "fork"
+        "fork" => data["mirror"],
         "owner" => %{
           "login" => data["namespace"]["full_path"],
           "avatar_url" => get_avatar_url(data)
         }
       }
       |> Enum.into(data)
+
     # sometimes open_issues_count does not exist!
     data = Map.put_new(data, "open_issues_count", 0)
     repo = Repos.to_struct(Repository, data)
@@ -114,8 +119,13 @@ defmodule Coophub.Backends.Gitlab do
 
   @impl Backends.Behaviour
   @spec prepare_request_languages(org, repo) :: request_data
-  def prepare_request_languages(_organization, %Repository{path_with_namespace: path_with_namespace}) do
-    prepare_request("projects/#{path_with_namespace}", "projects/#{URI.encode_www_form(path_with_namespace)}/languages")
+  def prepare_request_languages(_organization, %Repository{
+        path_with_namespace: path_with_namespace
+      }) do
+    prepare_request(
+      "projects/#{path_with_namespace}",
+      "projects/#{URI.encode_www_form(path_with_namespace)}/languages"
+    )
   end
 
   @impl Backends.Behaviour
@@ -158,7 +168,9 @@ defmodule Coophub.Backends.Gitlab do
           nil -> ""
           avatar_url -> "https://gitlab.com" <> avatar_url
         end
-      avatar_url -> avatar_url
+
+      avatar_url ->
+        avatar_url
     end
   end
 

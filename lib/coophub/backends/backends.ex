@@ -74,7 +74,7 @@ defmodule Coophub.Backends do
         Logger.info("Fetched #{length(repos)} '#{name}' repos! (#{ms}ms)", ansi_color: :green)
 
         Enum.map(repos, fn repo_data ->
-          #get_repo(backend, org, repo_data)
+          # get_repo(backend, org, repo_data)
           backend.parse_repo(repo_data)
           |> Map.put(:key, org.key)
         end)
@@ -156,6 +156,7 @@ defmodule Coophub.Backends do
 
   @spec request(String.t(), headers) :: {:ok, map | [map], integer} | {:error, any}
   defp request(nil, _), do: {:ok, [], 0}
+
   defp request(url, headers) do
     start_ms = take_time()
 
@@ -168,7 +169,9 @@ defmodule Coophub.Backends do
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
-      _ -> {:error, nil}
+
+      _ ->
+        {:error, nil}
     end
   end
 
