@@ -68,6 +68,13 @@ agaric:
   description: "We build websites and online tools that respect your freedom, and we provide training and consultation to meet your goals."
   location: Boston, USA; Minneapolis, USA; Denver, USA; Managua, Nicaragua; Puebla, Mexico
 
+agaric:
+  source: gitlab
+  name: Agaric 2
+  url: https://agaric.coop
+  description: "We build websites and online tools that respect your freedom, and we provide training and consultation to meet your goals."
+  location: Boston, USA; Minneapolis, USA; Denver, USA; Managua, Nicaragua; Puebla, Mexico
+
 seattledeveloperscoop:
   source: github
   name: Seattle Developer's Cooperative

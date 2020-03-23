@@ -42,11 +42,16 @@ defmodule Coophub.CacheWarmer do
 
     repos =
       read_yml()
-      |> Enum.reduce([], fn {key, yml_data}, acc ->
-        case get_org(key, yml_data) do
-          :error -> acc
-          org -> [get_repos(org) | acc]
-        end
+      |> Enum.map(fn {key, yml_data} ->
+        Task.async(fn ->
+          case get_org(key, yml_data) do
+            :error -> []
+            org -> get_repos(org)
+          end
+        end)
+      end)
+      |> Enum.map(fn task ->
+        Task.await(task, :infinity)
       end)
 
     spawn(save_cache_dump(repos))
@@ -140,7 +145,7 @@ defmodule Coophub.CacheWarmer do
       org
       |> Map.put(:repos, repos)
       |> Map.put(:repo_count, Enum.count(repos))
-      |> put_org_languages_stats()
+      |> put_org_languages()
       |> put_org_popularity()
       |> put_org_last_activity()
 
@@ -154,34 +159,20 @@ defmodule Coophub.CacheWarmer do
   defp put_topics(repos, %Organization{yml_data: %{"source" => source}} = org) do
     Enum.map(repos, fn repo ->
       topics = Backends.get_topics(source, org, repo)
-      Map.put(repo, :topics, topics)
+      Map.put_new(repo, :topics, topics)
     end)
   end
 
   defp put_languages(repos, %Organization{yml_data: %{"source" => source}} = org) do
     Enum.map(repos, fn repo ->
       languages = Backends.get_languages(source, org, repo)
-      stats = Repos.get_percentages_by_language(languages)
-      Map.put(repo, :languages, stats)
+      Map.put(repo, :languages, languages)
     end)
   end
 
-  defp put_org_languages_stats(org) do
-    stats = Repos.get_org_languages_stats(org)
-
-    org
-    |> Map.put(:languages, stats)
+  defp put_org_languages(%Organization{yml_data: %{"source" => source}} = org) do
+    Map.put(org, :languages, Backends.get_org_languages(source, org))
     |> convert_languages_to_list_and_sort()
-  end
-
-  defp put_org_popularity(org) do
-    popularity = Repos.get_org_popularity(org)
-    Map.put(org, :popularity, popularity)
-  end
-
-  defp put_org_last_activity(org) do
-    last_activity = Repos.get_org_last_activity(org)
-    Map.put(org, :last_activity, last_activity)
   end
 
   defp convert_languages_to_list_and_sort(org) do
@@ -203,5 +194,15 @@ defmodule Coophub.CacheWarmer do
       |> Enum.sort(&(&1["bytes"] > &2["bytes"]))
 
     Map.put(datamap, :languages, languages)
+  end
+
+  defp put_org_popularity(org) do
+    popularity = Repos.get_org_popularity(org)
+    Map.put(org, :popularity, popularity)
+  end
+
+  defp put_org_last_activity(org) do
+    last_activity = Repos.get_org_last_activity(org)
+    Map.put(org, :last_activity, last_activity)
   end
 end
