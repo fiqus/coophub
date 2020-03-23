@@ -194,7 +194,6 @@ defmodule Coophub.Repos do
           languages
         end)
         |> List.flatten()
-        |> IO.inspect
         |> Enum.map(fn %{"lang" => lang, "bytes" => bytes} ->
           %{lang => bytes}
         end)
