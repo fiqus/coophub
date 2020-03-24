@@ -46,7 +46,7 @@ defmodule Coophub.CacheWarmer do
         Task.async(fn ->
           case get_org(key, yml_data) do
             :error -> []
-            org -> get_repos(org)
+            org -> get_org_with_repos(key, org)
           end
         end)
       end)
@@ -123,17 +123,12 @@ defmodule Coophub.CacheWarmer do
 
   defp get_org(key, %{"source" => source} = yml_data) do
     case Backends.get_org(source, key, yml_data) do
-      %Organization{} = org -> get_members(org)
+      %Organization{} = org -> org
       _ -> :error
     end
   end
 
-  defp get_members(%Organization{yml_data: %{"source" => source}} = org) do
-    members = Backends.get_members(source, org)
-    Map.put(org, :members, members)
-  end
-
-  defp get_repos(%Organization{key: key, yml_data: %{"source" => source}} = org) do
+  defp get_org_with_repos(key, %Organization{yml_data: %{"source" => source}} = org) do
     repos =
       Backends.get_repos(source, org)
       |> put_popularities()

@@ -9,11 +9,8 @@ defmodule Coophub.Backends.Behaviour do
 
   @callback name() :: String.t()
 
-  @callback prepare_request_org(String.t(), map) :: request_data
+  @callback prepare_request_org(String.t()) :: request_data
   @callback parse_org(map) :: org
-
-  @callback prepare_request_members(org) :: request_data
-  @callback parse_members([map]) :: [map]
 
   @callback prepare_request_repos(org, integer) :: request_data
   @callback prepare_request_repo(org, map) :: request_data

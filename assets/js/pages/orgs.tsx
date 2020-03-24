@@ -22,9 +22,9 @@ const OrgList: React.FC = () => {
                     <span>{org.repo_count} Repos</span>
                 </Col>
                 <Col className="org-location">
-                {org.location &&
+                {org.yml_data.location &&
                     <span>
-                        <GoLocation/> { org.location }
+                        <GoLocation/> { org.yml_data.location }
                     </span>
                 } 
                 </Col>

@@ -22,9 +22,9 @@ defmodule Coophub.Backends.Gitlab do
   def name(), do: "gitlab"
 
   @impl Backends.Behaviour
-  @spec prepare_request_org(String.t(), map) :: request_data
-  def prepare_request_org(key, _yml_data) do
-    prepare_request(key, "groups/#{key}")
+  @spec prepare_request_org(String.t()) :: request_data
+  def prepare_request_org(login) do
+    prepare_request(login, "groups/#{login}")
   end
 
   @impl Backends.Behaviour
@@ -32,9 +32,9 @@ defmodule Coophub.Backends.Gitlab do
   def parse_org(data) do
     data =
       %{
-        "key" => data["path"],
-        "login" => data["name"],
-        "url" => data["web_url"],
+        "login" => data["path"],
+        "url" => data["yml_data"]["url"],
+        "html_url" => data["web_url"],
         "public_repos" => length(data["projects"])
       }
       |> Enum.into(data)
@@ -43,23 +43,11 @@ defmodule Coophub.Backends.Gitlab do
   end
 
   @impl Backends.Behaviour
-  @spec prepare_request_members(org) :: request_data
-  def prepare_request_members(%Organization{}) do
-    dont_request()
-  end
-
-  @impl Backends.Behaviour
-  @spec parse_members([map]) :: [map]
-  def parse_members(members) do
-    members
-  end
-
-  @impl Backends.Behaviour
   @spec prepare_request_repos(org, integer) :: request_data
-  def prepare_request_repos(%Organization{key: key}, limit) do
+  def prepare_request_repos(%Organization{login: login}, limit) do
     prepare_request(
-      key,
-      "groups/#{key}/projects?include_subgroups=true&per_page=#{limit}&type=public&order_by=last_activity_at&sort=desc"
+      login,
+      "groups/#{login}/projects?include_subgroups=true&per_page=#{limit}&type=public&order_by=last_activity_at&sort=desc"
     )
   end
 
@@ -184,5 +172,5 @@ defmodule Coophub.Backends.Gitlab do
 
   defp full_url(path), do: "https://gitlab.com/api/v4/#{path}"
 
-  defp dont_request(key \\ ""), do: {key, nil, []}
+  defp dont_request(login \\ ""), do: {login, nil, []}
 end

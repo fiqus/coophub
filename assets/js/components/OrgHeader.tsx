@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container, ButtonGroup, Button, CardLink, Row, Col} from "reactstrap";
-import {GoLocation, GoLink, GoMail, IoMdCalendar, GoMarkGithub} from "react-icons/all";
+import {GoLocation, GoLink, GoMail, IoMdCalendar, GoMarkGithub, AiOutlineGitlab} from "react-icons/all";
 import {Org} from "../types";
 import LanguagesProgressBar from './LanguagesProgressBar';
 import CountUp from 'react-countup';
@@ -9,6 +9,11 @@ import {GoCode, GoStar} from "react-icons/all";
 const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = ({org, maxLanguages, reposQuantity, starsSum}) => {
     const orgDate = new Date(org.created_at);
     const createdDate = `${orgDate.toLocaleString('en', { month: 'long' })} ${orgDate.getFullYear()}`
+
+    let sourceBtn = <GoMarkGithub />;
+    if (org.yml_data.source === "gitlab") {
+        sourceBtn = <AiOutlineGitlab />;
+    }
     
     return (
         
@@ -55,7 +60,7 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
                 <div className="org-details-container">
                     {org.location &&
                         <div>
-                            <GoLocation/> { org.location }
+                            <GoLocation/> { org.yml_data.location || org.location }
                         </div>
                     }
                     {org.email &&
@@ -63,24 +68,26 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
                             <GoMail/> { org.email }
                         </div>
                     }
-                    {org.blog &&
+                    {org.yml_data.url &&
                         <div>
-                            <a className="btn btn-link" href={org.blog} target="_blank"> 
-                                <GoLink/> { org.blog }
+                            <a className="btn btn-link" href={org.yml_data.url} target="_blank"> 
+                                <GoLink/> { org.yml_data.url }
                             </a>
                         </div>
                     }
                     {org.login &&
                         <div>
                             <a className="btn btn-link" href={org.html_url} target="_blank"> 
-                                <GoMarkGithub/> { org.login }
+                             { sourceBtn } { org.login }
                             </a>
                         </div>
                     }
-                    <div>
-                        <IoMdCalendar />
-                        Created in {createdDate}
-                    </div>
+                    {org.created_at &&
+                        <div>
+                            <IoMdCalendar />
+                            Created in {createdDate}
+                        </div>
+                    }
                 </div>
             </Container>
         </Container>

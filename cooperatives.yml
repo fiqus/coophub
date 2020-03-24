@@ -1,19 +1,22 @@
 fiqus:
   source: github
+  login: fiqus
   name: Fiqus
   url: https://www.fiqus.coop
   description: ""
   location: CABA/Villa La Angostura
 
-gcoop-libre:
+gcoop:
   source: github
+  login: gcoop-libre
   name: gcoop
   url: https://www.gcoop.coop
   description: ""
   location: CABA
 
-cambalab:
+camba:
   source: github
+  login: cambalab
   name: Cambá
   url: https://www.camba.coop
   description: ""
@@ -21,13 +24,15 @@ cambalab:
 
 devecoop:
   source: github
+  login: devecoop
   name: Devecoop
   url: http://www.devecoop.com
   description: ""
   location: CABA
 
-Unixono:
+unixono:
   source: github
+  login: unixono
   name: Uníxono
   url: http://www.unixono.com
   description: ""
@@ -35,6 +40,7 @@ Unixono:
 
 geneos:
   source: github
+  login: geneos
   name: Geneos
   url: http://www.geneos.com.ar
   description: ""
@@ -42,13 +48,15 @@ geneos:
 
 bitson:
   source: github
+  login: bitson
   name: Bitson
   url: https://bitson.group/
   description: ""
   location: CABA
 
-nayracoop:
+nayra:
   source: github
+  login: nayracoop
   name: Nayra
   url: https://nayra.coop/
   description: ""
@@ -56,6 +64,7 @@ nayracoop:
 
 hyphacoop:
   source: github
+  login: hyphacoop
   name: Hypha
   url: https://hypha.coop
   description: "We cultivate collective growth and meaningful livelihoods through learning and building technologies together."
@@ -63,20 +72,23 @@ hyphacoop:
 
 agaric:
   source: github
+  login: agaric
   name: Agaric
   url: https://agaric.coop
   description: "We build websites and online tools that respect your freedom, and we provide training and consultation to meet your goals."
   location: Boston, USA; Minneapolis, USA; Denver, USA; Managua, Nicaragua; Puebla, Mexico
 
-agaric:
+agaric-gitlab:
   source: gitlab
-  name: Agaric 2
+  login: agaric
+  name: Agaric
   url: https://agaric.coop
   description: "We build websites and online tools that respect your freedom, and we provide training and consultation to meet your goals."
   location: Boston, USA; Minneapolis, USA; Denver, USA; Managua, Nicaragua; Puebla, Mexico
 
 seattledeveloperscoop:
   source: github
+  login: seattledeveloperscoop
   name: Seattle Developer's Cooperative
   url: https://www.seattledevelopers.coop
   description: "A worker-owned web developer cooperative based in Seattle"
@@ -84,6 +96,7 @@ seattledeveloperscoop:
   
 camplight:
   source: github
+  login: camplight
   name: Camplight
   url: https://camplight.net
   description: "A digital cooperative that creates experiences for the web, mobile and beyond."
