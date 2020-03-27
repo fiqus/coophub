@@ -8,7 +8,8 @@ import {GoCode, GoStar} from "react-icons/all";
 
 const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = ({org, maxLanguages, reposQuantity, starsSum}) => {
     const orgDate = new Date(org.created_at);
-    const createdDate = `${orgDate.toLocaleString('en', { month: 'long' })} ${orgDate.getFullYear()}`
+    const createdDate = `${orgDate.toLocaleString('en', { month: 'long' })} ${orgDate.getFullYear()}`;
+    const location = org.yml_data.location || org.location;
 
     let sourceBtn = <GoMarkGithub />;
     if (org.yml_data.source === "gitlab") {
@@ -58,9 +59,9 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
 
             <Container className="text-center mb-4">
                 <div className="org-details-container">
-                    {org.location &&
+                    {location &&
                         <div>
-                            <GoLocation/> { org.yml_data.location || org.location }
+                            <GoLocation/> { location }
                         </div>
                     }
                     {org.email &&
