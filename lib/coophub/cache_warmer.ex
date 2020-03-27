@@ -53,6 +53,7 @@ defmodule Coophub.CacheWarmer do
       |> Enum.map(fn task ->
         Task.await(task, :infinity)
       end)
+      |> List.flatten()
 
     spawn(save_cache_dump(repos))
 
