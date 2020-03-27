@@ -185,33 +185,6 @@ defmodule Coophub.Repos do
     Enum.reduce(repos, 0, fn %Repository{:popularity => pop}, acc -> acc + pop end)
   end
 
-  @spec get_percentages_by_language(map) :: map
-  def get_percentages_by_language(languages) do
-    total = Enum.reduce(languages, 0, fn {_lang, bytes}, acc -> acc + bytes end)
-
-    Enum.reduce(languages, %{}, fn {lang, bytes}, acc ->
-      percentage = (bytes / total * 100) |> Float.round(2)
-      Map.put(acc, lang, %{"bytes" => bytes, "percentage" => percentage})
-    end)
-  end
-
-  @spec get_org_languages_stats(org()) :: map
-  def get_org_languages_stats(%Organization{:repos => repos}) do
-    languages =
-      Enum.reduce(repos, %{}, fn %Repository{:languages => langs} = repo, acc ->
-        if not repo.fork do
-          Enum.reduce(langs, acc, fn {lang, %{"bytes" => bytes}}, acc_repo ->
-            acc_lang = Map.get(acc, lang, 0)
-            Map.put(acc_repo, lang, acc_lang + bytes)
-          end)
-        else
-          acc
-        end
-      end)
-
-    get_percentages_by_language(languages)
-  end
-
   @spec get_languages() :: map
   def get_languages() do
     case get_all_orgs() do
@@ -232,6 +205,33 @@ defmodule Coophub.Repos do
       :error ->
         :error
     end
+  end
+
+  @spec get_org_languages(org()) :: map
+  def get_org_languages(%Organization{:repos => repos}) do
+    languages =
+      Enum.reduce(repos, %{}, fn %Repository{:languages => langs} = repo, acc ->
+        if not repo.fork do
+          Enum.reduce(langs, acc, fn {lang, %{"bytes" => bytes}}, acc_repo ->
+            acc_lang = Map.get(acc, lang, 0)
+            Map.put(acc_repo, lang, acc_lang + bytes)
+          end)
+        else
+          acc
+        end
+      end)
+
+    get_percentages_by_language(languages)
+  end
+
+  @spec get_percentages_by_language(map) :: map
+  def get_percentages_by_language(languages) do
+    total = Enum.reduce(languages, 0, fn {_lang, bytes}, acc -> acc + bytes end)
+
+    Enum.reduce(languages, %{}, fn {lang, bytes}, acc ->
+      percentage = (bytes / total * 100) |> Float.round(2)
+      Map.put(acc, lang, %{"bytes" => bytes, "percentage" => percentage})
+    end)
   end
 
   @spec get_repos_by_language(any) :: repos() | :error

@@ -36,7 +36,7 @@ export type Repo  = {
 export type Repos = Array<Repo>
 
 export type Org = {
-    yml_data: {name: string}
+    yml_data: {name: string, location: string, source: string, url: string}
     key: string;
     name: string;
     description: string;

@@ -1,12 +1,12 @@
 defmodule Coophub.Backends do
-  alias Coophub.Backends
+  alias Coophub.{Backends, Repos}
   alias Coophub.Schemas.{Organization, Repository}
 
   require Logger
 
   @type url :: String.t()
   @type headers :: [{String.t(), String.t()}]
-  @type request_data :: {String.t(), url, headers}
+  @type request_data :: {String.t(), url | nil, headers}
 
   @type org :: Organization.t()
   @type repo :: Repository.t()
@@ -15,6 +15,7 @@ defmodule Coophub.Backends do
 
   ## Backends implementations
   defp get_backend_module!("github"), do: Backends.Github
+  defp get_backend_module!("gitlab"), do: Backends.Gitlab
   defp get_backend_module!(source), do: raise("Unknown backend source: #{source}")
 
   ########
@@ -25,7 +26,7 @@ defmodule Coophub.Backends do
   def get_org(source, key, yml_data) do
     backend = get_backend_module!(source)
     bname = backend.name()
-    {name, url, headers} = backend.prepare_request_org(key, yml_data)
+    {name, url, headers} = backend.prepare_request_org(yml_data["login"])
     Logger.info("Fetching '#{name}' organization from #{bname}..", ansi_color: :yellow)
 
     case request(url, headers) do
@@ -34,29 +35,12 @@ defmodule Coophub.Backends do
 
         backend.parse_org(data)
         |> Map.put(:key, key)
+        |> Map.put(:login, yml_data["login"])
         |> Map.put(:yml_data, yml_data)
 
       {:error, reason} ->
         Logger.error("Error getting '#{name}' organization from #{bname}: #{inspect(reason)}")
         :error
-    end
-  end
-
-  @spec get_members(String.t(), org) :: [map]
-  def get_members(source, org) do
-    backend = get_backend_module!(source)
-    bname = backend.name()
-    {name, url, headers} = backend.prepare_request_members(org)
-    Logger.info("Fetching '#{name}' members from #{bname}..", ansi_color: :yellow)
-
-    case request(url, headers) do
-      {:ok, members, ms} ->
-        Logger.info("Fetched #{length(members)} '#{name}' members! (#{ms}ms)", ansi_color: :green)
-        backend.parse_members(members)
-
-      {:error, reason} ->
-        Logger.error("Error getting '#{name}' members from #{bname}: #{inspect(reason)}")
-        []
     end
   end
 
@@ -73,7 +57,8 @@ defmodule Coophub.Backends do
         Logger.info("Fetched #{length(repos)} '#{name}' repos! (#{ms}ms)", ansi_color: :green)
 
         Enum.map(repos, fn repo_data ->
-          get_repo(backend, org, repo_data)
+          backend.parse_repo(repo_data)
+          |> Map.put(:key, org.key)
         end)
 
       {:error, reason} ->
@@ -145,7 +130,14 @@ defmodule Coophub.Backends do
     end
   end
 
+  @spec get_org_languages(org) :: map()
+  def get_org_languages(org) do
+    Repos.get_org_languages(org)
+  end
+
   @spec request(String.t(), headers) :: {:ok, map | [map], integer} | {:error, any}
+  defp request(nil, _), do: {:ok, [], 0}
+
   defp request(url, headers) do
     start_ms = take_time()
 
