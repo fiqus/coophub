@@ -1,12 +1,12 @@
 defmodule Coophub.Backends do
-  alias Coophub.Backends
+  alias Coophub.{Backends, Repos}
   alias Coophub.Schemas.{Organization, Repository}
 
   require Logger
 
   @type url :: String.t()
   @type headers :: [{String.t(), String.t()}]
-  @type request_data :: {String.t(), url, headers}
+  @type request_data :: {String.t(), url | nil, headers}
 
   @type org :: Organization.t()
   @type repo :: Repository.t()
@@ -130,10 +130,9 @@ defmodule Coophub.Backends do
     end
   end
 
-  @spec get_org_languages(String.t(), org) :: map()
-  def get_org_languages(source, org) do
-    backend = get_backend_module!(source)
-    backend.get_org_languages(org)
+  @spec get_org_languages(org) :: map()
+  def get_org_languages(org) do
+    Repos.get_org_languages(org)
   end
 
   @spec request(String.t(), headers) :: {:ok, map | [map], integer} | {:error, any}

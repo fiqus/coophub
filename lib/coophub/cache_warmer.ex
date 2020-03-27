@@ -165,8 +165,8 @@ defmodule Coophub.CacheWarmer do
     end)
   end
 
-  defp put_org_languages(%Organization{yml_data: %{"source" => source}} = org) do
-    Map.put(org, :languages, Backends.get_org_languages(source, org))
+  defp put_org_languages(org) do
+    Map.put(org, :languages, Backends.get_org_languages(org))
     |> convert_languages_to_list_and_sort()
   end
 

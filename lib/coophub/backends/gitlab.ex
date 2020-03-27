@@ -94,7 +94,7 @@ defmodule Coophub.Backends.Gitlab do
 
   @impl Backends.Behaviour
   @spec prepare_request_topics(org, repo) :: request_data
-  def prepare_request_topics(%Organization{}, %Repository{}) do
+  def prepare_request_topics(_, _) do
     # topics are tag_list already set
     dont_request()
   end
@@ -126,23 +126,6 @@ defmodule Coophub.Backends.Gitlab do
       # (100 bytes will be the total of bytes of the project)
       Map.put(acc, lang, %{"bytes" => percentage, "percentage" => percentage})
     end)
-  end
-
-  @spec get_org_languages(org()) :: map
-  def get_org_languages(%Organization{:repos => repos}) do
-    languages =
-      Enum.reduce(repos, %{}, fn %Repository{:languages => langs} = repo, acc ->
-        if not repo.fork do
-          Enum.reduce(langs, acc, fn {lang, %{"bytes" => bytes}}, acc_repo ->
-            acc_lang = Map.get(acc, lang, 0)
-            Map.put(acc_repo, lang, acc_lang + bytes)
-          end)
-        else
-          acc
-        end
-      end)
-
-    Repos.get_percentages_by_language(languages)
   end
 
   ########
