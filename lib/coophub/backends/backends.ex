@@ -151,9 +151,6 @@ defmodule Coophub.Backends do
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
-
-      _ ->
-        {:error, nil}
     end
   end
 
