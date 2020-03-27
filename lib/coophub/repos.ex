@@ -12,24 +12,24 @@ defmodule Coophub.Repos do
   @percentage_for_updated_time 0.8
 
   @typedoc """
-  Org is a map representing an organisation
+  org is a struct representing an organization
   """
   @type org :: Organization.t()
 
   @typedoc """
-  Repo is a map representing a repository
+  repo is a struct representing a repository
   """
   @type repo :: Repository.t()
 
   @typedoc """
   Repos is a list of repo maps
   """
-  @type repos :: List.t(repo()) | []
+  @type repos :: list(repo()) | []
 
   @typedoc """
   Orgs is a list of org maps
   """
-  @type orgs :: List.t(org()) | []
+  @type orgs :: list(org()) | []
   @type orgs_map :: %{required(String.t()) => org()}
 
   @spec get_all_orgs :: orgs_map() | :error
@@ -185,33 +185,6 @@ defmodule Coophub.Repos do
     Enum.reduce(repos, 0, fn %Repository{:popularity => pop}, acc -> acc + pop end)
   end
 
-  @spec get_percentages_by_language(map) :: map
-  def get_percentages_by_language(languages) do
-    total = Enum.reduce(languages, 0, fn {_lang, bytes}, acc -> acc + bytes end)
-
-    Enum.reduce(languages, %{}, fn {lang, bytes}, acc ->
-      percentage = (bytes / total * 100) |> Float.round(2)
-      Map.put(acc, lang, %{"bytes" => bytes, "percentage" => percentage})
-    end)
-  end
-
-  @spec get_org_languages_stats(org()) :: map
-  def get_org_languages_stats(%Organization{:repos => repos}) do
-    languages =
-      Enum.reduce(repos, %{}, fn %Repository{:languages => langs} = repo, acc ->
-        if not repo.fork do
-          Enum.reduce(langs, acc, fn {lang, %{"bytes" => bytes}}, acc_repo ->
-            acc_lang = Map.get(acc, lang, 0)
-            Map.put(acc_repo, lang, acc_lang + bytes)
-          end)
-        else
-          acc
-        end
-      end)
-
-    get_percentages_by_language(languages)
-  end
-
   @spec get_languages() :: map
   def get_languages() do
     case get_all_orgs() do
@@ -234,6 +207,33 @@ defmodule Coophub.Repos do
     end
   end
 
+  @spec get_org_languages(org()) :: map
+  def get_org_languages(%Organization{:repos => repos}) do
+    languages =
+      Enum.reduce(repos, %{}, fn %Repository{:languages => langs} = repo, acc ->
+        if not repo.fork do
+          Enum.reduce(langs, acc, fn {lang, %{"bytes" => bytes}}, acc_repo ->
+            acc_lang = Map.get(acc, lang, 0)
+            Map.put(acc_repo, lang, acc_lang + bytes)
+          end)
+        else
+          acc
+        end
+      end)
+
+    get_percentages_by_language(languages)
+  end
+
+  @spec get_percentages_by_language(map) :: map
+  def get_percentages_by_language(languages) do
+    total = Enum.reduce(languages, 0, fn {_lang, bytes}, acc -> acc + bytes end)
+
+    Enum.reduce(languages, %{}, fn {lang, bytes}, acc ->
+      percentage = (bytes / total * 100) |> Float.round(2)
+      Map.put(acc, lang, %{"bytes" => bytes, "percentage" => percentage})
+    end)
+  end
+
   @spec get_repos_by_language(any) :: repos() | :error
   def get_repos_by_language(lang) do
     case get_all_repos() do
@@ -249,14 +249,14 @@ defmodule Coophub.Repos do
 
   @spec to_struct(module, map | [map]) :: struct | [struct]
   def to_struct(_, []), do: []
-  def to_struct(str, [data | tail]), do: [to_struct(str, data) | to_struct(str, tail)]
+  def to_struct(module, [data | tail]), do: [to_struct(module, data) | to_struct(module, tail)]
 
-  def to_struct(str, map) when is_map(map) do
+  def to_struct(module, map) when is_map(map) do
     map_with_atom_keys = for {k, v} <- map, into: %{}, do: {String.to_atom(k), v}
-    struct(str, map_with_atom_keys)
+    struct(module, map_with_atom_keys)
   end
 
-  @spec repo_has_lang?(repo(), String.t()) :: Boolean.t()
+  @spec repo_has_lang?(repo(), String.t()) :: boolean()
   defp repo_has_lang?(repo, lang) do
     Enum.find(repo.languages, fn %{"lang" => repo_lang} ->
       String.downcase(repo_lang) == String.downcase(lang)

@@ -1,5 +1,7 @@
 import * as React from "react";
 
+declare var APP_VERSION: string;
+
 const Footer: React.FC = () =>
     <footer className="mt-xl-5">
         <div className="container">
@@ -7,7 +9,11 @@ const Footer: React.FC = () =>
                 <div className="col-sm-12">
                     <div className="copyright-box">
                         <div className="credits">
-                        Created with ♥ by <a href="https://fiqus.coop" target="_blank">Fiqus</a> | View the <a href="https://github.com/fiqus/coophub" target="_blank">GitHub repo</a>
+                        <a className="btn btn-link" href="https://fiqus.coop" target="_blank">Created with ♥ by Fiqus</a>
+                        &nbsp;|&nbsp;
+                        <a className="btn btn-link" href="https://github.com/fiqus/coophub" target="_blank">View the GitHub repo</a>
+                        &nbsp;|&nbsp;
+                        <a className="btn btn-link" href={`https://github.com/fiqus/coophub/releases/tag/v${APP_VERSION}`} target="_blank">v{APP_VERSION}</a>
                         </div>
                     </div>
                 </div>

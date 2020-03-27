@@ -2,17 +2,19 @@
 
 :link: [`coophub.io`](http://coophub.io)
 
-This web app uses the [GitHub API](https://developer.github.com/v3/) to join and show *nicely- the projects/repositories of any subscripted co-operative from over the world.
+This web app uses the [GitHub API](https://developer.github.com/v3/) and [GitLab API](https://docs.gitlab.com/ee/api/README.html) to fetch, process and nicely display the projects/repositories of any subscribed co-operative from over the world.
 
 It is strictly limited to co-operative enterprises.
 
 The main goal is to find in-the-same-place all the open source projects that can be used to start others, be consumed or motivate collaboration.
 
 ## Add your co-operative
-1. [Fork this repo](https://github.com/fiqus/coophub/fork).
+1. [Fork this repo](https://github.com/fiqus/coophub/fork) or edit this [file](https://github.com/fiqus/coophub/edit/master/cooperatives.yml)
 2. Add your co-op in the [cooperatives.yml](https://github.com/fiqus/coophub/blob/master/cooperatives.yml) file:
 ```
-github_org_name:
+key_org_name:
+  source: github or gitlab
+  login: <USERNAME_IN_THE_SOURCE>
   name: <NAME_OF_THE_COOP>
   url: <URL_OF_THE_COOP>
   description: <DESCRIPTION>

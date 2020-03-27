@@ -38,7 +38,7 @@ const RepoCard:React.FC<{repo: Repo}> = ({repo}) => {
                     </a>
                 </div>
                 <div className="post-date">
-                    <CardLink href={`${repo.html_url}/fork`} target="_blank"><GoRepoForked/> {repo.forks_count}</CardLink>
+                    <CardLink href={`${repo.html_url}/fork`} target="_blank"><GoRepoForked/>{repo.forks_count}</CardLink>
                     <CardLink href={`${repo.html_url}/stargazers`} target="_blank"><GoStar/>{repo.stargazers_count}</CardLink>
                 </div>
                 

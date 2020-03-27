@@ -1,8 +1,23 @@
 # CoopHub Changelog
 
+## v0.2.0
+
+* Added support for GitLab!
+* Cache warming improved using `Task.async`, so now loads the data concunrrently.
+
+## v0.1.9
+
+* [#48] Extract github API into its own module and refactor cache warmer to use it (#50).
+* Adding current app version to footer.
+
+## v0.1.8
+
+* Adds Camplight in cooperatives.yml (#49).
+* Hotfix for Repository.url => .html_url and getting back to work links at RepoCard.tsx.
+
 ## v0.1.7
 
-* Schemaization of the data into Organization and Repository structs (#4 + #47)
+* Schemaization of the data into Organization and Repository structs (#4 + #47).
 
 ## v0.1.6
 
