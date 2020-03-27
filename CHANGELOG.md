@@ -1,5 +1,10 @@
 # CoopHub Changelog
 
+## v0.2.0
+
+* Added support for GitLab!
+* Cache warming improved using `Task.async`, so now loads the data concunrrently.
+
 ## v0.1.9
 
 * [#48] Extract github API into its own module and refactor cache warmer to use it (#50).
