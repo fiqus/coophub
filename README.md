@@ -2,7 +2,7 @@
 
 :link: [`coophub.io`](http://coophub.io)
 
-This web app uses the [GitHub API](https://developer.github.com/v3/) and [GitLab API](https://docs.gitlab.com/ee/api/README.html) to join and show *nicely- the projects/repositories of any subscripted co-operative from over the world.
+This web app uses the [GitHub API](https://developer.github.com/v3/) and [GitLab API](https://docs.gitlab.com/ee/api/README.html) to fetch, process and nicely display the projects/repositories of any subscribed co-operative from over the world.
 
 It is strictly limited to co-operative enterprises.
 
