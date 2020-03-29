@@ -13,7 +13,7 @@ The main goal is to find in-the-same-place all the open source projects that can
 2. Add your co-op in the [cooperatives.yml](https://github.com/fiqus/coophub/blob/master/cooperatives.yml) file:
 ```
 key_org_name:
-  source: github or gitlab
+  source: github/gitlab/git.coop
   login: <USERNAME_IN_THE_SOURCE>
   name: <NAME_OF_THE_COOP>
   url: <URL_OF_THE_COOP>

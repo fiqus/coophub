@@ -3,8 +3,8 @@ fiqus:
   login: fiqus
   name: Fiqus
   url: https://www.fiqus.coop
-  description: ""
-  location: CABA/Villa La Angostura
+  description: "Cooperative company specialized in software, founded in 2011."
+  location: CABA/Villa La Angostura, Argentina
 
 gcoop:
   source: github
@@ -12,7 +12,7 @@ gcoop:
   name: gcoop
   url: https://www.gcoop.coop
   description: ""
-  location: CABA
+  location: CABA, Argentina
 
 camba:
   source: github
@@ -20,15 +20,15 @@ camba:
   name: Cambá
   url: https://www.camba.coop
   description: ""
-  location: CABA
+  location: CABA, Argentina
 
 devecoop:
   source: github
   login: devecoop
   name: Devecoop
   url: http://www.devecoop.com
-  description: ""
-  location: CABA
+  description: "Cooperativa de Trabajo Devecoop Ltda."
+  location: CABA, Argentina
 
 unixono:
   source: github
@@ -36,38 +36,38 @@ unixono:
   name: Uníxono
   url: http://www.unixono.com
   description: ""
-  location: Bahía Blanca
+  location: Bahía Blanca, Argentina
 
 geneos:
   source: github
   login: geneos
   name: Geneos
   url: http://www.geneos.com.ar
-  description: ""
-  location: Tandil
+  description: "Cooperativa Software Libre Ltda."
+  location: Tandil, Argentina
 
 bitson:
   source: github
   login: bitson
   name: Bitson
   url: https://bitson.group/
-  description: ""
-  location: CABA
+  description: "GNU/Linux & Python Consultants"
+  location: CABA, Argentina
 
 nayra:
   source: github
   login: nayracoop
   name: Nayra
   url: https://nayra.coop/
-  description: ""
-  location: Provincia de Buenos Aires
+  description: "Art & Technology"
+  location: Buenos Aires, Argentina
 
 hyphacoop:
   source: github
   login: hyphacoop
   name: Hypha
   url: https://hypha.coop
-  description: "We cultivate collective growth and meaningful livelihoods through learning and building technologies together."
+  description: "🍄 We cultivate collective growth and meaningful livelihoods through learning and building technologies together."
   location: Toronto, Canada
 
 agaric:
@@ -101,3 +101,11 @@ camplight:
   url: https://camplight.net
   description: "A digital cooperative that creates experiences for the web, mobile and beyond."
   location: Remote, mainly europe, Bulgaria
+
+webarchitects:
+  source: git.coop
+  login: webarch
+  name: Webarchitects
+  url: https://webarchitects.coop
+  description: Webarchitects is a Sheffield based, small and friendly, multi-stakeholder co-operative which has been providing ethical and green, web hosting, virtual servers and GNU/Linux sysadmin support services for over 20 years.
+  location: Sheffield, UK
