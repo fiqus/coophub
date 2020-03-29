@@ -12,7 +12,7 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
     const location = org.yml_data.location || org.location;
 
     let sourceBtn = <GoMarkGithub />;
-    if (org.yml_data.source === "gitlab") {
+    if (["gitlab", "git.coop"].includes(org.yml_data.source)) {
         sourceBtn = <AiOutlineGitlab />;
     }
     
@@ -37,7 +37,7 @@ const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = (
                     {org.yml_data.name}
                     </h3>
                     <p className="subtitle-a">
-                    {org.description}
+                    {org.yml_data.description}
                     </p>
                 </Container>
                 <Container className="col-2">

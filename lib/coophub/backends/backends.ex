@@ -15,7 +15,8 @@ defmodule Coophub.Backends do
 
   ## Backends implementations
   defp get_backend_module!("github"), do: Backends.Github
-  defp get_backend_module!("gitlab"), do: Backends.Gitlab
+  defp get_backend_module!("gitlab"), do: Backends.GitlabCom
+  defp get_backend_module!("git.coop"), do: Backends.GitCoop
   defp get_backend_module!(source), do: raise("Unknown backend source: #{source}")
 
   ########
