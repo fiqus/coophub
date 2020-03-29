@@ -1,5 +1,11 @@
 # CoopHub Changelog
 
+## v0.2.1
+
+* Added support for Git.coop: 
+  * Add `use Coophub.Backends.Gitlab` in modules that want to add support to any public Gitlab server.
+* In the organization page now shows the description of the `cooperatives.yml` file.
+
 ## v0.2.0
 
 * Added support for GitLab!
