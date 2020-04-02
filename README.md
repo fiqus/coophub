@@ -1,19 +1,19 @@
-# Coophub
+# Coophub - Cooperatives repos over the world!
 
 :link: [`coophub.io`](http://coophub.io)
 
-This web app uses the [GitHub API](https://developer.github.com/v3/) and [GitLab API](https://docs.gitlab.com/ee/api/README.html) to fetch, process and nicely display the projects/repositories of any subscribed co-operative from over the world.
+This web app uses the [GitHub API](https://developer.github.com/v3/) and [GitLab API](https://docs.gitlab.com/ee/api/README.html) to fetch, process and nicely display the projects/repositories of any subscribed cooperative from over the world.
 
-It is strictly limited to co-operative enterprises.
+Please nothe that it's strictly limited to cooperative enterprises.
 
-The main goal is to find in-the-same-place all the open source projects that can be used to start others, be consumed or motivate collaboration.
+The main goal is to gather in one place all the open source projects that can be used to start others, to be consumed, to learn or to just motivate collaboration.
 
-## Add your co-operative
+## Add your cooperative
 1. [Fork this repo](https://github.com/fiqus/coophub/fork) or edit this [file](https://github.com/fiqus/coophub/edit/master/cooperatives.yml)
 2. Add your co-op in the [cooperatives.yml](https://github.com/fiqus/coophub/blob/master/cooperatives.yml) file:
 ```
 key_org_name:
-  source: github/gitlab/git.coop
+  source: github|gitlab|git.coop
   login: <USERNAME_IN_THE_SOURCE>
   name: <NAME_OF_THE_COOP>
   url: <URL_OF_THE_COOP>
@@ -55,3 +55,14 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - `limit` - Number
 - `sort` - `popular` or `latest` (default)
 - `exclude_forks` - boolean (`false` default)
+
+## Releasing a new version
+1. Update [CHANGELOG.md](https://github.com/fiqus/coophub/blob/master/CHANGELOG.md) with latest changes.
+2. Go to create a [new release](https://github.com/fiqus/coophub/releases/new) and complete the fields:
+  - Tag version: `vx.x.x` (like `v0.2.2`).
+  - Target: Always against `master` branch.
+  - Release title: Same as tag version.
+  - Description: Just copy/paste the latest changes from [CHANGELOG.md](https://github.com/fiqus/coophub/blob/master/CHANGELOG.md).
+3. Click the `Publish release` button and check that a new [github action](https://github.com/fiqus/coophub/actions?query=workflow%3A%22CI+-+Build+release+asset%22) was started for this release.
+4. When the github action finishes, a [release asset](https://github.com/fiqus/coophub/releases/latest) should be attached (like `coophub-20200330-034316-0635b9c7.tar.gz`).
+5. Done! Just wait a few minutes and the new release will be deployed to https://coophub.io (you can check the version at site footer).
