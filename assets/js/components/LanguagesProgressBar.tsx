@@ -4,7 +4,7 @@ import getLangColor from '../languageColors';
 
 const LanguagesProgressBar: React.FC<{ languages: Array<Language>, maxLanguages: number }> = ({ languages, maxLanguages }) => {
     let mainLanguages = languages.slice(0, maxLanguages);
-    mainLanguages.push({ bytes: 0, lang: "other", percentage: Math.round((100.0 - (mainLanguages.reduce((acc, lang) => acc + lang.percentage, 0))) * 100) / 100})
+    mainLanguages.push({ lang: "other", percentage: Math.round((100.0 - (mainLanguages.reduce((acc, lang) => acc + lang.percentage, 0))) * 100) / 100})
     mainLanguages = mainLanguages.filter(l=>l.percentage > 0);
 
     return <>

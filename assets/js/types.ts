@@ -9,13 +9,11 @@ export type Owner = {
 
 export type Language = {
     lang: string,
-    bytes: number,
     percentage: number
 }
 
 export type TotalLanguage = {
     [key: string]: {
-        bytes: number,
         percentage: number
     }
 }

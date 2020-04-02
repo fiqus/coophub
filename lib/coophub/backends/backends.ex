@@ -131,11 +131,6 @@ defmodule Coophub.Backends do
     end
   end
 
-  @spec get_org_languages(org) :: map()
-  def get_org_languages(org) do
-    Repos.get_org_languages(org)
-  end
-
   @spec request(String.t(), headers) :: {:ok, map | [map], integer} | {:error, any}
   defp request(nil, _), do: {:ok, [], 0}
 
