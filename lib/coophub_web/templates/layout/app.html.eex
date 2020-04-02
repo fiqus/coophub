@@ -19,10 +19,10 @@
     <meta name="msapplication-config" content="<%= Routes.static_path(@conn, "/icons/browserconfig.xml") %>">
     <meta name="theme-color" content="#ffffff">
 
-    <meta property="og:title" content="CoopHub · Open source from co-operatives" />
+    <meta property="og:title" content="CoopHub · Open source from worldwide co-operatives" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://coophub.io" />
-    <meta property="og:description" content="Repos and projects open source from co-operatives around the world" />
+    <meta property="og:description" content="Open source projects and repositories from co-operatives around the world!" />
     <meta property="og:type" content="website" />
 
   </head>
