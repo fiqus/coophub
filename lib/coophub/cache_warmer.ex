@@ -167,7 +167,7 @@ defmodule Coophub.CacheWarmer do
   end
 
   defp put_org_languages(org) do
-    Map.put(org, :languages, Backends.get_org_languages(org))
+    Map.put(org, :languages, Repos.get_org_languages(org))
     |> convert_languages_to_list_and_sort()
   end
 
@@ -187,7 +187,7 @@ defmodule Coophub.CacheWarmer do
       datamap
       |> Map.get(:languages, [])
       |> Enum.map(fn {lang, stats} -> Map.put(stats, "lang", lang) end)
-      |> Enum.sort(&(&1["bytes"] > &2["bytes"]))
+      |> Enum.sort(&(&1["percentage"] > &2["percentage"]))
 
     Map.put(datamap, :languages, languages)
   end

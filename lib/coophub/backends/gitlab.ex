@@ -113,10 +113,7 @@ defmodule Coophub.Backends.Gitlab do
       def parse_languages(languages) do
         languages
         |> Enum.reduce(%{}, fn {lang, percentage}, acc ->
-          # bytes is not used by GitLab, since we are using bytes only for getting percentages
-          # using directly the percentage as bytes will be proportional
-          # (100 bytes will be the total of bytes of the project)
-          Map.put(acc, lang, %{"bytes" => percentage, "percentage" => percentage})
+          Map.put(acc, lang, %{"percentage" => percentage})
         end)
       end
 

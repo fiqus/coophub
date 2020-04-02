@@ -194,13 +194,13 @@ defmodule Coophub.Repos do
           languages
         end)
         |> List.flatten()
-        |> Enum.map(fn %{"lang" => lang, "bytes" => bytes} ->
-          %{lang => bytes}
+        |> Enum.map(fn %{"lang" => lang, "percentage" => percentage} ->
+          %{lang => percentage}
         end)
         |> Enum.reduce(%{}, fn lang_orgs_stats, acc ->
           Map.merge(lang_orgs_stats, acc, fn _key, x1, x2 -> x1 + x2 end)
         end)
-        |> get_percentages_by_language
+        |> get_percentages_by_language()
 
       :error ->
         :error
@@ -208,29 +208,26 @@ defmodule Coophub.Repos do
   end
 
   @spec get_org_languages(org()) :: map
-  def get_org_languages(%Organization{:repos => repos}) do
-    languages =
-      Enum.reduce(repos, %{}, fn %Repository{:languages => langs} = repo, acc ->
-        if not repo.fork do
-          Enum.reduce(langs, acc, fn {lang, %{"bytes" => bytes}}, acc_repo ->
-            acc_lang = Map.get(acc, lang, 0)
-            Map.put(acc_repo, lang, acc_lang + bytes)
-          end)
-        else
-          acc
-        end
-      end)
-
-    get_percentages_by_language(languages)
+  def get_org_languages(%Organization{repos: repos}) do
+    Enum.reduce(repos, %{}, fn %Repository{languages: languages} = repo, acc ->
+      if not repo.fork do
+        Enum.reduce(languages, acc, fn {lang, %{"percentage" => percentage}}, acc_repo ->
+          acc_lang = Map.get(acc, lang, 0)
+          Map.put(acc_repo, lang, acc_lang + percentage)
+        end)
+      else
+        acc
+      end
+    end)
+    |> get_percentages_by_language()
   end
 
-  @spec get_percentages_by_language(map) :: map
-  def get_percentages_by_language(languages) do
-    total = Enum.reduce(languages, 0, fn {_lang, bytes}, acc -> acc + bytes end)
+  defp get_percentages_by_language(languages) do
+    total = Enum.reduce(languages, 0, fn {_lang, percentage}, acc -> acc + percentage end)
 
-    Enum.reduce(languages, %{}, fn {lang, bytes}, acc ->
-      percentage = (bytes / total * 100) |> Float.round(2)
-      Map.put(acc, lang, %{"bytes" => bytes, "percentage" => percentage})
+    Enum.reduce(languages, %{}, fn {lang, percentage}, acc ->
+      percentage_for_lang = (percentage * 100 / total) |> Float.round(2)
+      Map.put(acc, lang, %{"percentage" => percentage_for_lang})
     end)
   end
 

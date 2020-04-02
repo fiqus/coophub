@@ -48,7 +48,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 - GET api/repos (all coops repos)
 - GET api/search?q=term_to_search
 - GET api/topics (all the repos topics)
-- GET api/languages (all the programming languages with bytes and %)
+- GET api/languages (all the programming languages with percentages)
 - GET api/languages/:lang (the repos using the lang)
 
 ## Allowed query params
