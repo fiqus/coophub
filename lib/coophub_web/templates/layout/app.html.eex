@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>CoopHub · Open source from cooperatives over the world!</title>
+    <title>CoopHub · Open source from co-operatives over the world!</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
 
     <link rel="apple-touch-icon" sizes="180x180" href="<%= Routes.static_path(@conn, "/icons/apple-touch-icon.png") %>">
@@ -18,6 +18,12 @@
     <meta name="msapplication-TileColor" content="#2d89ef">
     <meta name="msapplication-config" content="<%= Routes.static_path(@conn, "/icons/browserconfig.xml") %>">
     <meta name="theme-color" content="#ffffff">
+
+    <meta property="og:title" content="CoopHub · Open source from co-operatives" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://coophub.io" />
+    <meta property="og:description" content="Repos and projects open source from co-operatives around the world" />
+    <meta property="og:type" content="website" />
 
   </head>
   <body id="page-top">
