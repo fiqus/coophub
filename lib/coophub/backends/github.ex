@@ -83,12 +83,21 @@ defmodule Coophub.Backends.Github do
   @impl Backends.Behaviour
   @spec parse_languages(langs) :: langs
   def parse_languages(languages) do
-    Repos.get_percentages_by_language(languages)
+    percentage_from_bytes(languages)
   end
 
   ########
   ## INTERNALS
   ########
+  defp percentage_from_bytes(languages) do
+    total = Enum.reduce(languages, 0, fn {_lang, bytes}, acc -> acc + bytes end)
+
+    Enum.reduce(languages, %{}, fn {lang, bytes}, acc ->
+      percentage_for_lang = (bytes * 100 / total) |> Float.round(2)
+      Map.put(acc, lang, %{"percentage" => percentage_for_lang})
+    end)
+  end
+
   defp prepare_request(name, path) do
     {name, full_url(path), headers()}
   end
