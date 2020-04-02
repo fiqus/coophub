@@ -30,4 +30,5 @@ plt:
 clean:
 	@mix deps.clean --all --unlock
 	@rm -rf deps _build node_modules priv/static/*
+	@rm repos-cache.dump
 	@mix deps.get && npm install

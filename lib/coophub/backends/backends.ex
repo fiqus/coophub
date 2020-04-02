@@ -1,5 +1,5 @@
 defmodule Coophub.Backends do
-  alias Coophub.{Backends, Repos}
+  alias Coophub.Backends
   alias Coophub.Schemas.{Organization, Repository}
 
   require Logger
