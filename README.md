@@ -4,7 +4,7 @@
 
 This web app uses the [GitHub API](https://developer.github.com/v3/) and [GitLab API](https://docs.gitlab.com/ee/api/README.html) to fetch, process and nicely display the projects/repositories of any subscribed cooperative from over the world.
 
-Please nothe that it's strictly limited to cooperative enterprises.
+Please note that it's strictly limited to cooperative enterprises.
 
 The main goal is to gather in one place all the open source projects that can be used to start others, to be consumed, to learn or to just motivate collaboration.
 
@@ -23,7 +23,7 @@ key_org_name:
 3. Add-commit-push and send us a Pull Request!
 
 ## Changelog
-See [changelog file](CHANGELOG.md)
+See [changelog file](CHANGELOG.md).
 
 ## Development
 It uses the Elixir [Phoenix Framework](https://phoenixframework.org/) for the back-end and ReactJS for the front-end.
