@@ -109,3 +109,11 @@ webarchitects:
   url: https://webarchitects.coop
   description: Webarchitects is a Sheffield based, small and friendly, multi-stakeholder co-operative which has been providing ethical and green, web hosting, virtual servers and GNU/Linux sysadmin support services for over 20 years.
   location: Sheffield, UK
+  
+ eryx:
+  source: gitlab
+  login: eryx
+  name: Eryx
+  url: https://www.eryx.co
+  description: "Cooperative company specialized in software, founded in 2011."
+  location: CABA, Argentina
