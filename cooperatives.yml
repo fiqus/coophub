@@ -6,6 +6,14 @@ fiqus:
   description: "Cooperative company specialized in software, founded in 2011."
   location: CABA/Villa La Angostura, Argentina
 
+eryx:
+  source: gitlab
+  login: eryx
+  name: Eryx
+  url: https://www.eryx.co
+  description: "Cooperative company specialized in software, founded in 2011."
+  location: CABA, Argentina
+
 gcoop:
   source: github
   login: gcoop-libre
