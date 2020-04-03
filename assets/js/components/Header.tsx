@@ -44,7 +44,7 @@ const Header: React.FC<RouteComponentProps> = ({history}) => {
                     <NavLink tag={Link} to={`/orgs/`}>Cooperatives</NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink href="https://github.com/fiqus/coophub#add-your-co-operative" target="_blank">How to join?</NavLink>
+                    <NavLink href="https://github.com/fiqus/coophub#add-your-cooperative" target="_blank">How to join?</NavLink>
                 </NavItem>
             </Nav>
         </Collapse>

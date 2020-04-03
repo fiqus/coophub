@@ -433,27 +433,22 @@ defmodule CoophubWeb.Fixtures do
     [
       %{
         "lang" => "Elixir",
-        "bytes" => 142_649,
         "percentage" => 60.75
       },
       %{
         "lang" => "Vue",
-        "bytes" => 54487,
         "percentage" => 23.2
       },
       %{
         "lang" => "JavaScript",
-        "bytes" => 23030,
         "percentage" => 9.81
       },
       %{
         "lang" => "CSS",
-        "bytes" => 13607,
         "percentage" => 5.79
       },
       %{
         "lang" => "HTML",
-        "bytes" => 1050,
         "percentage" => 0.45
       }
     ]
@@ -463,7 +458,6 @@ defmodule CoophubWeb.Fixtures do
     [
       %{
         "lang" => "CSS",
-        "bytes" => 642,
         "percentage" => 100
       }
     ]
@@ -473,22 +467,18 @@ defmodule CoophubWeb.Fixtures do
     [
       %{
         "lang" => "Elixir",
-        "bytes" => 5_000,
         "percentage" => 50
       },
       %{
         "lang" => "Erlang",
-        "bytes" => 2_500,
         "percentage" => 25
       },
       %{
         "lang" => "JavaScript",
-        "bytes" => 1_500,
         "percentage" => 15
       },
       %{
         "lang" => "HTML",
-        "bytes" => 1_000,
         "percentage" => 10
       }
     ]
@@ -498,17 +488,14 @@ defmodule CoophubWeb.Fixtures do
     [
       %{
         "lang" => "Python",
-        "bytes" => 7_000,
         "percentage" => 70
       },
       %{
         "lang" => "HTML",
-        "bytes" => 2_000,
         "percentage" => 20
       },
       %{
         "lang" => "CSS",
-        "bytes" => 1_000,
         "percentage" => 10
       }
     ]
@@ -518,12 +505,10 @@ defmodule CoophubWeb.Fixtures do
     [
       %{
         "lang" => "PHP",
-        "bytes" => 90,
         "percentage" => 90
       },
       %{
         "lang" => "HTML",
-        "bytes" => 10,
         "percentage" => 10
       }
     ]

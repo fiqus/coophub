@@ -1,5 +1,11 @@
 # CoopHub Changelog
 
+## v0.2.2
+
+* [#57] Adding metadata to `<head>` (#60).
+* [#58] Fixing wrong languages % in the index chart (#59).
+* [#55] Adding how to release a new coophub version at `README.md`.
+
 ## v0.2.1
 
 * Added support for Git.coop: 

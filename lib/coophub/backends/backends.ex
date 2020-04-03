@@ -1,5 +1,5 @@
 defmodule Coophub.Backends do
-  alias Coophub.{Backends, Repos}
+  alias Coophub.Backends
   alias Coophub.Schemas.{Organization, Repository}
 
   require Logger
@@ -129,11 +129,6 @@ defmodule Coophub.Backends do
         Logger.error("Error getting '#{name}' languages from #{bname}: #{inspect(reason)}")
         []
     end
-  end
-
-  @spec get_org_languages(org) :: map()
-  def get_org_languages(org) do
-    Repos.get_org_languages(org)
   end
 
   @spec request(String.t(), headers) :: {:ok, map | [map], integer} | {:error, any}
