@@ -34,8 +34,9 @@ const LanguagesChart: React.FC<urlProp> = ({languages}) => {
     };
 
     const options = {
+        maintainAspectRatio: false,
         legend: {
-            position: 'right',
+            position: 'bottom',
             labels: {
                 padding: 15
             }
@@ -63,7 +64,7 @@ const LanguagesChart: React.FC<urlProp> = ({languages}) => {
         }
     };
 
-    return <Doughnut data={data} options={options}/>;
+    return <Doughnut data={data} options={options} height={250} />;
 };
 
 export default LanguagesChart;

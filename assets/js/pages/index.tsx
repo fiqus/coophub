@@ -145,7 +145,7 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                 <div className="line-mf"/>
             </div>
             <Row>
-                <Container className="col-6 mb-5">
+                <Container className="col-12 col-md-6 mb-5">
                     <CardDeck>
                         <Card className="card card-blog mb-4">
                             <CardHeader style={{color: "grey"}}><h5>Most popular languages</h5></CardHeader>
