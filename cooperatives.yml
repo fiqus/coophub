@@ -93,7 +93,7 @@ seattledeveloperscoop:
   url: https://www.seattledevelopers.coop
   description: "A worker-owned web developer cooperative based in Seattle"
   location: Seattle, USA
-  
+
 camplight:
   source: github
   login: camplight
@@ -109,8 +109,8 @@ webarchitects:
   url: https://webarchitects.coop
   description: Webarchitects is a Sheffield based, small and friendly, multi-stakeholder co-operative which has been providing ethical and green, web hosting, virtual servers and GNU/Linux sysadmin support services for over 20 years.
   location: Sheffield, UK
-  
- eryx:
+
+eryx:
   source: gitlab
   login: eryx
   name: Eryx
