@@ -117,3 +117,59 @@ eryx:
   url: https://www.eryx.co
   description: "Cooperative company specialized in software, founded in 2011."
   location: CABA, Argentina
+
+nilenso:
+  source: github
+  login: nilenso
+  name: Nilenso
+  url: https://nilenso.com/
+  description: "nilenso is an employee-owned software cooperative based out of Bangalore, India. We ship beautiful, fully-tested applications for your organization"
+  location: Bangalore, India
+
+aptivate:
+  source: github
+  login: aptivate
+  name: Aptivate
+  url: https://nilenso.com/
+  description: "We are a UK based NGO that provides IT services for international development"
+  location: Cambridge, UK
+
+code-operative:
+  source: github
+  login: Code-Operative
+  name: Code-Operative
+  url: https://code-operative.co.uk/
+  description: "A lean co-op of freelance coders providing transparently costed work/training to members & clients"
+  location: North East, UK
+
+developersociety:
+  source: github
+  login: developersociety
+  name: Developer Society
+  url: https://www.dev.ngo/
+  description: "We help non-profits change the world, crafting one digital project at a time"
+  location: Birmingham, UK
+
+foundersandcoders:
+  source: github
+  login: foundersandcoders
+  name: Founders and Coders
+  url: http://www.foundersandcoders.com/
+  description: "Our tuition-free peer-led coding bootcamp and Tech for Better app development programme help people from all backgrounds get into tech and make a social impact"
+  location: London, UK
+
+freerange:
+  source: github
+  login: freerange
+  name: Go Freerange
+  url: https://gofreerange.com/
+  description: "Founded in 2009, Go Free Range is a worker co-operative with some of the most experienced application developers in the UK."
+  location: London, UK
+
+outlandish:
+  source: github
+  login: outlandishideas
+  name: Outlandish
+  url: http://outlandish.com/
+  description: "Web tech co-op based in Finsbury Park, North London"
+  location: London, UK
