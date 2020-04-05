@@ -1,5 +1,13 @@
 # CoopHub Changelog
 
+## v0.2.5
+
+* Increasing cachex warmer interval to 1 hour.
+
+## v0.2.4
+
+* Same as `v0.2.3` but adding `CHANGELOG.md`.
+
 ## v0.2.3
 
 * [#61] Fixed sizing and style of popular languages chart on mobile
