@@ -1,10 +1,23 @@
 # CoopHub Changelog
 
+## v0.2.5
+
+* Increasing cachex warmer interval to 1 hour.
+
+## v0.2.4
+
+* Same as `v0.2.3` but adding `CHANGELOG.md`.
+
+## v0.2.3
+
+* [#61] Fixed sizing and style of popular languages chart on mobile
+* More coops added!
+
 ## v0.2.2
 
-* [#57] Adding metadata to `<head>` (#60).
-* [#58] Fixing wrong languages % in the index chart (#59).
-* [#55] Adding how to release a new coophub version at `README.md`.
+* [#57] Added metadata to `<head>` (#60).
+* [#58] Fixed wrong languages % in the index chart (#59).
+* [#55] Added how to release a new coophub version at `README.md`.
 
 ## v0.2.1
 
