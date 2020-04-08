@@ -173,3 +173,11 @@ outlandish:
   url: http://outlandish.com/
   description: "Web tech co-op based in Finsbury Park, North London"
   location: London, UK
+  
+facttic:
+  source: github
+  login: facttic
+  name: FACTTIC
+  url: https://facttic.org.ar/
+  description: "Federación Argentina de cooperativas de trabajo de tecnología innovación y conocimiento"
+  location: Argentina
