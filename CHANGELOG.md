@@ -1,5 +1,10 @@
 # CoopHub Changelog
 
+## v0.2.6
+
+* Rolling back cache warming to synchronous according GitHub's Best Practices for API Rate Limiter.
+* Added FACTTIC to coops.
+
 ## v0.2.5
 
 * Increasing cachex warmer interval to 1 hour.
