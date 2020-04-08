@@ -130,7 +130,7 @@ aptivate:
   source: github
   login: aptivate
   name: Aptivate
-  url: https://nilenso.com/
+  url: http://www.aptivate.org/
   description: "We are a UK based NGO that provides IT services for international development"
   location: Cambridge, UK
 
