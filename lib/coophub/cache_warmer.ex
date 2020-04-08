@@ -43,17 +43,11 @@ defmodule Coophub.CacheWarmer do
     repos =
       read_yml()
       |> Enum.map(fn {key, yml_data} ->
-        Task.async(fn ->
-          case get_org(key, yml_data) do
-            :error -> []
-            org -> get_org_with_repos(key, org)
-          end
-        end)
+        case get_org(key, yml_data) do
+          :error -> []
+          org -> get_org_with_repos(key, org)
+        end
       end)
-      |> Enum.map(fn task ->
-        Task.await(task, :infinity)
-      end)
-      |> List.flatten()
 
     spawn(save_cache_dump(repos))
 
