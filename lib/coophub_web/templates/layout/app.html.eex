@@ -24,6 +24,7 @@
     <meta property="og:url" content="https://coophub.io" />
     <meta property="og:description" content="Open source projects and repositories from cooperatives around the world!" />
     <meta property="og:type" content="website" />
+    <meta property="twitter:image" content="https://coophub.io/images/logo-light.png" />
 
   </head>
   <body id="page-top">
