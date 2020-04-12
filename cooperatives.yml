@@ -181,3 +181,67 @@ facttic:
   url: https://facttic.org.ar/
   description: "Federación Argentina de cooperativas de trabajo de tecnología innovación y conocimiento"
   location: Argentina
+
+commonknowledge:
+  source: github
+  login: commonknowledge
+  name: Common Knowledge
+  url: https://commonknowledge.coop/
+  description: "Building digital tools for the grassroots. We are a nonprofit workers cooperative of software engineers, designers and organisers"
+  location: London, UK
+
+infact:
+  source: github
+  login: infact-coop
+  name: InFact Digital Co-op
+  url: https://www.infactcoop.com/
+  description: "We are a design & development digital co-operative using technology in service of humans and nature"
+  location: London, UK
+
+abunchofhacks:
+  source: github
+  login: abunchofhacks
+  name: A Bunch of Hacks
+  url: https://abunchofhacks.coop/
+  description: "A Bunch of Hacks, the Netherlands' first worker-owned cooperative for video game and software development"
+  location: Amsterdam, Netherlands
+
+colab:
+  source: github
+  login: colab-coop
+  name: CoLab Cooperative
+  url: http://colab.coop/
+  description: "CoLab’s mission is to contribute to a new economy of justice and cooperation while bringing clients beautiful, cutting-edge technology"
+  location: Ithaca, NY, USA
+
+caravancoop:
+  source: github
+  login: caravancoop
+  name: Caravan
+  url: https://caravan.coop/
+  description: "Web application development cooperative"
+  location: Montreal, Canada
+
+coopdevs:
+  source: github
+  login: coopdevs
+  name: Coopdevs
+  url: https://coopdevs.org/
+  description: "Coopdevs, Free and Open Source Software for Social and Solidarity Economy"
+  location: Barcelona, Spain
+
+coopdevs-gitlab:
+  source: gitlab
+  login: coopdevs
+  name: Coopdevs
+  url: https://coopdevs.org/
+  description: "Coopdevs, Free and Open Source Software for Social and Solidarity Economy"
+  location: Barcelona, Spain
+
+digicoop:
+  source: github
+  login: digicoop
+  name: Digicoop
+  url: http://digicoop.io/
+  description: "We make products for the web and mobile"
+  location: France
