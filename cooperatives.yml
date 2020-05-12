@@ -245,3 +245,11 @@ digicoop:
   url: http://digicoop.io/
   description: "We make products for the web and mobile"
   location: France
+
+lyseontech:
+  source: github
+  login: lyseontech
+  name: LyseonTech
+  url: http://LT.coop.br/
+  description: "Lyseon Tech - Open source technology solutions"
+  location: Brazil
