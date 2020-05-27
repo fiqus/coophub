@@ -253,3 +253,11 @@ lyseontech:
   url: http://LT.coop.br/
   description: "Lyseon Tech - Open source technology solutions"
   location: Brazil
+
+fiqus:
+  source: gitlab
+  login: bagimsizatolye
+  name: Bağımsız Atölye
+  url: https://bagimsizatolye.org/en
+  description: "Workshop that contains different fields of work such as development, design, textile"
+  location: Istanbul, Turkey
