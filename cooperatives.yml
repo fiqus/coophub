@@ -261,3 +261,13 @@ bagimsizatolye:
   url: https://bagimsizatolye.org/en
   description: "Workshop that contains different fields of work such as development, design, textile"
   location: Istanbul, Turkey
+
+eita:
+  source: gitlab
+  login: eita
+  name: EITA
+  url: https://eita.coop.br/
+  description: "EITA, a worker-owned software development coop, helps progressist social/popular movements in their struggles for solidarity economy, agrarian reform, agroecology, health and social justice."
+  location: Brazil
+
+
