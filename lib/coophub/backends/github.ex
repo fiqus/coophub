@@ -86,6 +86,10 @@ defmodule Coophub.Backends.Github do
     percentage_from_bytes(languages)
   end
 
+  def prepare_request_rate_limit() do
+    prepare_request("", "rate_limit")
+  end
+
   ########
   ## INTERNALS
   ########

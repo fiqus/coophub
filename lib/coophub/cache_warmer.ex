@@ -42,6 +42,8 @@ defmodule Coophub.CacheWarmer do
 
     repos =
       read_yml()
+      |> group_by_source()
+      |> IO.inspect
       |> Enum.map(fn {key, yml_data} ->
         case get_org(key, yml_data) do
           :error -> []
@@ -55,6 +57,34 @@ defmodule Coophub.CacheWarmer do
     ## in the case we aren't able to refresh data from github API, but..
     ## we will try to refresh it anyways every ":cache_interval" minutes!
     {:ok, repos, ttl: :timer.hours(24 * 365)}
+  end
+
+  def get_from_github(yml_orgs) do
+    rate_limit = Backends.get_rate_limit("github")
+    # 1 x org details
+    # 1 x org repos
+    # 1 x repo lang
+    # 1 x repo topics
+    # 202 is the worst number of requests x org
+    Enum.take(yml_orgs, 1..floor(rate_limit / 202))
+  end
+
+  def group_by_source(yml_orgs) do
+    # %{
+    #    "github" => %{
+    #       "fiqus" => %{ ... }
+    #     },
+    #    "gitlab" => %{
+    #       "another" => %{ ... }
+    #    }
+    #}
+    Enum.reduce(yml_orgs, %{}, fn {key, yml_data}, acc ->
+      source_coops =
+        acc
+        |> Map.get(yml_data["source"], %{})
+        |> Map.put(key, yml_data)
+      Map.put(acc, yml_data["source"], source_coops)
+    end)
   end
 
   defp save_cache_dump(repos) do

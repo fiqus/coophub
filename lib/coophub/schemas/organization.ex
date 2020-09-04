@@ -27,7 +27,8 @@ defmodule Coophub.Schemas.Organization do
           repo_count: integer(),
           popularity: float(),
           followers: integer(),
-          repos: [Coophub.Schemas.Repository.t()]
+          repos: [Coophub.Schemas.Repository.t()],
+          cached_at: String.t()
         }
 
   @derive Jason.Encoder
@@ -55,6 +56,7 @@ defmodule Coophub.Schemas.Organization do
     :repo_count,
     :popularity,
     :followers,
-    :repos
+    :repos,
+    :cached_at
   ]
 end

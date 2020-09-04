@@ -131,6 +131,21 @@ defmodule Coophub.Backends do
     end
   end
 
+  @spec get_rate_limit(<<_::48, _::_*16>>) :: any
+  def get_rate_limit(source) do
+    backend = get_backend_module!(source)
+    {_, url, headers} = backend.prepare_request_rate_limit()
+
+    case request(url, headers) do
+      {:ok, data, _} ->
+        data["resources"]["core"]["remaining"]
+
+      {:error, reason} ->
+        Logger.error("Error getting account rate limit: #{inspect(reason)}")
+        0
+    end
+  end
+
   @spec request(String.t(), headers) :: {:ok, map | [map], integer} | {:error, any}
   defp request(nil, _), do: {:ok, [], 0}
 
