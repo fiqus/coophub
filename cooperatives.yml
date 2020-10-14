@@ -270,7 +270,7 @@ eita:
   description: "EITA, a worker-owned software development coop, helps progressist social/popular movements in their struggles for solidarity economy, agrarian reform, agroecology, health and social justice."
   location: Brazil
 
-catalyst:
+catalyst-cooperative:
   source: github
   login: catalyst-cooperative
   name: Catalyst Cooperative
