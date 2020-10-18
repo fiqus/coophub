@@ -2,15 +2,13 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, options) => ({
   optimization: {
     minimize: true,
     minimizer: [
-      new TerserPlugin({cache: true, parallel: true, sourceMap: false}),
-      new OptimizeCSSAssetsPlugin({})
+      new TerserPlugin({})
     ]
   },
   entry: {
@@ -37,7 +35,7 @@ module.exports = (env, options) => ({
   },
   plugins: [
     new MiniCssExtractPlugin({filename: '../css/app.css'}),
-    new CopyWebpackPlugin([{from: 'assets/static/', to: '../'}]),
+    new CopyWebpackPlugin({patterns: [{from: 'assets/static/', to: '../'}]}),
     new webpack.DefinePlugin({
       APP_VERSION: JSON.stringify(require("fs").readFileSync("VERSION", "utf8"))
     })
