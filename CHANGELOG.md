@@ -1,5 +1,24 @@
 # CoopHub Changelog
 
+## v0.2.10
+
+* Updating elixir and node deps.
+* Add Lyseon Tech to the list of co-ops.
+
+## v0.2.9
+
+* Some minor adjustments, last 2020 release!
+
+## v0.2.8
+
+* Updating elixir and node deps.
+* Add Catalyst Cooperative to the list of co-ops.
+
+## v0.2.7
+
+* [#57] Adding twitter meta image (#70)
+* Added more coops =]
+
 ## v0.2.6
 
 * Rolling back cache warming to synchronous according GitHub's Best Practices for API Rate Limiter.
