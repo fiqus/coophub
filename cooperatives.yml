@@ -286,4 +286,10 @@ catalyst-cooperative:
   description: "Catalyst Cooperative is a small group of data scientists and policy wonks. We integrate public data and perform custom analyses to inform public policy. Our focus is primarily on mitigating climate change and improving electric utility regulation in the United States."
   location: United States
 
-
+metafam:
+  source: github
+  login: metafam
+  name: MetaGame
+  url: https://wiki.metagame.wtf/
+  description: "MetaGame is a real-life MMO-RPG helping people level up & build a better future."
+  location: Decentralized
