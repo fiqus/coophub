@@ -254,10 +254,10 @@ librecode:
   description: "LibreCode - Open source technology solutions"
   location: Brazil
 
-lyseontech-gitlab:
+librecode-gitlab:
   source: gitlab
-  login: lyseontech
-  name: LyseonTech
+  login: librecodecoop
+  name: LibreCode Coop
   url: http://librecode.coop/
   description: "LibreCode - Open source technology solutions"
   location: Brazil
