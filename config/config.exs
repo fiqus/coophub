@@ -20,7 +20,7 @@ config :coophub,
   fetch_max_repos: 10,
   # Configures Cachex
   main_cache_name: :repos_cache,
-  cache_interval: 60,
+  cache_interval: 30,
   main_cache_dump_file: "repos-cache.dump",
   uris_cache_name: :uris_cache
 

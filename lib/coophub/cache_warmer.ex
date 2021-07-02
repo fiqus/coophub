@@ -24,14 +24,15 @@ defmodule Coophub.CacheWarmer do
     ## Delay the execution a bit to ensure Cachex is available
     Process.sleep(2000)
 
-    prev_size = Cachex.size(@repos_cache_name) |> elem(1)
-    curr_size = maybe_load_dump(prev_size)
+    {:ok, prev_size} = Cachex.size(@repos_cache_name)
+    maybe_load_dump(prev_size)
+    {:ok, curr_size} = Cachex.size(@repos_cache_name)
     maybe_warm_cache(Coophub.Application.env(), prev_size, curr_size)
   end
 
   ## Just load dump on the first warm cycle
   defp maybe_load_dump(0), do: load_cache_dump()
-  defp maybe_load_dump(prev_size), do: prev_size
+  defp maybe_load_dump(_), do: :ignore
 
   ## Ignore the first warm cycle if we are at :dev and if dump has entries
   defp maybe_warm_cache(:dev, 0, curr_size) when curr_size > 0, do: :ignore
@@ -43,13 +44,11 @@ defmodule Coophub.CacheWarmer do
     repos =
       read_yml()
       |> group_by_source()
-      |> IO.inspect
-      |> Enum.map(fn {key, yml_data} ->
-        case get_org(key, yml_data) do
-          :error -> []
-          org -> get_org_with_repos(key, org)
-        end
+      |> Enum.map(fn {source, orgs} ->
+        Task.async(fn -> get_data(source, orgs) end)
       end)
+      |> Enum.map(fn task -> Task.await(task, :infinity) end)
+      |> List.flatten()
 
     spawn(save_cache_dump(repos))
 
@@ -59,30 +58,65 @@ defmodule Coophub.CacheWarmer do
     {:ok, repos, ttl: :timer.hours(24 * 365)}
   end
 
-  def get_from_github(yml_orgs) do
-    rate_limit = Backends.get_rate_limit("github")
-    # 1 x org details
-    # 1 x org repos
-    # 1 x repo lang
-    # 1 x repo topics
-    # 202 is the worst number of requests x org
-    Enum.take(yml_orgs, 1..floor(rate_limit / 202))
+  @doc """
+  Prepare the data using a different logic by source
+  E.g: github will require a rate_limit handling logic
+  """
+  def get_data("github", orgs) do
+    get_from_github(orgs)
   end
 
+  def get_data(_source, orgs) do
+    Enum.map(orgs, fn {org_key, yml_data} ->
+      case get_org(org_key, yml_data) do
+        :error -> []
+        org -> get_org_with_repos(org_key, org)
+      end
+    end)
+  end
+
+  @doc """
+  Get data from Github, using the max requests per organization
+  Github has a rate limit policy and we use a safe way of getting
+  the data, rotating the organizations by last requested date
+  - 1 req x org details
+  - 1 req x org repos
+  - 1 req x repo lang
+  - 1 req x repo topics
+  - 202 is the worst number of requests x org in prod (depends on fetch_max_repos config)
+  """
+  def get_from_github(orgs) do
+    github_rate_limit = Backends.get_rate_limit("github")
+    limit = Application.get_env(:coophub, :fetch_max_repos) * 2 + 2
+
+    Enum.take(orgs, floor(github_rate_limit / limit))
+    |> Enum.map(fn {org_key, yml_data} ->
+      case get_org(org_key, yml_data) do
+        :error -> []
+        org -> get_org_with_repos(org_key, org)
+      end
+    end)
+  end
+
+  @doc """
+  Group organizations by git source
+  %{
+    "github" => %{
+      "fiqus" => %{ ... }
+    },
+    "gitlab" => %{
+      "another" => %{ ... }
+    }
+  }
+  TODO: sort github orgs by last request date asc!
+  """
   def group_by_source(yml_orgs) do
-    # %{
-    #    "github" => %{
-    #       "fiqus" => %{ ... }
-    #     },
-    #    "gitlab" => %{
-    #       "another" => %{ ... }
-    #    }
-    #}
     Enum.reduce(yml_orgs, %{}, fn {key, yml_data}, acc ->
       source_coops =
         acc
         |> Map.get(yml_data["source"], %{})
         |> Map.put(key, yml_data)
+
       Map.put(acc, yml_data["source"], source_coops)
     end)
   end
@@ -114,11 +148,9 @@ defmodule Coophub.CacheWarmer do
          {:ok, true} <- Cachex.import(@repos_cache_name, dump),
          {:ok, size} <- Cachex.size(@repos_cache_name) do
       Logger.info("The dump was loaded with #{size} orgs!", ansi_color: :magenta)
-      size
     else
       _ ->
         Logger.info("Dump not found '#{@repos_cache_dump_file}'", ansi_color: :yellow)
-        0
     end
   end
 
@@ -148,8 +180,11 @@ defmodule Coophub.CacheWarmer do
 
   defp get_org(key, %{"source" => source} = yml_data) do
     case Backends.get_org(source, key, yml_data) do
-      %Organization{} = org -> org
-      _ -> :error
+      %Organization{} = org ->
+        %Organization{org | cached_at: DateTime.utc_now()}
+
+      _ ->
+        :error
     end
   end
 
