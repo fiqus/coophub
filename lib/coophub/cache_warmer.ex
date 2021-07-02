@@ -59,11 +59,34 @@ defmodule Coophub.CacheWarmer do
   end
 
   @doc """
+  Given the github orgs from the yml as input, it will merge them with
+  the existent in the current cache (sorted by cached_at asc) and prepare
+  the github orgs to be requested
+  """
+  def merge_github_orgs(github_orgs_yml) do
+    github_orgs_yml
+    |> Enum.map(fn {org_key, yml_data} ->
+      case Cachex.get(@repos_cache_name, org_key) do
+        {:ok, %Organization{} = cached_org} ->
+          {org_key, Map.put(yml_data, "cached_at", cached_org.cached_at)}
+
+        _ ->
+          {org_key, Map.put(yml_data, "cached_at", nil)}
+      end
+    end)
+    |> Enum.sort_by(fn {org_key, yml_data} ->
+      yml_data["cached_at"]
+    end)
+  end
+
+  @doc """
   Prepare the data using a different logic by source
   E.g: github will require a rate_limit handling logic
   """
-  def get_data("github", orgs) do
-    get_from_github(orgs)
+  def get_data("github", github_orgs) do
+    github_orgs
+    |> merge_github_orgs()
+    |> get_from_github()
   end
 
   def get_data(_source, orgs) do
@@ -108,7 +131,6 @@ defmodule Coophub.CacheWarmer do
       "another" => %{ ... }
     }
   }
-  TODO: sort github orgs by last request date asc!
   """
   def group_by_source(yml_orgs) do
     Enum.reduce(yml_orgs, %{}, fn {key, yml_data}, acc ->
