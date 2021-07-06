@@ -131,7 +131,7 @@ defmodule Coophub.Backends do
     end
   end
 
-  @spec get_rate_limit(<<_::48, _::_*16>>) :: any
+  @spec get_rate_limit(String.t()) :: integer
   def get_rate_limit(source) do
     backend = get_backend_module!(source)
     {_, url, headers} = backend.prepare_request_rate_limit()
