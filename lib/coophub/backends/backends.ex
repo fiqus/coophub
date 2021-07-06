@@ -13,6 +13,21 @@ defmodule Coophub.Backends do
   @type langs :: %{String.t() => integer()}
   @type topics :: [String.t()]
 
+  @callback name() :: String.t()
+
+  @callback prepare_request_org(String.t()) :: request_data
+  @callback parse_org(map) :: org
+
+  @callback prepare_request_repos(org, integer) :: request_data
+  @callback prepare_request_repo(org, map) :: request_data
+  @callback parse_repo(map) :: repo
+
+  @callback prepare_request_topics(org, repo) :: request_data
+  @callback parse_topics(any) :: topics
+
+  @callback prepare_request_languages(org, repo) :: request_data
+  @callback parse_languages(any) :: langs
+
   ## Backends implementations
   defp get_backend_module!("github"), do: Backends.Github
   defp get_backend_module!("gitlab"), do: Backends.GitlabCom
