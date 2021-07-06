@@ -156,11 +156,17 @@ defmodule Coophub.Backends do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         {:ok, Jason.decode!(body), take_time() - start_ms}
 
+      {:ok, %HTTPoison.Response{status_code: 403}} ->
+        {:error, "Forbidden (possible API rate-limit): #{url}"}
+
       {:ok, %HTTPoison.Response{status_code: 404}} ->
         {:error, "Not found: #{url}"}
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
+
+      _ ->
+        {:error, "Unexpected error: #{url}"}
     end
   end
 

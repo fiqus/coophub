@@ -32,7 +32,7 @@ Then, to run this app you will need:
 - Elixir >= 1.5
 - NodeJS >= 5.0
 
-Use `GITHUB_OAUTH_TOKEN` ENV var ir order to authenticate with the GitHub APIv3. Read the [guide](https://developer.github.com/v3/guides/getting-started/#oauth).
+Use `GITHUB_OAUTH_TOKEN` ENV var in order to authenticate with the GitHub APIv3. Read the [guide](https://developer.github.com/v3/guides/getting-started/#oauth).
 
 ### Run it!
 - Install dependencies with `mix deps.get`

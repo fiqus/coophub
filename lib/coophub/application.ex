@@ -19,6 +19,7 @@ defmodule Coophub.Application do
     children = [
       # Start the endpoint when the application starts
       CoophubWeb.Endpoint,
+      {Phoenix.PubSub, [name: Coophub.PubSub, adapter: Phoenix.PubSub.PG2]},
       # Starts a worker by calling: Coophub.Worker.start_link(arg)
       # {Coophub.Worker, arg},
       %{

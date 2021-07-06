@@ -18,7 +18,7 @@ defmodule Coophub.MixProject do
       dialyzer_warnings: [:error_handling, :race_conditions, :underspecs, :unknown],
       dialyzer_ignored_warnings: [
         # {tag, {file, line}, {warning_type, arguments}}
-        {:warn_matching, {'lib/cachex/warmer.ex', :_}, {:pattern_match, :_}}
+        {:_, {'lib/cachex/warmer.ex', :_}, :_}
       ]
     ]
   end
@@ -42,15 +42,15 @@ defmodule Coophub.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.9"},
-      {:phoenix_pubsub, "~> 1.1"},
-      {:phoenix_html, "~> 2.11"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:gettext, "~> 0.11"},
-      {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"},
-      {:httpoison, "~> 1.4"},
-      {:yaml_elixir, "~> 2.4"},
+      {:phoenix, "~> 1.5"},
+      {:phoenix_pubsub, "~> 2.0"},
+      {:phoenix_html, "~> 2.14"},
+      {:phoenix_live_reload, "~> 1.3", only: :dev},
+      {:gettext, "~> 0.18"},
+      {:jason, "~> 1.2"},
+      {:plug_cowboy, "~> 2.4"},
+      {:httpoison, "~> 1.8"},
+      {:yaml_elixir, "~> 2.6"},
       {:cachex, "~> 3.1"},
       {:dialyzex, "~> 1.2", only: :dev}
     ]

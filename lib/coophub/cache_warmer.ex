@@ -74,7 +74,7 @@ defmodule Coophub.CacheWarmer do
           {org_key, Map.put(yml_data, "cached_at", nil)}
       end
     end)
-    |> Enum.sort_by(fn {org_key, yml_data} ->
+    |> Enum.sort_by(fn {_org_key, yml_data} ->
       yml_data["cached_at"]
     end)
   end

@@ -246,12 +246,20 @@ digicoop:
   description: "We make products for the web and mobile"
   location: France
 
-lyseontech:
+librecode:
   source: github
-  login: lyseontech
-  name: LyseonTech
-  url: http://LT.coop.br/
-  description: "Lyseon Tech - Open source technology solutions"
+  login: librecodecoop
+  name: LibreCode Coop
+  url: http://librecode.coop/
+  description: "LibreCode - Open source technology solutions"
+  location: Brazil
+
+librecode-gitlab:
+  source: gitlab
+  login: librecodecoop
+  name: LibreCode Coop
+  url: http://librecode.coop/
+  description: "LibreCode - Open source technology solutions"
   location: Brazil
 
 bagimsizatolye:
@@ -261,3 +269,35 @@ bagimsizatolye:
   url: https://bagimsizatolye.org/en
   description: "Workshop that contains different fields of work such as development, design, textile"
   location: Istanbul, Turkey
+
+eita:
+  source: gitlab
+  login: eita
+  name: EITA
+  url: https://eita.coop.br/
+  description: "EITA, a worker-owned software development coop, helps progressist social/popular movements in their struggles for solidarity economy, agrarian reform, agroecology, health and social justice."
+  location: Brazil
+
+catalyst-cooperative:
+  source: github
+  login: catalyst-cooperative
+  name: Catalyst Cooperative
+  url: https://catalyst.coop
+  description: "Catalyst Cooperative is a small group of data scientists and policy wonks. We integrate public data and perform custom analyses to inform public policy. Our focus is primarily on mitigating climate change and improving electric utility regulation in the United States."
+  location: United States
+
+cooperativa-subte:
+  source: github
+  login: cooperativa-subte
+  name: Cooperativa de trabajo SUBTE
+  url: https://subte.uy
+  description: "Cooperativa de comunicación visual, programación y formación"
+  location: Montevideo, Uruguay
+
+nova-web-development:
+  source: gitlab
+  login: novawebdevelopment
+  name: NOVA Web Development
+  url: https://novawebdevelopment.org/
+  description: "NOVA Web Development is a democratically run, worker-owned and operated cooperative focused on developing free software tools for progressive organizations and committed to economic democracy."
+  location: Arlington, VA, USA; Newcastle Upon Tyne, UK; Santa Ana, El Salvador

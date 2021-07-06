@@ -16,8 +16,8 @@ config :coophub, CoophubWeb.Endpoint,
       "node_modules/webpack/bin/webpack.js",
       "--mode",
       "development",
-      "--watch-stdin",
-      "--colors"
+      "--watch",
+      "--color"
     ]
   ]
 

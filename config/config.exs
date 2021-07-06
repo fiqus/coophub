@@ -13,7 +13,7 @@ config :coophub, CoophubWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "j8dPu7alWBB8pf3xaMOJ1ulQBBm23vHIROUbGOyLthlPUiSg5wv/j+KevCnbsjWV",
   render_errors: [view: CoophubWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Coophub.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: Coophub.PubSub
 
 # Configures app options
 config :coophub,
