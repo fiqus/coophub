@@ -301,3 +301,11 @@ nova-web-development:
   url: https://novawebdevelopment.org/
   description: "NOVA Web Development is a democratically run, worker-owned and operated cooperative focused on developing free software tools for progressive organizations and committed to economic democracy."
   location: Arlington, VA, USA; Newcastle Upon Tyne, UK; Santa Ana, El Salvador
+  
+gaia:
+  source: gitlab
+  login: gaia-software
+  name: GAIA
+  url: https://gaiacoop.tech/
+  description: "Software Development Cooperative - founded in 2018"
+  location: Quilmes/Villa La Angostura, Argentina
