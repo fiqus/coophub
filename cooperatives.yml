@@ -309,3 +309,11 @@ gaia:
   url: https://gaiacoop.tech/
   description: "Software Development Cooperative - founded in 2018"
   location: Quilmes/Villa La Angostura, Argentina
+
+instituciones-abiertas:
+  source: github
+  login: instituciones-abiertas
+  name: instituciones-abiertas
+  url: https://www.ia2.coop/
+  description: "IA² is an open source software that integrates a set of tools developed to facilitate transparency among institutions in order to enhance the citizen's involvement."
+  location: Argentina
