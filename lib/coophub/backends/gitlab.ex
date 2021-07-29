@@ -11,15 +11,15 @@ defmodule Coophub.Backends.Gitlab do
       @type langs :: Backends.langs()
       @type topics :: Backends.topics()
 
-      @behaviour Backends.Behaviour
+      @behaviour Backends
 
-      @impl Backends.Behaviour
+      @impl Backends
       @spec prepare_request_org(String.t()) :: request_data
       def prepare_request_org(login) do
         prepare_request(login, "groups/#{login}")
       end
 
-      @impl Backends.Behaviour
+      @impl Backends
       @spec parse_org(map) :: org
       def parse_org(data) do
         data =
@@ -34,7 +34,7 @@ defmodule Coophub.Backends.Gitlab do
         Repos.to_struct(Organization, data)
       end
 
-      @impl Backends.Behaviour
+      @impl Backends
       @spec prepare_request_repos(org, integer) :: request_data
       def prepare_request_repos(%Organization{login: login}, limit) do
         prepare_request(
@@ -43,7 +43,7 @@ defmodule Coophub.Backends.Gitlab do
         )
       end
 
-      @impl Backends.Behaviour
+      @impl Backends
       @spec prepare_request_repo(org, map) :: request_data
       def prepare_request_repo(_organization, %{"path_with_namespace" => path_with_namespace}) do
         prepare_request(
@@ -52,7 +52,7 @@ defmodule Coophub.Backends.Gitlab do
         )
       end
 
-      @impl Backends.Behaviour
+      @impl Backends
       @spec parse_repo(map) :: repo
       def parse_repo(data) do
         data =
@@ -84,20 +84,20 @@ defmodule Coophub.Backends.Gitlab do
         end
       end
 
-      @impl Backends.Behaviour
+      @impl Backends
       @spec prepare_request_topics(org, repo) :: request_data
       def prepare_request_topics(_, _) do
         # topics are tag_list already set
         dont_request()
       end
 
-      @impl Backends.Behaviour
+      @impl Backends
       @spec parse_topics(map) :: topics
       def parse_topics(data) do
         data
       end
 
-      @impl Backends.Behaviour
+      @impl Backends
       @spec prepare_request_languages(org, repo) :: request_data
       def prepare_request_languages(_organization, %Repository{
             path_with_namespace: path_with_namespace
@@ -108,7 +108,7 @@ defmodule Coophub.Backends.Gitlab do
         )
       end
 
-      @impl Backends.Behaviour
+      @impl Backends
       @spec parse_languages(langs) :: langs
       def parse_languages(languages) do
         languages
