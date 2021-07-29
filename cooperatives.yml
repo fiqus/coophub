@@ -317,3 +317,27 @@ instituciones-abiertas:
   url: https://www.ia2.coop/
   description: "IA² is an open source software that integrates a set of tools developed to facilitate transparency among institutions in order to enhance the citizen's involvement."
   location: Argentina
+
+enspiral:
+  source: github
+  login: enspiral
+  name: Enspiral
+  url: https://enspiral.com/
+  description: ""
+  location: Wellington and Auckland, New Zealand
+
+kedu:
+  source: github
+  login: Kedu-SCCL
+  name: Kedu
+  url: https://kedu.coop/
+  description: "Cooperative technology from Barcelona"
+  location: Barcelona, Spain
+
+sassafras:
+  source: github
+  login: sassafrastech
+  name: Sassafras Tech Collective
+  url: https://www.sassafras.coop/
+  description: "A tech worker-coop based in Ann Arbor, Michigan."
+  location: Michigan, USA
