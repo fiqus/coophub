@@ -1,5 +1,9 @@
 # CoopHub Changelog
 
+## v0.3.0
+* Improve cachex warmer using GitHub rate limiter allowing us to add organizations with no limits (#64)
+* Added some new co-ops.
+
 ## v0.2.10
 
 * Updating elixir and node deps.
