@@ -341,3 +341,51 @@ sassafras:
   url: https://www.sassafras.coop/
   description: "A tech worker-coop based in Ann Arbor, Michigan."
   location: Michigan, USA
+
+colivre:
+  source: gitlab
+  login: colivre
+  name: Colivre
+  url: http://colivre.coop.br/
+  description: "Empresa cooperativa de serviços em Tecnologia da Informação, especializada no desenvolvimento de soluções inovadoras para a web."
+  location: Salvador, Brazil
+
+vulk:
+  source: github
+  login: vulk
+  name: Vulk
+  url: https://vulk.coop/
+  description: "As a design and development cooperative, teamwork is our creed."
+  location: Austin, USA
+
+tableflip:
+  source: github
+  login: tableflip
+  name: Tableflip
+  url: https://tableflip.io/
+  description: "A web-developer co-op. Experts in Node.js & Meteor. Based in London."
+  location: London, UK
+
+magnesium:
+  source: github
+  login: MgCoders
+  name: Magnesium
+  url: http://magnesium.coop/
+  description: ""
+  location: Montevideo, Uruguay
+
+enreda:
+  source: github
+  login: enredacoop
+  name: ENREDA Cooperativa
+  url: http://enreda.coop/
+  description: "Tecnología para la Transformación Social."
+  location: Andalucía, Spain
+
+obran:
+  source: github
+  login: staffing-coop
+  name: Obran
+  url: https://obran.org/
+  description: "We believe that everyone has the freedom to own their work. We are creating a community of worker-owners to do just that."
+  location: Baltimore, USA
