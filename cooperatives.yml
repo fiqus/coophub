@@ -389,3 +389,11 @@ obran:
   url: https://obran.org/
   description: "We believe that everyone has the freedom to own their work. We are creating a community of worker-owners to do just that."
   location: Baltimore, USA
+  
+informal-systems:
+  source: github
+  login: informalsystems
+  name: Informal Systems
+  url: https://informal.systems/
+  description: "We envision an open-source ecosystem of cooperatively owned and governed, distributed organizations, running on reliable distributed systems."
+  location: Toronto, Canada; Vienna, Austria; Lausanne, Switzerland; Berlin, Germany
