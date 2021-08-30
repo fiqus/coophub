@@ -397,3 +397,11 @@ informal-systems:
   url: https://informal.systems/
   description: "We envision an open-source ecosystem of cooperatively owned and governed, distributed organizations, running on reliable distributed systems."
   location: Toronto, Canada; Vienna, Austria; Lausanne, Switzerland; Berlin, Germany
+  
+  RChain:
+  source: github
+  login: rchain
+  name: RChain
+  url: https://rchain.coop
+  description: RChain® Cooperative is building a blockchain platform and key social coordination technologies. It uses CBC-Casper proof of stake + rholang and aims to become the most powerful and widely used smart contract platform.
+  location: Incorporated in Seattle Washington, Global membership 
