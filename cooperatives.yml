@@ -398,7 +398,7 @@ informal-systems:
   description: "We envision an open-source ecosystem of cooperatively owned and governed, distributed organizations, running on reliable distributed systems."
   location: Toronto, Canada; Vienna, Austria; Lausanne, Switzerland; Berlin, Germany
   
-  RChain:
+RChain:
   source: github
   login: rchain
   name: RChain
