@@ -408,7 +408,7 @@ RChain:
 
 Resonate:
    source: github
-   login: resonate
+   login: resonatecoop
    name: Resonate
    url: https://resonate.coop
    description: "Resonate is the Stream 2 Own ethical, global music streaming co-operative.  Our rewards for new artists and music are better than those from typical mass market streaming services. We are a community-led alternative that embodies cooperative values."
