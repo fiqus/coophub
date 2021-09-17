@@ -405,3 +405,12 @@ RChain:
   url: https://rchain.coop
   description: RChain® Cooperative is building a blockchain platform and key social coordination technologies. It uses CBC-Casper proof of stake + rholang and aims to become the most powerful and widely used smart contract platform.
   location: Incorporated in Seattle Washington, Global membership 
+
+Resonate:
+   source: github
+   login: resonatecoop
+   name: Resonate
+   url: https://resonate.coop
+   description: "Resonate is the Stream 2 Own ethical, global music streaming co-operative.  Our rewards for new artists and music are better than those from typical mass market streaming services. We are a community-led alternative that embodies cooperative values."
+   location: Registered in Ireland in the EU - Global Membership
+   
