@@ -403,7 +403,7 @@ RChain:
   login: rchain
   name: RChain
   url: https://rchain.coop
-  description: RChain® Cooperative is building a blockchain platform and key social coordination technologies. It uses CBC-Casper proof of stake + rholang and aims to become the most powerful and widely used smart contract platform.
+  description: "Blockchain (smart contract) platform and key social coordination technologies."
   location: Incorporated in Seattle Washington, Global membership 
 
 Resonate:
