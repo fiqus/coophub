@@ -445,14 +445,6 @@ nimbleheroes:
    url: https://nexod.us/
    description: "We build curated VFX production teams with the industry’s best talent & technology."
    location: Cincinnati, Ohio, USA
-   
-novawebdevelopment:
-  source: gitlab
-  login: novawebdevelopment
-  name: NOVA Web Development
-  url: https://novawebdevelopment.org/
-  description: "Worker-owned co-op developing LibreOrganize and Business Tracker primarily for unions, labor movement, social justice, etc."
-  location: USA / El Salvador / elsewhere
   
 plausiblelabs:
   source: github
@@ -477,4 +469,4 @@ zinc-collective:
   url: https://www.zinc.coop/
   description: ""
   location: USA
-   
+ 
