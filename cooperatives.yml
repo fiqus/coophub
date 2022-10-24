@@ -469,4 +469,235 @@ zinc-collective:
   url: https://www.zinc.coop/
   description: ""
   location: USA
+  
+soficoop:
+  source: github
+  login: soficoop
+  name: Sofi Cooperative
+  url: https://www.sofi.coop/
+  description: "Sofi is a workers cooperative of designers and developers, we focus on websites and applications that bring positive value for society and the planet."
+  location: Jerusalem, Israel
+  
+24eme:
+  source: github
+  login: 24eme
+  name: 24ème
+  url: https://www.24eme.fr/
+  description: "Governance based on trust and transparency."
+  location: Paris, France
+  
+atomised:
+  source: github
+  login: Atomised
+  name: Atomised
+  url: http://www.atomised.coop/
+  description: "Founded 2008."
+  location: Cupar, Scotland
+  
+agilecollective:
+  source: github
+  login: agilecollective
+  name: Agile Collective
+  url: https://agile.coop/
+  description: "We are a worker-owned agency that designs, builds and supports websites for purpose-driven organisations."
+  location: UK
+
+Autonomic-Cooperative:
+  source: github
+  login: Autonomic-Cooperative
+  name: Autonomic Cooperative
+  url: https://autonomic.zone/
+  description: "We build technologies and infrastructure to empower users to make a positive impact on the world."
+  location: UK, Cypherspace
+
+champs-libres:
+  source: gitlab
+  login: champs-libres
+  name: Champs Libres
+  url: https://www.champs-libres.coop/
+  description: "Logiciels libres & géographiques."
+  location: Namur, Belgium
+  
+ CodeursEnLiberte:
+  source: gitlab
+  login: CodeursEnLiberte
+  name: Codeurs en Liberté 
+  url: https://xn--codeursenlibert-pnb.fr/
+  description: "Codeurs en Liberté brings together independent employees in the IT field."
+  location: France
+  
+coopiteasy:
+  source: github
+  login: coopiteasy
+  name: Coop IT Easy
+  url: https://coopiteasy.be/
+  description: "Worker coop, we provide Open Source ERPs to other cooperatives."
+  location: Brussels, Belgium
+  
+dalibo:
+  source: github
+  login: dalibo
+  name: Dalibo
+  url: https://dalibo.com/
+  description: "Since 2005, Dalibo has made its know-how in the field of databases available to its customers and offers consulting, training and support services to businesses and institutions."
+  location: Paris, France
+  
+fairnesscoop:
+  source: github
+  login: fairnesscoop
+  name: Fairness
+  url: https://fairness.coop/
+  description: "Worker-owned coop with a focus on digital eco-design and software quality."
+  location: France
+  
+femprocomuns:
+  source: gitlab
+  login: femprocomuns
+  name: femProcomuns 
+  url: https://femprocomuns.coop/
+  description: "Strategic social tool to make common activity viable."
+  location: Catalunia
  
+ FikaWorks:
+  source: github
+  login: FikaWorks
+  name: FikaWorks
+  url: https://fika.works/
+  description: "We are the next wave of Cloud Native Consultants."
+  location: Netherlands
+  
+ gnucoop:
+  source: github
+  login: gnucoop
+  name: Gnucoop
+  url: https://www.gnucoop.com/
+  description: "The Digital Transformation for the Sustainable Economy."
+  location: Italy
+
+GoodPraxis:
+  source: github
+  login: GoodPraxis
+  name: Good Praxis
+  url: https://goodpraxis.coop/
+  description: "GOOD PRAXIS is a socially aware digital studio based in London. Connecting strategic thinking with technical expertise, the way we work is sensitive to people’s needs."
+  location: London, UK
+  
+HappyDev:
+  source: github
+  login: HappyDev-team
+  name: Happy dev
+  url: https://happy-dev.fr/
+  description: "The Happy Dev network brings together digital freelancers from all over France."
+  location: France
+  
+HappyCulture:
+  source: github
+  login: Happyculture
+  name: Happy Culture
+  url: https://happyculture.coop/
+  description: "Webagency working to increase projects sucess rates for customers."
+  location: France
+  
+hostsharing:
+  source: github
+  login: hostsharing
+  name: Hostsharing eG
+  url: https://www.hostsharing.net/
+  description: "Community hosting for digital sovereignty, sustainability and excellence."
+  location: Germany
+  
+hostsharing:
+  source: github
+  login: hostsharing
+  name: Hostsharing eG
+  url: https://www.hostsharing.net/
+  description: "Community hosting for digital sovereignty, sustainability and excellence."
+  location: Germany
+  
+igalia:
+  source: github
+  login: Igalia
+  name: Igalia
+  url: https://www.igalia.com/
+  description: "Igalia is a Free Software consultancy with headquarters in Spain and developers all around the world."
+  location: Spain
+  
+jamgocoop:
+  source: github
+  login: jamgocoop
+  name: Jamgo
+  url: https://jamgo.coop/
+  description: "We are a technology cooperative. We design and develop from advanced applications to web pages, as well as all kinds of tailor-made technological solutions."
+  location: Barcelona, Spain
+ 
+kaleidos:
+  source: github
+  login: kaleidos
+  name: Kaleidos
+  url: https://kaleidos.net/
+  description: "We seek to create transformational impact through our work. We incubate, fund and operate our own open-source based products."
+  location: Madrid, Spain
+  
+Kedu-SCCL:
+  source: github
+  login: Kedu-SCCL
+  name: Kedu
+  url: https://kedu.coop/
+  description: "Kedu is a young consultancy, focused on giving reality to the technological needs of companies and social entities, through technologies and open source resources."
+  location: Barcelona, Spain
+  
+Kedu-SCCL:
+  source: github
+  login: Kedu-SCCL
+  name: Kedu
+  url: https://kedu.coop/
+  description: "Kedu is a young consultancy, focused on giving reality to the technological needs of companies and social entities, through technologies and open source resources."
+  location: Barcelona, Spain
+  
+Les-Tilleuls:
+  source: github
+  login: coopTilleuls
+  name: Les-Tilleuls
+  url: https://les-tilleuls.coop/
+  description: "We are a tech company and a cooperative, specialized in e-commerce, web technologies and open source."
+  location: Lille, Paris, Nantes, Lyon, France
+  
+motion-twin:
+  source: github
+  login: motion-twin
+  name: Motion Twin
+  url: https://motion-twin.com/
+  description: "Games! Everyone at Motion Twin is an associate. We're all part owners of the company and we're all here way longer than we should be."
+  location: Bordeaux, France
+  
+multi-coop:
+  source: github
+  login: multi-coop
+  name: Multi
+  url: https://www.multi.coop/
+  description: "The cooperative multi contibutes to develop digital commons and related services. To do so we gathered a community of profesionals aiming to keep digital industry able to respond to the public's general interest."
+  location: France
+  
+open-data-services:
+  source: github
+  login: OpenDataServices
+  name: Open Data Services
+  url: https://opendataservices.coop/
+  description: "Open Data Services Co-operative works on a broad range of projects to make open data useful, usable and in use."
+  location: UK
+
+probesys:
+  source: github
+  login: Probesys
+  name: Probesys
+  url: https://www.probesys.com/
+  description: "Since 2003, Probesys, IT service provider specializing in free and open source solutions, supports you in all your IT projects."
+  location: Grenoble, France
+  
+reinblau:
+  source: github
+  login: reinblau
+  name: Reinblau
+  url: https://reinblau.coop/
+  description: "Our cooperative has around 20 members spread across Germany. As a decentralized agency, we have a lot of experience working together in agile teams, even across geographical distances."
+  location: Berlin, Germany
