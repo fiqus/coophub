@@ -518,7 +518,7 @@ champs-libres:
   description: "Logiciels libres & géographiques."
   location: Namur, Belgium
   
- CodeursEnLiberte:
+CodeursEnLiberte:
   source: gitlab
   login: CodeursEnLiberte
   name: Codeurs en Liberté 
