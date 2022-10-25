@@ -638,22 +638,6 @@ kaleidos:
   description: "We seek to create transformational impact through our work. We incubate, fund and operate our own open-source based products."
   location: Madrid, Spain
   
-Kedu-SCCL:
-  source: github
-  login: Kedu-SCCL
-  name: Kedu
-  url: https://kedu.coop/
-  description: "Kedu is a young consultancy, focused on giving reality to the technological needs of companies and social entities, through technologies and open source resources."
-  location: Barcelona, Spain
-  
-Kedu-SCCL:
-  source: github
-  login: Kedu-SCCL
-  name: Kedu
-  url: https://kedu.coop/
-  description: "Kedu is a young consultancy, focused on giving reality to the technological needs of companies and social entities, through technologies and open source resources."
-  location: Barcelona, Spain
-  
 Les-Tilleuls:
   source: github
   login: coopTilleuls
