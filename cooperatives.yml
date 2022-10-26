@@ -558,7 +558,7 @@ femprocomuns:
   description: "Strategic social tool to make common activity viable."
   location: Catalunia
  
- FikaWorks:
+FikaWorks:
   source: github
   login: FikaWorks
   name: FikaWorks
@@ -566,7 +566,7 @@ femprocomuns:
   description: "We are the next wave of Cloud Native Consultants."
   location: Netherlands
   
- gnucoop:
+gnucoop:
   source: github
   login: gnucoop
   name: Gnucoop
