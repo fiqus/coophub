@@ -45,6 +45,7 @@ defmodule Coophub.MixProject do
       {:phoenix, "~> 1.6"},
       {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_html, "~> 3.0"},
+      {:phoenix_live_view, "~> 0.18"},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
