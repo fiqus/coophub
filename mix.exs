@@ -46,14 +46,14 @@ defmodule Coophub.MixProject do
       {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_view, "~> 0.18"},
-      {:phoenix_live_reload, "~> 1.3", only: :dev},
+      {:phoenix_live_reload, "~> 1.4", only: :dev},
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.4"},
       {:httpoison, "~> 1.8"},
-      {:yaml_elixir, "~> 2.6"},
-      {:cachex, "~> 3.1"},
-      {:dialyzex, "~> 1.2", only: :dev},
+      {:yaml_elixir, "~> 2.9"},
+      {:cachex, "3.2.0"}, # TODO: for a 3.4 upgrade we need a ChildSpec change
+      {:dialyzex, "~> 1.3", only: :dev},
     ]
   end
 
