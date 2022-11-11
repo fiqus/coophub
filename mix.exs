@@ -5,7 +5,7 @@ defmodule Coophub.MixProject do
     [
       app: :coophub,
       version: File.read!("VERSION"),
-      elixir: "~> 1.5",
+      elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -42,9 +42,9 @@ defmodule Coophub.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.5"},
+      {:phoenix, "~> 1.6"},
       {:phoenix_pubsub, "~> 2.0"},
-      {:phoenix_html, "~> 2.14"},
+      {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
@@ -52,7 +52,7 @@ defmodule Coophub.MixProject do
       {:httpoison, "~> 1.8"},
       {:yaml_elixir, "~> 2.6"},
       {:cachex, "~> 3.1"},
-      {:dialyzex, "~> 1.2", only: :dev}
+      {:dialyzex, "~> 1.2", only: :dev},
     ]
   end
 
