@@ -151,9 +151,7 @@ defmodule Coophub.CacheWarmer do
       case Cachex.dump(@repos_cache_name, @repos_cache_dump_file) do
         {:ok, true} ->
           Logger.info(
-            "Saved repos cache dump with #{length(repos)} orgs to local file '#{
-              @repos_cache_dump_file
-            }'",
+            "Saved repos cache dump with #{length(repos)} orgs to local file '#{@repos_cache_dump_file}'",
             ansi_color: :magenta
           )
 

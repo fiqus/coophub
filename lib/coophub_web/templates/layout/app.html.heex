@@ -5,18 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>CoopHub · Open source from cooperatives over the world!</title>
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" href={Routes.static_path(@conn, "/css/app.css")}/>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="<%= Routes.static_path(@conn, "/icons/apple-touch-icon.png") %>">
-    <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_path(@conn, "/icons/favicon-32x32.png") %>">
-    <link rel="icon" type="image/png" sizes="16x16" href="<%= Routes.static_path(@conn, "/icons/favicon-16x16.png") %>">
-    <link rel="manifest" href="<%= Routes.static_path(@conn, "/icons/site.webmanifest") %>">
-    <link rel="mask-icon" href="<%= Routes.static_path(@conn, "/icons/safari-pinned-tab.svg") %>" color="#5bbad5">
-    <link rel="shortcut icon" href="<%= Routes.static_path(@conn, "/icons/favicon.ico") %>">
+    <link rel="apple-touch-icon" sizes="180x180" href={Routes.static_path(@conn, "/icons/apple-touch-icon.png")}>
+    <link rel="icon" type="image/png" sizes="32x32" href={Routes.static_path(@conn, "/icons/favicon-32x32.png")}>
+    <link rel="icon" type="image/png" sizes="16x16" href={Routes.static_path(@conn, "/icons/favicon-16x16.png")}>
+    <link rel="manifest" href={Routes.static_path(@conn, "/icons/site.webmanifest")}>
+    <link rel="mask-icon" href={Routes.static_path(@conn, "/icons/safari-pinned-tab.svg")} color="#5bbad5">
+    <link rel="shortcut icon" href={Routes.static_path(@conn, "/icons/favicon.ico")}>
     <meta name="apple-mobile-web-app-title" content="CoopHub">
     <meta name="application-name" content="CoopHub">
     <meta name="msapplication-TileColor" content="#2d89ef">
-    <meta name="msapplication-config" content="<%= Routes.static_path(@conn, "/icons/browserconfig.xml") %>">
+    <meta name="msapplication-config" content={Routes.static_path(@conn, "/icons/browserconfig.xml")}>
     <meta name="theme-color" content="#ffffff">
 
     <meta property="og:title" content="CoopHub · Open source from worldwide cooperatives" />
@@ -29,6 +29,6 @@
   </head>
   <body id="page-top">
     <%= @inner_content %>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <script type="text/javascript" src={Routes.static_path(@conn, "/js/app.js")}></script>
   </body>
 </html>
