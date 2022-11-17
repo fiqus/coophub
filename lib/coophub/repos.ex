@@ -170,10 +170,11 @@ defmodule Coophub.Repos do
         do: rating * @fork_coeficient,
         else: rating
 
-    {:ok, pushed_at_datetime, _} = DateTime.from_iso8601(repo.pushed_at)
+    repo_date = repo_date = repo.pushed_at || repo.updated_at || repo.created_at
+    {:ok, repo_datetime, _} = DateTime.from_iso8601(repo_date)
 
     divisor =
-      (((DateTime.utc_now() |> DateTime.to_unix()) - (pushed_at_datetime |> DateTime.to_unix())) /
+      (((DateTime.utc_now() |> DateTime.to_unix()) - (repo_datetime |> DateTime.to_unix())) /
          3600)
       |> :math.pow(@gravity)
 
