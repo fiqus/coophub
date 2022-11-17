@@ -421,14 +421,6 @@ dojo4:
    url: https://www.dojo4.com/
    description: "Dojo4 is a community-based, member-owned agency that creates positive change through technology and design."
    location: Boulder, Colorado, USA
-      
-fullsteamlabs:
-   source: github
-   login: fullsteamlabs
-   name: Fullsteam Labs
-   url: https://www.fullsteamlabs.com/
-   description: "FullSteam Labs is a nimble worker-owned tech cooperative that values clear communications skills, works in an efficient collaborative spirit, and excels at tackling the types of problems that are specific to mission-driven organizations."
-   location: USA
    
 gemifytech:
    source: github
@@ -621,14 +613,6 @@ igalia:
   url: https://www.igalia.com/
   description: "Igalia is a Free Software consultancy with headquarters in Spain and developers all around the world."
   location: Spain
-  
-jamgocoop:
-  source: github
-  login: jamgocoop
-  name: Jamgo
-  url: https://jamgo.coop/
-  description: "We are a technology cooperative. We design and develop from advanced applications to web pages, as well as all kinds of tailor-made technological solutions."
-  location: Barcelona, Spain
  
 kaleidos:
   source: github
