@@ -669,3 +669,11 @@ reinblau:
   url: https://reinblau.coop/
   description: "Our cooperative has around 20 members spread across Germany. As a decentralized agency, we have a lot of experience working together in agile teams, even across geographical distances."
   location: Berlin, Germany
+
+sutty:
+  source: "0xacab"
+  login: "sutty"
+  name: "Sutty"
+  url: "https://sutty.coop.ar"
+  description: "A worker-owned cooperative developing and hosting resilient websites for collectives, non-profit organizations and activists."
+  location: "Argentina"

@@ -32,6 +32,7 @@ defmodule Coophub.Backends do
   defp get_backend_module!("github"), do: Backends.Github
   defp get_backend_module!("gitlab"), do: Backends.GitlabCom
   defp get_backend_module!("git.coop"), do: Backends.GitCoop
+  defp get_backend_module!("0xacab"), do: Backends.HexAcab
   defp get_backend_module!(source), do: raise("Unknown backend source: #{source}")
 
   ########
