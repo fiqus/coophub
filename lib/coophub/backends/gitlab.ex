@@ -71,8 +71,15 @@ defmodule Coophub.Backends.Gitlab do
           }
           |> Enum.into(data)
 
-        # sometimes open_issues_count does not exist!
-        data = Map.put_new(data, "open_issues_count", 0)
+        # Fix some important values
+        data =
+          data
+          # Sometimes open_issues_count does not exist!
+          |> Map.put("open_issues_count", data["open_issues_count"] || 0)
+          # Keep fixing other values that might be empty/nil
+          |> Map.put("stargazers_count", data["stargazers_count"] || 0)
+          |> Map.put("forks_count", data["forks_count"] || 0)
+
         repo = Repos.to_struct(Repository, data)
 
         case repo.parent do

@@ -206,14 +206,14 @@ defmodule CoophubWeb.RepoControllerTest do
       data = get_data(conn, :topics)
       assert length(data) == 8
 
-      assert data = [
+      assert data == [
                %{"count" => 1, "orgs" => ["fiqus"], "topic" => "cirugias"},
                %{"count" => 1, "orgs" => ["fiqus"], "topic" => "elixir-lang"},
                %{"count" => 1, "orgs" => ["fiqus"], "topic" => "elixir-phoenix"},
                %{"count" => 1, "orgs" => ["fiqus"], "topic" => "hospital"},
                %{"count" => 1, "orgs" => ["fiqus"], "topic" => "salud"},
                %{"count" => 1, "orgs" => ["fiqus"], "topic" => "talks"},
-               %{"count" => 3, "orgs" => ["test", "fiqus"], "topic" => "test"},
+               %{"count" => 3, "orgs" => ["fiqus", "test"], "topic" => "test"},
                %{"count" => 1, "orgs" => ["fiqus"], "topic" => "vuejs"}
              ]
     end
