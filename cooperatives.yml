@@ -621,7 +621,15 @@ kaleidos:
   url: https://kaleidos.net/
   description: "We seek to create transformational impact through our work. We incubate, fund and operate our own open-source based products."
   location: Madrid, Spain
-  
+
+Kibatic:
+  source: github
+  login: kibatic
+  name: Kibatic
+  url: https://kibatic.com/
+  description: "We create softwares with web technologies (PHP, Symfony, Docker, Linux). We work mainly on business softwares and platforms for connected objects."
+  location: Grenoble, France
+
 Les-Tilleuls:
   source: github
   login: coopTilleuls
