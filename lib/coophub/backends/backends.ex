@@ -184,7 +184,8 @@ defmodule Coophub.Backends do
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
 
-      _ ->
+      error ->
+        Logger.error("Request failed with: #{inspect(error)}")
         {:error, "Unexpected error: #{url}"}
     end
   end
