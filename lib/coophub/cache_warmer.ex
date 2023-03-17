@@ -7,19 +7,21 @@ defmodule Coophub.CacheWarmer do
 
   require Logger
 
-  @repos_cache_name Application.get_env(:coophub, :main_cache_name)
-  @repos_cache_interval Application.get_env(:coophub, :cache_interval)
-  @repos_cache_dump_file Application.get_env(:coophub, :main_cache_dump_file)
+  @repos_cache_name Application.compile_env(:coophub, :main_cache_name)
+  @repos_cache_interval Application.compile_env(:coophub, :cache_interval)
+  @repos_cache_dump_file Application.compile_env(:coophub, :main_cache_dump_file)
 
   @doc """
   Returns the interval for this warmer.
   """
+  @spec interval :: non_neg_integer
   def interval,
     do: :timer.minutes(@repos_cache_interval)
 
   @doc """
   Executes this cache warmer.
   """
+  @spec execute(any) :: :ignore | {:ok, list({atom, Repos.org()}), keyword}
   def execute(_state) do
     ## Delay the execution a bit to ensure Cachex is available
     Process.sleep(2000)
@@ -58,12 +60,10 @@ defmodule Coophub.CacheWarmer do
     {:ok, repos, ttl: :timer.hours(24 * 365)}
   end
 
-  @doc """
-  Given the github orgs from the yml as input, it will merge them with
-  the existent in the current cache (sorted by cached_at asc) and prepare
-  the github orgs to be requested
-  """
-  def merge_github_orgs(github_orgs_yml) do
+  ## Given the github orgs from the yml as input, it will merge them with
+  ## the existent in the current cache (sorted by cached_at asc) and prepare
+  ## the github orgs to be requested
+  defp merge_github_orgs(github_orgs_yml) do
     github_orgs_yml
     |> Enum.map(fn {org_key, yml_data} ->
       case Cachex.get(@repos_cache_name, org_key) do
@@ -79,17 +79,15 @@ defmodule Coophub.CacheWarmer do
     end)
   end
 
-  @doc """
-  Prepare the data using a different logic by source
-  E.g: github will require a rate_limit handling logic
-  """
-  def get_data("github", github_orgs) do
+  ## Prepare the data using a different logic by source
+  ## E.g: github will require a rate_limit handling logic
+  defp get_data("github", github_orgs) do
     github_orgs
     |> merge_github_orgs()
     |> get_from_github()
   end
 
-  def get_data(_source, orgs) do
+  defp get_data(_source, orgs) do
     Enum.map(orgs, fn {org_key, yml_data} ->
       case get_org(org_key, yml_data) do
         :error -> []
@@ -98,18 +96,17 @@ defmodule Coophub.CacheWarmer do
     end)
   end
 
-  @doc """
-  Get data from Github, using the max requests per organization
-  Github has a rate limit policy and we use a safe way of getting
-  the data, rotating the organizations by last requested date
-  - 1 req x org details
-  - 1 req x org repos
-  - 1 req x repo lang
-  - 1 req x repo topics
-  - 202 is the worst number of requests x org in prod (depends on fetch_max_repos config)
-  """
-  def get_from_github(orgs) do
+  ## Get data from Github, using the max requests per organization
+  ## Github has a rate limit policy and we use a safe way of getting
+  ## the data, rotating the organizations by last requested date
+  ## - 1 req x org details
+  ## - 1 req x org repos
+  ## - 1 req x repo lang
+  ## - 1 req x repo topics
+  ## - 202 is the worst number of requests x org in prod (depends on fetch_max_repos config)
+  defp get_from_github(orgs) do
     github_rate_limit = Backends.get_rate_limit("github")
+    Logger.info("Github request rate limit: #{inspect(github_rate_limit)}")
     limit = Application.get_env(:coophub, :fetch_max_repos) * 2 + 2
 
     Enum.take(orgs, floor(github_rate_limit / limit))
@@ -121,18 +118,16 @@ defmodule Coophub.CacheWarmer do
     end)
   end
 
-  @doc """
-  Group organizations by git source
-  %{
-    "github" => %{
-      "fiqus" => %{ ... }
-    },
-    "gitlab" => %{
-      "another" => %{ ... }
-    }
-  }
-  """
-  def group_by_source(yml_orgs) do
+  ## Group organizations by git source
+  ## %{
+  ##   "github" => %{
+  ##     "fiqus" => %{ ... }
+  ##   },
+  ##   "gitlab" => %{
+  ##     "another" => %{ ... }
+  ##   }
+  ## }
+  defp group_by_source(yml_orgs) do
     Enum.reduce(yml_orgs, %{}, fn {key, yml_data}, acc ->
       source_coops =
         acc
@@ -203,7 +198,8 @@ defmodule Coophub.CacheWarmer do
       %Organization{} = org ->
         %Organization{org | cached_at: DateTime.utc_now()}
 
-      _ ->
+      error ->
+        Logger.error("Couldn't get org data: #{inspect(error)}")
         :error
     end
   end
@@ -220,6 +216,7 @@ defmodule Coophub.CacheWarmer do
       org
       |> Map.put(:repos, repos)
       |> Map.put(:repo_count, Enum.count(repos))
+      |> Map.put(:star_count, Enum.reduce(repos, 0, &(&2 + (&1.stargazers_count || 0))))
       |> put_org_languages()
       |> put_org_popularity()
       |> put_org_last_activity()

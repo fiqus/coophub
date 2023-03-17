@@ -19,6 +19,7 @@ defmodule CoophubWeb.Fixtures do
        Repos.to_struct(Organization, %{
          "repos" => generate_repos(:fiqus),
          "repo_count" => 2,
+         "star_count" => 22,
          "languages" => generate_languages(:surgex),
          "login" => "fiqus",
          "id" => 1_891_317,
@@ -54,6 +55,7 @@ defmodule CoophubWeb.Fixtures do
        Repos.to_struct(Organization, %{
          "repos" => generate_repos(:test),
          "repo_count" => 3,
+         "star_count" => 33,
          "languages" => generate_languages(:testone),
          "login" => "test",
          "id" => 123,

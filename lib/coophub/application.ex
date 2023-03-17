@@ -8,9 +8,9 @@ defmodule Coophub.Application do
   import Cachex.Spec
   require Logger
 
-  @repos_cache_name Application.get_env(:coophub, :main_cache_name)
-  @uris_cache_name Application.get_env(:coophub, :uris_cache_name)
-  @cache_interval Application.get_env(:coophub, :cache_interval)
+  @repos_cache_name Application.compile_env(:coophub, :main_cache_name)
+  @uris_cache_name Application.compile_env(:coophub, :uris_cache_name)
+  @cache_interval Application.compile_env(:coophub, :cache_interval)
 
   def start(_type, _args) do
     check_github_token()
@@ -42,12 +42,15 @@ defmodule Coophub.Application do
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
+  @spec config_change(any, any, any) :: :ok
   def config_change(changed, _new, removed) do
     CoophubWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 
+  @spec env :: atom
   def env, do: Application.get_env(:coophub, CoophubWeb.Endpoint)[:environment]
+  @spec env?(atom) :: boolean
   def env?(environment), do: env() == environment
 
   defp main_cache_opts(:test), do: []

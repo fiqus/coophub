@@ -53,6 +53,7 @@ export type Org = {
     languages: Array<Language>;
     created_at: string;
     repo_count: number;
+    star_count: number;
 }
 
 export type Counters = {

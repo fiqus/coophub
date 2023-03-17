@@ -19,10 +19,8 @@ const OrgPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
     const orgName = match.params.name;
     const response = useFetch(`/api/orgs/${orgName}`) as OrgResponse;
     const repos = useFetch(`/api/orgs/${orgName}/repos?sort=popular`) as OrgReposResponse;
-    const starsSum = repos.data.reduce((acc, r)=>{
-        return acc + r.stargazers_count;
-    }, 0);
     const org = response.data;
+    const starsSum = org.star_count;
     const maxLanguages = 5;
 
     return <>

@@ -3,7 +3,7 @@ defmodule Coophub.Repos do
 
   alias Coophub.Schemas.{Organization, Repository}
 
-  @repos_cache_name Application.get_env(:coophub, :main_cache_name)
+  @repos_cache_name Application.compile_env(:coophub, :main_cache_name)
   @forks_factor 1.7
   @stargazers_factor 1.5
   @open_issues_factor 0.3
