@@ -6,7 +6,7 @@ import LanguagesProgressBar from './LanguagesProgressBar';
 import CountUp from 'react-countup';
 import {GoCode, GoStar} from "react-icons/all";
 
-const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = ({org, maxLanguages, reposQuantity, starsSum}) => {
+const OrgHeader:React.FC<{org: Org, maxLanguages: number, starsSum: number}> = ({org, maxLanguages, starsSum}) => {
     const orgDate = new Date(org.created_at);
     const createdDate = `${orgDate.toLocaleString('en', { month: 'long' })} ${orgDate.getFullYear()}`;
     const location = org.yml_data.location || org.location;

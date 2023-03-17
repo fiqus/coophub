@@ -107,11 +107,15 @@ defmodule Coophub.Backends.Github do
   end
 
   defp headers() do
-    headers = [{"Accept", "application/vnd.github.mercy-preview+json"}]
+    headers = [
+      {"Accept", "application/vnd.github+json"},
+      {"X-GitHub-Api-Version", "2022-11-28"}
+    ]
+
     token = System.get_env("GITHUB_OAUTH_TOKEN")
 
     if is_binary(token),
-      do: [{"Authorization", "token #{token}"} | headers],
+      do: [{"Authorization", "Bearer #{token}"} | headers],
       else: headers
   end
 

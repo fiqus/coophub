@@ -1,4 +1,4 @@
-.PHONY: server release compile test dialyzer plt clean
+.PHONY: server release compile test coverage dialyzer plt clean
 
 export MIX_ENV ?= dev
 export SECRET_KEY_BASE ?= $(shell mix phx.gen.secret)
@@ -18,6 +18,10 @@ compile:
 test: MIX_ENV=test
 test: dialyzer
 	@mix test
+
+coverage: MIX_ENV=test
+coverage:
+	@mix coverage
 
 dialyzer: MIX_ENV=dev
 dialyzer:

@@ -3,7 +3,7 @@ defmodule CoophubWeb.RepoController do
 
   require Logger
 
-  @uris_cache_name Application.get_env(:coophub, :uris_cache_name)
+  @uris_cache_name Application.compile_env(:coophub, :uris_cache_name)
   @uris_cache_success [:ok, :commit, :ignore]
   action_fallback(CoophubWeb.FallbackController)
 

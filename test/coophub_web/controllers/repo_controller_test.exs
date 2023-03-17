@@ -45,6 +45,8 @@ defmodule CoophubWeb.RepoControllerTest do
       data = get_data(conn, :org, "fiqus")
       assert data["id"] == 1_891_317
       assert data["email"] == "info@fiqus.coop"
+      assert data["repo_count"] == 2
+      assert data["star_count"] == 22
       assert length(data["languages"]) == 5
     end
 
@@ -52,6 +54,8 @@ defmodule CoophubWeb.RepoControllerTest do
       data = get_data(conn, :org, "test")
       assert data["id"] == 123
       assert data["email"] == "info@test.coop"
+      assert data["repo_count"] == 3
+      assert data["star_count"] == 33
       assert length(data["languages"]) == 4
     end
 

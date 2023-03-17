@@ -172,6 +172,9 @@ defmodule Coophub.Backends do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         {:ok, Jason.decode!(body), take_time() - start_ms}
 
+      {:ok, %HTTPoison.Response{status_code: 401}} ->
+        {:error, "Forbidden (bad credentials): #{url}"}
+
       {:ok, %HTTPoison.Response{status_code: 403}} ->
         {:error, "Forbidden (possible API rate-limit): #{url}"}
 
