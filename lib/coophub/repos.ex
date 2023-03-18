@@ -340,7 +340,7 @@ defmodule Coophub.Repos do
   end
 
   defp orgs_sort_by(orgs, %{"dir" => dir}, limit) do
-    sort_and_take(orgs, &sort_field_last_activity/1, dir, limit)
+    sort_and_take(orgs, &sort_org_last_activity/1, dir, limit)
   end
 
   defp repos_sort_by(repos, params, limit, exclude_forks \\ false)
@@ -350,7 +350,7 @@ defmodule Coophub.Repos do
   end
 
   defp repos_sort_by(repos, %{"dir" => dir}, limit, exclude_forks) do
-    sort_and_take(repos, &sort_pushed_at/1, dir, limit, exclude_forks)
+    sort_and_take(repos, &sort_repo_last_activity/1, dir, limit, exclude_forks)
   end
 
   defp sort_and_take(enum, sort_fn, dir, limit, exclude_forks \\ false) do
@@ -372,20 +372,26 @@ defmodule Coophub.Repos do
   defp sort(enum, sort_fn, "asc"), do: Enum.sort(enum, &(sort_fn.(&1) < sort_fn.(&2)))
   defp sort(enum, sort_fn, _), do: Enum.sort(enum, &(sort_fn.(&1) >= sort_fn.(&2)))
 
-  defp sort_field_last_activity(%Organization{last_activity: last_activity}) do
+  defp sort_org_last_activity(%Organization{last_activity: last_activity}) do
     sort_field_date(last_activity)
   end
 
-  defp sort_pushed_at(%Repository{pushed_at: pushed_at}) do
-    sort_field_date(pushed_at)
+  defp sort_repo_last_activity(%Repository{
+         pushed_at: pushed_at,
+         updated_at: updated_at,
+         created_at: created_at
+       }) do
+    sort_field_date(pushed_at || updated_at || created_at)
   end
 
-  defp sort_field_date(date) do
+  defp sort_field_date(date) when is_binary(date) do
     case DateTime.from_iso8601(date) do
       {:ok, datetime, _} -> DateTime.to_unix(datetime)
       _ -> 0
     end
   end
+
+  defp sort_field_date(_date), do: 0
 
   defp sort_field_popularity(%{popularity: popularity}) do
     popularity || 0
