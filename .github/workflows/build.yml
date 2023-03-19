@@ -13,7 +13,7 @@ jobs:
         os: ['ubuntu-18.04']
         otp: ['24.3.3']
         elixir: ['1.14.3']
-        node: ['12.8.0']
+        node: ['14.21.3']
 
     steps:
       - uses: actions/checkout@v2
