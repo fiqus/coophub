@@ -30,7 +30,7 @@ defmodule Coophub.Repos do
   Orgs is a list of org maps
   """
   @type orgs :: list(org()) | []
-  @type orgs_map :: %{required(String.t()) => org()}
+  @type orgs_map :: %{required(binary) => org()}
 
   @spec get_all_orgs :: orgs_map() | :error
   def get_all_orgs() do

@@ -21,7 +21,7 @@ defmodule Coophub.CacheWarmer do
   @doc """
   Executes this cache warmer.
   """
-  @spec execute(any) :: :ignore | {:ok, list({atom, Repos.org()}), keyword}
+  @spec execute(any) :: :ignore | {:ok, list({binary, Repos.org()}), keyword}
   def execute(_state) do
     ## Delay the execution a bit to ensure Cachex is available
     Process.sleep(2000)
@@ -194,7 +194,7 @@ defmodule Coophub.CacheWarmer do
   defp get_org(key, %{"source" => source} = yml_data) do
     case Backends.get_org(source, key, yml_data) do
       %Organization{} = org ->
-        %Organization{org | cached_at: DateTime.utc_now()}
+        %Organization{org | cached_at: DateTime.utc_now() |> DateTime.to_iso8601()}
 
       error ->
         Logger.error("Couldn't get org data: #{inspect(error)}")

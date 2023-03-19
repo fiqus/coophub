@@ -43,6 +43,8 @@ jobs:
         run: mix format --check-formatted
       - name: Run tests
         run: mix test
+      - name: Run dialyzer
+        run: mix dialyzer --check=true --compile=true
 
       - name: Build release
         run: |
@@ -104,7 +106,7 @@ jobs:
       - name: Commit VERSION file
         run: |
           git add VERSION
-          git config --local user.name "coophub-ci"
+          git config --local user.name "fiqus-ci"
           git config --local user.email "ci@fiqus.coop"
           git commit -m "Bump to $RELEASE_TAG"
       - name: Push VERSION file
