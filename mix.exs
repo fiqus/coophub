@@ -53,8 +53,7 @@ defmodule Coophub.MixProject do
       {:plug_cowboy, "~> 2.4"},
       {:httpoison, "~> 1.8"},
       {:yaml_elixir, "~> 2.9"},
-      # TODO: for a 3.4 upgrade we need a ChildSpec change
-      {:cachex, "3.2.0"},
+      {:cachex, "~> 3.6"},
       {:dialyzex, "~> 1.3", only: :dev}
     ]
   end

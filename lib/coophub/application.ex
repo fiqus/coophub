@@ -58,7 +58,7 @@ defmodule Coophub.Application do
   defp main_cache_opts(_) do
     [
       warmers: [
-        warmer(module: Coophub.CacheWarmer)
+        warmer(module: Coophub.CacheWarmer, async: true)
       ],
       expiration: expiration(default: :timer.minutes(@cache_interval))
     ]

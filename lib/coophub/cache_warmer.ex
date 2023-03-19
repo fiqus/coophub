@@ -52,7 +52,7 @@ defmodule Coophub.CacheWarmer do
       |> Enum.map(fn task -> Task.await(task, :infinity) end)
       |> List.flatten()
 
-    spawn(save_cache_dump(repos))
+    spawn(fn -> save_cache_dump(repos) end)
 
     ## Set a very high TTL to ensure that memory and dump data don't expire
     ## in the case we aren't able to refresh data from github API, but..
@@ -139,20 +139,18 @@ defmodule Coophub.CacheWarmer do
   end
 
   defp save_cache_dump(repos) do
-    fn ->
-      ## Delay the execution a bit to ensure cache data is available
-      Process.sleep(2000)
+    ## Delay the execution a bit to ensure cache data is available
+    Process.sleep(2000)
 
-      case Cachex.dump(@repos_cache_name, @repos_cache_dump_file) do
-        {:ok, true} ->
-          Logger.info(
-            "Saved repos cache dump with #{length(repos)} orgs to local file '#{@repos_cache_dump_file}'",
-            ansi_color: :magenta
-          )
+    case Cachex.dump(@repos_cache_name, @repos_cache_dump_file) do
+      {:ok, true} ->
+        Logger.info(
+          "Saved repos cache dump with #{length(repos)} orgs to local file '#{@repos_cache_dump_file}'",
+          ansi_color: :magenta
+        )
 
-        err ->
-          Logger.error("Error saving repos cache dump: #{inspect(err)}")
-      end
+      err ->
+        Logger.error("Error saving repos cache dump: #{inspect(err)}")
     end
   end
 
