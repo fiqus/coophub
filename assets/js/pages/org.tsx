@@ -20,11 +20,10 @@ const OrgPage: React.FC<RouteComponentProps<MatchParams>> = ({match}) => {
     const response = useFetch(`/api/orgs/${orgName}`) as OrgResponse;
     const repos = useFetch(`/api/orgs/${orgName}/repos?sort=popular`) as OrgReposResponse;
     const org = response.data;
-    const starsSum = org.star_count;
     const maxLanguages = 5;
 
     return <>
-        <OrgHeader org={org} maxLanguages={maxLanguages} starsSum={starsSum}/>
+        <OrgHeader org={org} maxLanguages={maxLanguages}/>
         <Container className="org-repos-cards mt-5">
             {_.chunk(repos.data, 3).map((row, i)=>
             <CardDeck key={i}>

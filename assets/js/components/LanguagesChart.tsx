@@ -1,13 +1,12 @@
 import React from 'react';
-import {ApiResponse, Repo, TotalLanguage} from "../types";
+import {ApiResponse, TotalLanguage} from "../types";
 import {Doughnut} from 'react-chartjs-2';
-import useFetch from 'fetch-suspense';
 import 'chartjs-plugin-colorschemes';
 import getLangColor from '../languageColors';
 
-type urlProp = {url:string};
+type LanguagesChartProp = {languages:ApiResponse<[TotalLanguage]>};
 
-const LanguagesChart: React.FC<urlProp> = ({languages}) => {
+const LanguagesChart: React.FC<LanguagesChartProp> = ({languages}) => {
     if (!languages.data) {
         return null;
     }

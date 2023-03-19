@@ -45,7 +45,7 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                             <span className="ico-circle"><GoGlobe/></span>
                         </div>
                         <div className="counter-num">
-                            <p className="counter"><CountUp end={countersResponse.data.orgs}/></p>
+                            <p className="counter"><CountUp separator="" end={countersResponse.data.orgs}/></p>
                             <span className="counter-text">COOPS</span>
                         </div>
                     </div>
@@ -65,7 +65,7 @@ const HomePage: React.FC<RouteComponentProps> = () => {
                             <span className="ico-circle"><GoCode/></span>
                         </div>
                         <div className="counter-num">
-                            <p className="counter"><CountUp end={countersResponse.data.repos}/></p>
+                            <p className="counter"><CountUp separator="" end={countersResponse.data.repos}/></p>
                             <span className="counter-text">REPOS</span>
                         </div>
                     </div>
