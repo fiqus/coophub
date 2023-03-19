@@ -86,14 +86,6 @@ agaric-gitlab:
   description: "We build websites and online tools that respect your freedom, and we provide training and consultation to meet your goals."
   location: Boston, USA; Minneapolis, USA; Denver, USA; Managua, Nicaragua; Puebla, Mexico
 
-seattledeveloperscoop:
-  source: github
-  login: seattledeveloperscoop
-  name: Seattle Developer's Cooperative
-  url: https://www.seattledevelopers.coop
-  description: "A worker-owned web developer cooperative based in Seattle"
-  location: Seattle, USA
-
 camplight:
   source: github
   login: camplight
@@ -381,14 +373,6 @@ enreda:
   url: http://enreda.coop/
   description: "Tecnología para la Transformación Social."
   location: Andalucía, Spain
-
-obran:
-  source: github
-  login: staffing-coop
-  name: Obran
-  url: https://obran.org/
-  description: "We believe that everyone has the freedom to own their work. We are creating a community of worker-owners to do just that."
-  location: Baltimore, USA
 
 informal-systems:
   source: github
