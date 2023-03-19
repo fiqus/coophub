@@ -1,5 +1,5 @@
 defmodule CoophubWeb.Fixtures do
-  @repos_cache_name Application.get_env(:coophub, :main_cache_name)
+  @repos_cache_name Application.compile_env(:coophub, :main_cache_name)
 
   alias Coophub.Repos
   alias Coophub.Schemas.{Organization, Repository}

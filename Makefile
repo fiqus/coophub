@@ -40,8 +40,8 @@ coverage:
 
 dialyzer: MIX_ENV=dev
 dialyzer:
-	@mix dialyzer --check=false
+	@mix dialyzer --format dialyxir
 
 plt: MIX_ENV=dev
 plt:
-	@mix dialyzer --check=true --compile=true
+	@mix dialyzer --force-check --format dialyxir

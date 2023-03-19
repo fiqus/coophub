@@ -22,4 +22,4 @@ jobs:
     - name: Run tests
       run: mix test
     - name: Run dialyzer
-      run: mix dialyzer --check=true --compile=true
+      run: mix dialyzer --force-check --format dialyxir

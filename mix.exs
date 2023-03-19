@@ -54,7 +54,7 @@ defmodule Coophub.MixProject do
       {:httpoison, "~> 1.8"},
       {:yaml_elixir, "~> 2.9"},
       {:cachex, "~> 3.6"},
-      {:dialyzex, "~> 1.3", only: :dev}
+      {:dialyxir, "~> 1.2", only: :dev, runtime: false}
     ]
   end
 
