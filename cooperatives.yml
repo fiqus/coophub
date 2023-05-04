@@ -257,7 +257,7 @@ librecode-gitlab:
 libresign:
   source: github
   login: libresign
-  name: LibreCode Coop
+  name: LibreSign
   url: http://libresign.coop/
   description: "LibreCode - Open source technology solutions"
   location: Brazil
