@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-18.04']
+        os: ['ubuntu-22.04']
         otp: ['24.3.3']
         elixir: ['1.14.3']
         node: ['14.21.3']
@@ -103,15 +103,19 @@ jobs:
           event-type: coophub-release
           client-payload: '{"tag": "${{ env.RELEASE_TAG }}", "ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
 
-      - name: Commit VERSION file
-        run: |
-          git add VERSION
-          git config --local user.name "fiqus-ci"
-          git config --local user.email "ci@fiqus.coop"
-          git commit -m "Bump to $RELEASE_TAG"
-      - name: Push VERSION file
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: master
-          force: true
+      ##########
+      ### Disabled for now, since the branch is protected from direct push
+      ### and it works anyways displaying the right version on the site
+      ##########
+      # - name: Commit VERSION file
+      #   run: |
+      #     git add VERSION
+      #     git config --local user.name "fiqus-ci"
+      #     git config --local user.email "ci@fiqus.coop"
+      #     git commit -m "Bump to $RELEASE_TAG"
+      # - name: Push VERSION file
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: master
+      #     force: true
