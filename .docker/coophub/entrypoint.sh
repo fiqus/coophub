@@ -13,9 +13,4 @@ if [ ! -d "deps" ]; then
     mix local.rebar --force
 fi
 
-# If you want to recreate node_modules, delete this folder and run docker compose up again
-if [ ! -d "node_modules" ]; then
-    npm ci
-fi
-
 mix phx.server

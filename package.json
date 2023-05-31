@@ -2,8 +2,8 @@
     "repository": {},
     "license": "MIT",
     "scripts": {
-        "deploy": "webpack --mode production",
-        "watch": "webpack --mode development --watch-stdin",
+        "deploy": "webpack --mode-env production",
+        "watch": "webpack --node-env development --progress --watch",
         "delete-cache": "rm -rf ./repos-cache.dump"
     },
     "dependencies": {

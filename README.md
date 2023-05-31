@@ -33,6 +33,13 @@ Use `GITHUB_OAUTH_TOKEN` ENV var in order to authenticate with the GitHub APIv3.
 
 If you want to set any environment, like `GITHUB_OAUTH_TOKEN`, create a `.env` file with the custom values that you want.
 
+Available environments:
+| environment        | Default value |
+| ------------------ | ------------- |
+| GITHUB_OAUTH_TOKEN |               |
+| VERSION_ELIXIR     | 1.14          |
+| VERSION_NODE       | 18            |
+
 * Clone this repository
 * Run the command `docker compose up -d`
 
