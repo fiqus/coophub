@@ -1,4 +1,6 @@
-FROM elixir:1.14
+ARG version_elixir
+
+FROM elixir:${version_elixir}
 ARG version_node
 ARG host_uid
 ARG host_gid

@@ -27,20 +27,21 @@ See [changelog file](CHANGELOG.md).
 
 ## Development
 
+Use `GITHUB_OAUTH_TOKEN` ENV var in order to authenticate with the GitHub APIv3. Read the [guide](https://developer.github.com/v3/guides/getting-started/#oauth).
+
 ### With docker
 
 If you want to set any environment, like `GITHUB_OAUTH_TOKEN`, create a `.env` file with the custom values that you want.
 
 * Clone this repository
 * Run the command `docker compose up -d`
+
 ### Local
 It uses the Elixir [Phoenix Framework](https://phoenixframework.org/) for the back-end and ReactJS for the front-end.
 Then, to run this app you will need:
 - Erlang OTP >= 18
 - Elixir >= 1.5
 - NodeJS >= 5.0
-
-Use `GITHUB_OAUTH_TOKEN` ENV var in order to authenticate with the GitHub APIv3. Read the [guide](https://developer.github.com/v3/guides/getting-started/#oauth).
 
 ### Run it!
 - Install dependencies with `mix deps.get`
