@@ -1,0 +1,21 @@
+services:
+  coophub:
+    image: elixir:${VERSION_ELIXIR:-1.14}
+    working_dir: "/coophub"
+    ports:
+      - 127.0.0.1:4000:4000
+    volumes:
+      - ./:/coophub
+      - ~/.mix:/root/.mix/
+      - ~/.npm:/root/.npm/
+    environment:
+      - GITHUB_OAUTH_TOKEN
+    command: bash -c "sh .docker/coophub/entrypoint.sh"
+
+  nodejs:
+    image: node:${VERSION_NODE:-18}
+    working_dir: "/coophub"
+    volumes:
+      - ./:/coophub
+      - ~/.npm:/root/.npm/
+    command: bash -c "sh .docker/nodejs/entrypoint.sh"
