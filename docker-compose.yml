@@ -1,11 +1,7 @@
 services:
   coophub:
-    build:
-      context: .docker/coophub
-      args:
-        version_elixir: ${VERSION_ELIXIR:-1.14}
-        host_uid: ${UID:-1000}
-        host_gid: ${GID:-1000}
+    image: elixir:${VERSION_ELIXIR:-1.14}
+    working_dir: "/coophub"
     ports:
       - 127.0.0.1:4000:4000
     volumes:
@@ -14,6 +10,7 @@ services:
       - ~/.npm:/root/.npm/
     environment:
       - GITHUB_OAUTH_TOKEN
+    command: bash -c "sh .docker/coophub/entrypoint.sh"
 
   nodejs:
     image: node:${VERSION_NODE:-18}

@@ -4,7 +4,7 @@
 if [ -f ".env" ]; then
     . .env
 fi
-source $HOME/.bashr
+source $HOME/.bashrc
 
 # If you want to recreate node_modules, delete this folder and run docker compose up again
 if [ ! -d "node_modules" ]; then

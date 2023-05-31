@@ -40,8 +40,9 @@ Available environments:
 | VERSION_ELIXIR     | 1.14          |
 | VERSION_NODE       | 18            |
 
-* Clone this repository
-* Run the command `docker compose up -d`
+Steps:
+- Clone this repository
+- Run the command `docker compose up -d`
 
 ### Local
 It uses the Elixir [Phoenix Framework](https://phoenixframework.org/) for the back-end and ReactJS for the front-end.
