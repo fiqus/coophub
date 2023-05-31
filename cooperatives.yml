@@ -630,6 +630,22 @@ motion-twin:
   description: "Games! Everyone at Motion Twin is an associate. We're all part owners of the company and we're all here way longer than we should be."
   location: Bordeaux, France
 
+coopcycle:
+  source: github
+  login: coopcycle
+  name: CoopCycle
+  url: https://coopcycle.org/
+  description: CoopCycle is a federation of bike delivery co-ops. Governed democratically by coops, it enables them to stand united and to reduce their costs thanks to resources pooling. It creates a strong bargaining power to protect the bikers rights.
+  location: France
+
+apiplatform:
+  source: github
+  login: api-platform
+  name: API Platform
+  url: https://api-platform.com/
+  description: Create REST and GraphQL APIs, scaffold Jamstack webapps, stream changes in real-time. Made by Les-Tilleuls.
+  location: France
+
 multi-coop:
   source: github
   login: multi-coop
