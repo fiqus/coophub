@@ -1,0 +1,17 @@
+services:
+  coophub:
+    build:
+      context: .docker/coophub
+      args:
+        version_node: ${VERSION_NODE:-16}
+        host_uid: ${UID:-1000}
+        host_gid: ${GID:-1000}
+    ports:
+      - 127.0.0.1:4000:4000
+    volumes:
+      - ./:/coophub
+      - ~/.mix:/root/.mix/
+      - ~/.npm:/root/.npm/
+    environment:
+      - VERSION_COOPHUB=${VERSION_COOPHUB:-master}
+      - GITHUB_OAUTH_TOKEN
