@@ -7,19 +7,26 @@ jobs:
     name: Run elixir tests
     runs-on: ubuntu-latest
 
-    container:
-      image: elixir:1.14-slim
 
+    
     steps:
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        otp-version: 25.0.4
+        elixir-version: 1.14.3
+
     - uses: actions/checkout@v2
+    
     - name: Install dependencies
-      run: |
-        mix local.rebar --force
-        mix local.hex --force
+      run: 
         mix deps.get
+
     - name: Check code format
       run: mix format --check-formatted
+
     - name: Run tests
       run: mix test
+      
     - name: Run dialyzer
       run: mix dialyzer --force-check --format dialyxir
