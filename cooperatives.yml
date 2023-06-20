@@ -688,7 +688,7 @@ sutty:
 
 ascendynamics-nfp:
   source: "github"
-  login: ""
+  login: "ASCENDynamics-NFP"
   name: "ASCENDynamics NFP"
   url: "https://ascendynamics.org"
   description: "Non-profit incubator for worker-owned startups. Think tank for a utopian society. Building an open source, copy left and collaborative platform for nonprofits, movements, organizations and groups to organize at: https://github.com/ASCENDynamics-NFP/AscendCoopPlatform."
