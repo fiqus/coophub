@@ -396,7 +396,7 @@ RChain:
   name: RChain
   url: https://rchain.coop
   description: "Blockchain (smart contract) platform and key social coordination technologies."
-  location: Incorporated in Seattle Washington, Global membership 
+  location: Incorporated in Seattle Washington, Global membership
 
 Resonate:
   source: github
@@ -505,7 +505,7 @@ champs-libres:
 CodeursEnLiberte:
   source: gitlab
   login: CodeursEnLiberte
-  name: Codeurs en Liberté 
+  name: Codeurs en Liberté
   url: https://xn--codeursenlibert-pnb.fr/
   description: "Codeurs en Liberté brings together independent employees in the IT field."
   location: France
@@ -537,7 +537,7 @@ fairnesscoop:
 femprocomuns:
   source: gitlab
   login: femprocomuns
-  name: femProcomuns 
+  name: femProcomuns
   url: https://femprocomuns.coop/
   description: "Strategic social tool to make common activity viable."
   location: Catalunia
@@ -685,3 +685,11 @@ sutty:
   url: "https://sutty.coop.ar"
   description: "A worker-owned cooperative developing and hosting resilient websites for collectives, non-profit organizations and activists."
   location: "Argentina"
+
+ascendynamics-nfp:
+  source: "github"
+  login: "ASCENDynamics-NFP"
+  name: "ASCENDynamics NFP"
+  url: "https://ascendynamics.org"
+  description: "Non-profit incubator for worker-owned startups. Think tank for a utopian society. Building an open source, copy left and collaborative platform for nonprofits, movements, organizations and groups to organize at: https://github.com/ASCENDynamics-NFP/AscendCoopPlatform."
+  location: "USA, International"
