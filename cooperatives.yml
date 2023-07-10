@@ -693,3 +693,11 @@ ascendynamics-nfp:
   url: "https://ascendynamics.org"
   description: "Non-profit incubator for worker-owned startups. Think tank for a utopian society. Building an open source, copy left and collaborative platform for nonprofits, movements, organizations and groups to organize at: https://github.com/ASCENDynamics-NFP/AscendCoopPlatform."
   location: "USA, International"
+
+the-tech-support-cooperative:
+  source: github
+  login: CORE-POS
+  name: The Tech Support Cooperative
+  url: https://techsupport.coop
+  description: "Retail Technology experts.  Cooperative by design.  Committed to Freedom."
+  location: "US, CAN"
