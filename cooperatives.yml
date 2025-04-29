@@ -542,6 +542,14 @@ femprocomuns:
   description: "Strategic social tool to make common activity viable."
   location: Catalunia
 
+ttncat:
+  source: github
+  login: ttncat
+  name: ttncat
+  url: https://thethingsnetwork.cat/
+  description: "TheThingsNetwork Catalunya coomunity"
+  location: Catalunia
+
 FikaWorks:
   source: github
   login: FikaWorks
