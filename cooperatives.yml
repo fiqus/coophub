@@ -701,3 +701,11 @@ the-tech-support-cooperative:
   url: https://techsupport.coop
   description: "Retail Technology experts.  Cooperative by design.  Committed to Freedom."
   location: "US, CAN"
+
+limeleaf:
+  source: codeberg
+  login: limeleaf
+  name: Limeleaf Worker Collective
+  url: https://limeleaf.coop/
+  description: "Limeleaf is a worker-owned cooperative, based in Upstate New York"
+  location: NY, USA
