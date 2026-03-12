@@ -10,13 +10,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-22.04']
-        otp: ['24.3.3']
-        elixir: ['1.14.3']
-        node: ['14.21.3']
+        os: ['ubuntu-24.04']
+        otp: ['26.2.5']
+        elixir: ['1.14.5']
+        node: ['18.20.8']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set RELEASE_TAG env
         run: echo "RELEASE_TAG=${GITHUB_REF:10}" >> $GITHUB_ENV
@@ -27,7 +27,7 @@ jobs:
         with:
           otp-version: ${{ matrix.otp }}
           elixir-version: ${{ matrix.elixir }}
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
@@ -68,9 +68,9 @@ jobs:
           echo "$REVISION @ $REF" > $apppath/REVISION
           echo "$version @ $REF" > $apppath/VERSION
           tar -zcf $archive -C $RELEASE_PATH $APPLICATION
-          echo "::set-output name=timestamp::$timestamp"
-          echo "::set-output name=version::$version"
-          echo "::set-output name=archive::$archive"
+          echo "timestamp=$timestamp" >> $GITHUB_OUTPUT
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "archive=$archive" >> $GITHUB_OUTPUT
           echo "Release package built at $archive"
         env:
           REVISION: ${{ github.sha }}
@@ -79,43 +79,22 @@ jobs:
           APPLICATION: coophub
 
       - name: Upload package artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: coophub-release
           path: ${{ steps.build_package.outputs.archive }}
 
       - name: Upload release asset
-        id: upload_release 
-        uses: actions/upload-release-asset@v1.0.1
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.build_package.outputs.archive }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ steps.build_package.outputs.archive }}
-          asset_name: ${{ steps.build_package.outputs.archive }}
-          asset_content_type: application/tar+gzip
-      
+
       - name: Dispatch release
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.REPO_DISPATCH_TOKEN }}
           repository: ${{ secrets.REPO_DISPATCH_PATH }}
           event-type: coophub-release
           client-payload: '{"tag": "${{ env.RELEASE_TAG }}", "ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
-
-      ##########
-      ### Disabled for now, since the branch is protected from direct push
-      ### and it works anyways displaying the right version on the site
-      ##########
-      # - name: Commit VERSION file
-      #   run: |
-      #     git add VERSION
-      #     git config --local user.name "fiqus-ci"
-      #     git config --local user.email "ci@fiqus.coop"
-      #     git commit -m "Bump to $RELEASE_TAG"
-      # - name: Push VERSION file
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     branch: master
-      #     force: true
