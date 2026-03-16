@@ -18,7 +18,7 @@ defmodule Coophub.MixProject do
       dialyzer_warnings: [:error_handling, :race_conditions, :underspecs, :unknown],
       dialyzer_ignored_warnings: [
         # {tag, {file, line}, {warning_type, arguments}}
-        {:_, {'lib/cachex/warmer.ex', :_}, :_}
+        {:_, {~c"lib/cachex/warmer.ex", :_}, :_}
       ]
     ]
   end
