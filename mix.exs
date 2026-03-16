@@ -18,7 +18,7 @@ defmodule Coophub.MixProject do
       dialyzer_warnings: [:error_handling, :race_conditions, :underspecs, :unknown],
       dialyzer_ignored_warnings: [
         # {tag, {file, line}, {warning_type, arguments}}
-        {:_, {'lib/cachex/warmer.ex', :_}, :_}
+        {:_, {~c"lib/cachex/warmer.ex", :_}, :_}
       ]
     ]
   end
@@ -51,7 +51,7 @@ defmodule Coophub.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.4"},
-      {:httpoison, "~> 1.8"},
+      {:httpoison, "~> 2.3"},
       {:yaml_elixir, "~> 2.9"},
       {:cachex, "~> 3.6"},
       {:dialyxir, "~> 1.2", only: :dev, runtime: false}
