@@ -13,7 +13,7 @@ services:
     command: bash -c "sh .docker/coophub/entrypoint.sh"
 
   nodejs:
-    image: node:${VERSION_NODE:-18}
+    image: node:${VERSION_NODE:-22}
     working_dir: "/coophub"
     volumes:
       - ./:/coophub
