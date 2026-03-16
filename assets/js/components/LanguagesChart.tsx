@@ -1,8 +1,10 @@
 import React from 'react';
 import {ApiResponse, TotalLanguage} from "../types";
 import {Doughnut} from 'react-chartjs-2';
-import 'chartjs-plugin-colorschemes';
+import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
 import getLangColor from '../languageColors';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 type LanguagesChartProp = {languages:ApiResponse<[TotalLanguage]>};
 
@@ -34,10 +36,21 @@ const LanguagesChart: React.FC<LanguagesChartProp> = ({languages}) => {
 
     const options = {
         maintainAspectRatio: false,
-        legend: {
-            position: 'bottom',
-            labels: {
-                padding: 15
+        plugins: {
+            legend: {
+                position: 'bottom' as const,
+                labels: {
+                    padding: 15
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.parsed;
+                        return `${label}: ${value}%`;
+                    }
+                }
             }
         },
         layout: {
@@ -51,16 +64,6 @@ const LanguagesChart: React.FC<LanguagesChartProp> = ({languages}) => {
         responsive: true,
         rotation: 1 * Math.PI,
         circumference: 1 * Math.PI,
-        tooltips: {
-            callbacks: {
-                label: function(tooltipItem, data) {
-                    const dataset = data.datasets[tooltipItem.datasetIndex];
-                    const currentValue = dataset.data[tooltipItem.index];     
-                    const label = data.labels[tooltipItem.index]  
-                    return `${label}: ${currentValue}%`;
-                }
-            }
-        }
     };
 
     return <Doughnut data={data} options={options} height={250} />;

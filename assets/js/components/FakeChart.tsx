@@ -1,6 +1,8 @@
 import React from 'react';
 import {Line} from 'react-chartjs-2';
+import {Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend} from 'chart.js';
 
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 const FakeChart: React.FC = () => {
 
@@ -10,7 +12,7 @@ const FakeChart: React.FC = () => {
           {
             label: 'Commits',
             fill: false,
-            lineTension: 0.1,
+            tension: 0.1,
             backgroundColor: 'rgba(75,192,192,0.4)',
             borderColor: 'rgba(75,192,192,1)',
             borderCapStyle: 'butt',
@@ -30,7 +32,7 @@ const FakeChart: React.FC = () => {
           }
         ]
       };
-    
+
     return (<div>
         <Line data={data} />
       </div>);
