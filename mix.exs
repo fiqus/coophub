@@ -51,7 +51,7 @@ defmodule Coophub.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.4"},
-      {:httpoison, "~> 1.8"},
+      {:httpoison, "~> 2.3"},
       {:yaml_elixir, "~> 2.9"},
       {:cachex, "~> 3.6"},
       {:dialyxir, "~> 1.2", only: :dev, runtime: false}

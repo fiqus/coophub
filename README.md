@@ -48,8 +48,8 @@ Steps:
 It uses the Elixir [Phoenix Framework](https://phoenixframework.org/) for the back-end and ReactJS for the front-end.
 Then, to run this app you will need:
 - Erlang OTP >= 26
-- Elixir >= 1.14
-- NodeJS >= 18
+- Elixir >= 1.15
+- NodeJS >= 22
 
 ### Run it!
 - Install dependencies with `mix deps.get`
