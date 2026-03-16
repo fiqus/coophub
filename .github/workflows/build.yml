@@ -23,7 +23,7 @@ jobs:
       - name: Update VERSION file with '${GITHUB_REF:10}'
         run: echo -n "${GITHUB_REF:11}" > VERSION
 
-      - uses: erlef/setup-beam@v2
+      - uses: erlef/setup-beam@v1
         with:
           otp-version: ${{ matrix.otp }}
           elixir-version: ${{ matrix.elixir }}
