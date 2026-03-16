@@ -1,10 +1,8 @@
 import React from 'react';
 import {ApiResponse, TotalLanguage} from "../types";
 import {Doughnut} from 'react-chartjs-2';
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
+import 'chart.js/auto';
 import getLangColor from '../languageColors';
-
-ChartJS.register(ArcElement, Tooltip, Legend);
 
 type LanguagesChartProp = {languages:ApiResponse<[TotalLanguage]>};
 
