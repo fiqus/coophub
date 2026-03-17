@@ -2,7 +2,7 @@
 
 :link: [`coophub.io`](http://coophub.io)
 
-This web app uses the [GitHub API](https://developer.github.com/v3/) and [GitLab API](https://docs.gitlab.com/ee/api/README.html) to fetch, process and nicely display the projects/repositories of any subscribed cooperative from over the world.
+This web app uses the open APIs of [GitHub](https://developer.github.com/v3/), [GitLab](https://docs.gitlab.com/ee/api/README.html), [Git.coop](https://git.coop), [Codeberg](https://codeberg.org/api/swagger#/) and [0xacab](https://0xacab.org) to fetch, process and nicely display the projects/repositories of any subscribed cooperative from over the world.
 
 Please note that it's strictly limited to cooperative enterprises.
 
@@ -13,7 +13,7 @@ The main goal is to gather in one place all the open source projects that can be
 2. Add your co-op in the [cooperatives.yml](https://github.com/fiqus/coophub/blob/master/cooperatives.yml) file:
 ```
 key_org_name:
-  source: github|gitlab|git.coop
+  source: github|gitlab|git.coop|codeberg|0xacab
   login: <USERNAME_IN_THE_SOURCE>
   name: <NAME_OF_THE_COOP>
   url: <URL_OF_THE_COOP>
@@ -37,8 +37,8 @@ Available environments:
 | environment        | Default value |
 | ------------------ | ------------- |
 | GITHUB_OAUTH_TOKEN |               |
-| VERSION_ELIXIR     | 1.14          |
-| VERSION_NODE       | 18            |
+| VERSION_ELIXIR     | 1.15          |
+| VERSION_NODE       | 22            |
 
 Steps:
 - Clone this repository
