@@ -709,3 +709,11 @@ limeleaf:
   url: https://limeleaf.coop/
   description: "Limeleaf is a worker-owned cooperative, based in Upstate New York"
   location: NY, USA
+
+yaalcoop:
+  source: gitlab
+  login: yaal
+  name: Yaal Coop
+  url: https://yaal.coop/
+  description: "Software development and services cooperative in Bordeaux, France"
+  location: Bordeaux, France
