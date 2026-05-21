@@ -3,8 +3,24 @@ fiqus:
   login: fiqus
   name: Fiqus
   url: https://fiqus.coop
-  description: "Cooperative company specialized in software, founded in 2011."
+  description: "Ex-Cooperative company specialized in software, founded in 2011."
   location: CABA/Villa La Angostura, Argentina
+
+farox:
+  source: github
+  login: farox-coop
+  name: Farox
+  url: https://farox.coop
+  description: "Farox is a technology cooperative focused on designing and building meaningful digital products. (Fork from Fiqus)"
+  location: Argentina
+
+lawal:
+  source: github
+  login: LawalCoop
+  name: Lawal
+  url: https://lawal.coop
+  description: "A cooperative technology-based company, specialized in Artificial Intelligence and high-concurrency systems. (Fork from Fiqus)"
+  location: Villa La Angostura, Argentina
 
 gcoop:
   source: github
