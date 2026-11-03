@@ -246,6 +246,14 @@ coopdevs-gitlab:
   description: "Coopdevs, Free and Open Source Software for Social and Solidarity Economy"
   location: Barcelona, Spain
 
+dabne:
+  source: gitlab
+  login: dabne
+  name: Dabne
+  url: https://dabne.net/
+  description: "Supporting social transformation through free technologies and a gender perspective"
+  location: Madrid, Spain
+
 digicoop:
   source: github
   login: digicoop
