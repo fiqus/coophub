@@ -10,6 +10,7 @@ defmodule Coophub.CacheWarmer do
   @repos_cache_name Application.compile_env(:coophub, :main_cache_name)
   @repos_cache_interval Application.compile_env(:coophub, :cache_interval)
   @repos_cache_dump_file Application.compile_env(:coophub, :main_cache_dump_file)
+  @cooperatives_yml_url "https://raw.githubusercontent.com/fiqus/coophub/master/cooperatives.yml"
 
   @doc """
   Returns the interval for this warmer.
@@ -43,21 +44,28 @@ defmodule Coophub.CacheWarmer do
   defp warm_cache() do
     Logger.info("Warming repos into cache from remote backends..", ansi_color: :yellow)
 
-    repos =
-      read_yml()
-      |> group_by_source()
-      |> Enum.map(fn {source, orgs} ->
-        Task.async(fn -> get_data(source, orgs) end)
-      end)
-      |> Enum.map(fn task -> Task.await(task, :infinity) end)
-      |> List.flatten()
+    case read_yml() do
+      {:ok, yml_orgs} ->
+        repos =
+          yml_orgs
+          |> group_by_source()
+          |> Enum.map(fn {source, orgs} ->
+            Task.async(fn -> get_data(source, orgs) end)
+          end)
+          |> Enum.map(fn task -> Task.await(task, :infinity) end)
+          |> List.flatten()
 
-    spawn(fn -> save_cache_dump(repos) end)
+        spawn(fn -> save_cache_dump(repos) end)
 
-    ## Set a very high TTL to ensure that memory and dump data don't expire
-    ## in the case we aren't able to refresh data from github API, but..
-    ## we will try to refresh it anyways every ":cache_interval" minutes!
-    {:ok, repos, ttl: :timer.hours(24 * 365)}
+        ## Set a very high TTL to ensure that memory and dump data don't expire
+        ## in the case we aren't able to refresh data from github API, but..
+        ## we will try to refresh it anyways every ":cache_interval" minutes!
+        {:ok, repos, ttl: :timer.hours(24 * 365)}
+
+      {:error, reason} ->
+        Logger.error("Couldn't read cooperatives.yml: #{inspect(reason)}")
+        :ignore
+    end
   end
 
   ## Given the github orgs from the yml as input, it will merge them with
@@ -182,9 +190,48 @@ defmodule Coophub.CacheWarmer do
   end
 
   defp read_yml() do
+    case read_remote_yml() do
+      {:ok, coops} ->
+        {:ok, coops}
+
+      {:error, reason} ->
+        Logger.error(
+          "Couldn't read remote cooperatives.yml (#{inspect(reason)}), falling back to local file"
+        )
+
+        read_local_yml()
+    end
+  end
+
+  defp read_remote_yml() do
+    Logger.info("Reading cooperatives.yml from #{@cooperatives_yml_url}", ansi_color: :yellow)
+
+    with {:ok, %HTTPoison.Response{status_code: 200, body: body}} <-
+           HTTPoison.get(@cooperatives_yml_url, [{"User-Agent", "coophub"}]),
+         {:ok, coops} when is_map(coops) <-
+           YamlElixir.read_from_string(body, maps_as_keywords: false) do
+      {:ok, coops}
+    else
+      {:ok, %HTTPoison.Response{status_code: status}} ->
+        {:error, "HTTP #{status} fetching #{@cooperatives_yml_url}"}
+
+      {:ok, parsed} ->
+        {:error, "Unexpected cooperatives.yml shape: #{inspect(parsed)}"}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  defp read_local_yml() do
     path = Path.join(File.cwd!(), "cooperatives.yml")
-    {:ok, coops} = YamlElixir.read_from_file(path, maps_as_keywords: false)
-    coops
+    Logger.info("Reading cooperatives.yml from #{path}", ansi_color: :yellow)
+
+    case YamlElixir.read_from_file(path, maps_as_keywords: false) do
+      {:ok, coops} when is_map(coops) -> {:ok, coops}
+      {:ok, parsed} -> {:error, "Unexpected local cooperatives.yml shape: #{inspect(parsed)}"}
+      {:error, reason} -> {:error, reason}
+    end
   end
 
   ##
